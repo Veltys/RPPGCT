@@ -18,9 +18,8 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.1.2: Arreglo de un bug menor en **temperaturas.py**.
 - 0.1.3: Arreglo del mismo bug anterior en **cpu.py**.
 - 0.1.4: Redacción de este documento.
+- 0.1.5: Creación de la rama (*branch*) de *testing* y adición de el instalador de pruebas.
 
 ## Por hacer (*TODO*)
-* Crear una rama (*branch*) de *testing*.
-* Pasar **boton.py** a dicha rama.
-* Testear en dicha rama el instalador.
+* Testear el instalador.
 * Acabar de hacer el resto de scripts de init.d.
