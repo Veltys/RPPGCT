@@ -100,7 +100,7 @@ def main(argv = sys.argv):
             sys.exit(errno.EACCES)
 
     else:
-        print('Error: Ya se ha iniciado una instancia de ' + os.path.basename(argv[0]) + '.py', file=sys.stderr)
+        print('Error: Ya se ha iniciado una instancia de ' + os.path.basename(argv[0]), file=sys.stderr)
         sys.exit(errno.EEXIST)
 
 
