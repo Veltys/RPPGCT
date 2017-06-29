@@ -18,11 +18,12 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.1.2: Arreglo de un bug menor en **temperaturas.py**.
 - 0.1.3: Arreglo del mismo bug anterior en **cpu.py**.
 - 0.1.4: Redacción de este documento.
-- 0.1.5: Creación de la rama (*branch*) de *testing* y adición de el instalador de pruebas.
+- 0.1.5: Creación de la rama (*branch*) de *testing* y adición del instalador de pruebas.
+- 0.1.6: Añadida la sección de "Agradecimientos y otros créditos" en este documento y en los archivos correspondientes. Añadido el instalador. Acabados los scripts para init.d.
 
 ## Agradecimientos y otros créditos
-* A *Linuxito*, por [su script *netisup.py*](https://www.linuxito.com/programacion/635-netisup-py-script-python-para-verificar-el-estado-de-la-red), el cual he utilizado (adaptado) en mi **internet.py**
+* A *linuxitux*, por [su script *netisup.py*](https://www.linuxito.com/programacion/635-netisup-py-script-python-para-verificar-el-estado-de-la-red), el cual he utilizado (adaptado) en mi **internet.py**
 
 ## Por hacer (*TODO*)
 * Testear el instalador.
-* Acabar de hacer el resto de scripts de init.d.
+* Añadir el control de relés.
