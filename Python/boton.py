@@ -2,6 +2,15 @@
 # -*- coding: utf-8 -*-
 
 
+# Title         : boton.py
+# Description   : Pruebas con pulsadores en GPIO
+# Author        : Veltys
+# Date          : 29-06-2017
+# Version       : 0.0.2
+# Usage         : python boton.py
+# Notes         : Concluidas las pruebas, éste será el germen del sistema de relés
+
+
 GPIO_BOTON = 22
 
 

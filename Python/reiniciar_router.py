@@ -2,7 +2,18 @@
 # -*- coding: utf-8 -*-
 
 
-GPIOS = [4]                                                                     # Pines GPIO que serán utilizados
+# Title         : reiniciar_router.py
+# Description   : Sistema que comprueba si hay acceso a Internet. Si no, manda una señal en un puerto GPIO determinado
+# Author        : Veltys
+# Date          : 29-06-2017
+# Version       : 1.2.1
+# Usage         : python3 reiniciar_router.py
+# Notes         : La idea es conectar un relé a este GPIO y al mismo la alimentación del sistema de acceso a Internet
+#		  Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
+#                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual simplemente apaga todos los leds hasta que esta misma señal sea recibida de nuevo
+
+
+GPIOS = [4]                                                                 	# Pines GPIO que serán utilizados
 PAUSAS = [15, 60, 180, 900]                                                     # Vector de segundos de pausas en orden de menor a mayor
 
 
@@ -16,10 +27,6 @@ import signal		        				                # Manejo de señales
 import sys			                                                # Funcionalidades varias del sistema
 
 
-def apagado():
-    cerrar()
-
-
 def cerrar():                                                                   # Tareas necesarias al invocar el cierre
     GPIO.cleanup()                                                              # Devolvemos los pines a su estado inicial
     pid.desbloquear(os.path.basename(sys.argv[0]))
@@ -29,10 +36,6 @@ def cerrar():                                                                   
 def test():                                                                     # Función de testeo del sistema
     for gpio in GPIOS:
         GPIO.output(gpio, GPIO.HIGH)
-
-
-def sig_apagado(signum, frame):
-    apagado()
 
 
 def sig_cerrar(signum, frame):
@@ -77,7 +80,6 @@ def bucle():
 def main(argv = sys.argv):
     signal.signal(signal.SIGTERM, sig_cerrar)
     signal.signal(signal.SIGUSR1, sig_test)
-    signal.signal(signal.SIGUSR2, sig_apagado)
 
     if pid.comprobar(os.path.basename(argv[0])):
         if pid.bloquear(os.path.basename(argv[0])):

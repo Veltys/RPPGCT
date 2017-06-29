@@ -1,14 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Original title      : netisup.py
-# Title               : internet.py
-# Description         : Check if your Internet connection is alive
-# Author              : linuxitux
-# Adapted by          : Veltys
-# Date                : 01-02-2016
-# Usage               : ./internet.py
-# Notes               : ICMP traffic must not be filtered
+# Original title	: netisup.py
+# Title			: internet.py
+# Description		: Módulo auxiliar para la comprobación de si hay o no Internet
+# Original author	: linuxitux
+# Author		: Veltys
+# Date			: 29-06-2017
+# Version		: 1.0.2
+# Usage			: python internet.py
+# Notes			: Se debe poder generar tráfico ICMP (ping), es decir, no debe ser bloqueado por un cortafuegos
+#			  Este módulo está pensado para ser llamado desde otros módulos y no directamente, aunque si es llamado de esta forma, también hará su trabajo e informará al usuario de si hay conexión a Internet
 
 
 from subprocess import call

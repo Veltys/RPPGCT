@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Title		: instalador.sh
+# Description	: Instala los scripts y los configura para iniciarse automáticamente
+# Author	: Veltys
+# Date		: 29-06-2017
+# Version	: 1.0.0
+# Usage		: sudo bash instalador.sh
+# Notes		: Es necesario ser superusuario para su correcto funcionamiento
+
 install ./Python/pid.py /usr/local/bin/
 install ./Python/temperaturas.py /usr/local/bin/
 install ./init/temperaturas.sh /etc/init.d/temperaturas

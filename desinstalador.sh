@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Title         : desinstalador.sh
+# Description   : Desinstala los scripts y los elimina la configuración para iniciarse automáticamente
+# Author        : Veltys
+# Date          : 29-06-2017
+# Version       : 1.0.0
+# Usage         : sudo bash desinstalador.sh
+# Notes         : Es necesario ser superusuario para su correcto funcionamiento
+
 rm /usr/local/bin/pid.py
 rm /usr/local/bin/temperaturas.py
 rm /etc/init.d/temperaturas
