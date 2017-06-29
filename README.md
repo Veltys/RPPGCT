@@ -20,6 +20,9 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.1.4: Redacción de este documento.
 - 0.1.5: Creación de la rama (*branch*) de *testing* y adición de el instalador de pruebas.
 
+## Agradecimientos y otros créditos
+* A *Linuxito*, por [su script *netisup.py*](https://www.linuxito.com/programacion/635-netisup-py-script-python-para-verificar-el-estado-de-la-red), el cual he utilizado (adaptado) en mi **internet.py**
+
 ## Por hacer (*TODO*)
 * Testear el instalador.
 * Acabar de hacer el resto de scripts de init.d.

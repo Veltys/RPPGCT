@@ -1,14 +1,14 @@
 #!/bin/sh
 
 ### BEGIN INIT INFO
-# Provides:          temperaturas.py
+# Provides:          reiniciar_router.py
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 ### END INIT INFO
 
-nombre=temperaturas
+nombre=reiniciar_router
 
 case "$1" in
   start)

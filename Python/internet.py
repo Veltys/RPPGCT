@@ -1,6 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# Original title      : netisup.py
+# Title               : internet.py
+# Description         : Check if your Internet connection is alive
+# Author              : linuxitux
+# Adapted by          : Veltys
+# Date                : 01-02-2016
+# Usage               : ./internet.py
+# Notes               : ICMP traffic must not be filtered
+
 
 from subprocess import call
 import sys
@@ -26,9 +35,12 @@ def hay_internet():
     return internet
 
 
-# def main(argv = sys.argv):
-#     quit(net_is_up())
+def main(argv = sys.argv):
+    if hay_internet():
+        print('Hay Internet')
+    else:
+        print('No hay Internet')
 
 
-# if __name__ == '__main__':
-#     main(sys.argv)
+if __name__ == '__main__':
+    main(sys.argv)
