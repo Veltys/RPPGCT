@@ -14,13 +14,13 @@
 # Description   : Script de init.d para el arranque automático del sistema "reiniciar_router.py".
 # Author        : Veltys
 # Date          : 01-07-2017
-# Version       : 1.0.2
+# Version       : 1.0.3
 # Usage         : /etc/init.d/reiniciar_router {start|stop|restart|status}
 # Notes         :
 
 
 nombre=reiniciar_router
-
+directorio='/opt/RPPGCT'
 
 case "$1" in
 
@@ -29,14 +29,14 @@ case "$1" in
       echo "${nombre}.py ya está en ejecucuón"
     else
       echo "Iniciando ${nombre}.py"
-      /usr/local/bin/${nombre}.py &
+      ${directorio}/${nombre}.py &
     fi
     ;;
 
   stop)
     if [ -f /var/lock/${nombre}.lock ]; then
       echo "Deteniendo ${nombre}.py"
-      pkill -f /usr/local/bin/${nombre}.py
+      pkill -f ${directorio}/${nombre}.py
     else
       echo "${nombre}.py no está en ejecucuón"
     fi

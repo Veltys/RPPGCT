@@ -23,6 +23,7 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.1.7: Añadidas cabeceras en todos los archivos, eliminada funcionalidad no necesaria en **reiniciar_router.py** y arreglo de bugs menores.
 - 0.1.8: Añadido el script actualizador.
 - 0.2.0: Configuración exportada a un único archivo, añadido un sistema de comprobación para alertar de una mala configuración, actualizados instalador, actualizador y desinstalador, eliminado import innecesario en **internet.py** y editado **.gitignore** para que no suba el archivo **./Python/config.py**.
+- 0.2.1: Arreglo de bug en los scripts de **./init/**.
 
 ## Agradecimientos y otros créditos
 * A *linuxitux*, por [su script *netisup.py*](https://www.linuxito.com/programacion/635-netisup-py-script-python-para-verificar-el-estado-de-la-red), el cual he utilizado (adaptado) en mi **internet.py**
