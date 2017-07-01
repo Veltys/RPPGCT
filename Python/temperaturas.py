@@ -2,23 +2,36 @@
 # -*- coding: utf-8 -*-
 
 
-GPIOS = [21, 20, 16, 12]
-TEMPERATURAS = [36, 41, 46]
-PAUSA = 60
+# Title         : temperaturas.py
+# Description   : Sistema indicador led de la temperatura del procesador en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
+# Author        : Veltys
+# Date          : 01-07-2017
+# Version       : 2.0.1
+# Usage         : python3 temperaturas.py
+# Notes         : Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
+#                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual simplemente apaga todos los leds hasta que esta misma señal sea recibida de nuevo
 
 
 modo_apagado = False
 
 
+import errno                                                                    # Códigos de error
+import sys                                                                      # Funcionalidades varias del sistema
+
+try:
+  from config import cpu_config as config                                       # Configuración
+
+except ImportError:
+  print('Error: Archivo de configuración no encontrado', file=sys.stderr)
+  sys.exit(errno.ENOENT)
+
 from time import sleep	                                                        # Para hacer pausas
 from shlex import split				        	                # Manejo de cadenas
-from subprocess import check_output		        	                # Llamadas a programas externos
-import errno                                                                    # Códigos de error
+from subprocess import check_output		        	                # Llamadas a programas externos, recuperando su respuesta
 import os									# Funcionalidades varias del sistema operativo
 import pid                                                                      # Módulo propio de acceso a las funciones relativas al PID
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 import signal		        				                # Manejo de señales
-import sys			                                                # Funcionalidades varias del sistema
 
 
 def apagado():
@@ -37,7 +50,7 @@ def cerrar():
 
 
 def test():
-    for gpio in GPIOS:
+    for gpio in config.GPIOS:
         GPIO.output(gpio, GPIO.HIGH)
 
 
@@ -51,30 +64,30 @@ def sig_cerrar(signum, frame):
 
 def sig_test(signum, frame):
     test()
-    sleep(PAUSA)
+    sleep(config.PAUSA)
 
 
 def bucle():
     try:
         while True:
-            for gpio in GPIOS:
+            for gpio in config.GPIOS:
                 GPIO.output(gpio, GPIO.LOW)
 
             if not(modo_apagado):
                 temperatura = check_output(split('/opt/vc/bin/vcgencmd measure_temp'))
                 temperatura = float(temperatura[5:-3])
 
-                if temperatura < TEMPERATURAS[0]:
-                    GPIO.output(GPIOS[0], GPIO.HIGH)
-                elif temperatura < TEMPERATURAS[1]:
-                    GPIO.output(GPIOS[1], GPIO.HIGH)
-                elif temperatura < TEMPERATURAS[2]:
-                    GPIO.output(GPIOS[2], GPIO.HIGH)
+                if temperatura < config.TEMPERATURAS[0]:
+                    GPIO.output(config.GPIOS[0], GPIO.HIGH)
+                elif temperatura < config.TEMPERATURAS[1]:
+                    GPIO.output(config.GPIOS[1], GPIO.HIGH)
+                elif temperatura < config.TEMPERATURAS[2]:
+                    GPIO.output(config.GPIOS[2], GPIO.HIGH)
                 else:
-                    GPIO.output(GPIOS[3], GPIO.HIGH)
+                    GPIO.output(config.GPIOS[3], GPIO.HIGH)
 
 
-            sleep(PAUSA)
+            sleep(config.PAUSA)
 
     except KeyboardInterrupt:
         cerrar()
@@ -90,7 +103,7 @@ def main(argv = sys.argv):
             GPIO.setmode(GPIO.BCM)				                        # Establecemos el sistema de numeración BCM
             GPIO.setwarnings(False)				                        # De esta forma no alertará de los problemas
 
-            for gpio in GPIOS:
+            for gpio in config.GPIOS:
                 GPIO.setup(gpio, GPIO.OUT)                                              # Configuramos los pines GPIO como salida
 
             bucle()
