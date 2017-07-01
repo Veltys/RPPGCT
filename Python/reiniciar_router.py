@@ -35,7 +35,7 @@ def cerrar():                                                                   
 
 def test():                                                                     # Función de testeo del sistema
     for gpio in GPIOS:
-        GPIO.output(gpio, GPIO.HIGH)
+        GPIO.output(gpio, GPIO.LOW)
 
 
 def sig_cerrar(signum, frame):
@@ -50,25 +50,25 @@ def sig_test(signum, frame):
 def bucle():
     try:
         for gpio in GPIOS:
-            GPIO.output(gpio, GPIO.LOW)
+            GPIO.output(gpio, GPIO.HIGH)					# Lo "normal" sería GPIO.LOW, pero parece ser que el relé que empleo es activo a "baja" y no a "alta"
 
         sleep(PAUSAS[1])                                                        # Es necesario una pausa adicional, ya que al arrancar es posible que este script se ejecute antes de que haya red y no queremos que se reinicie el router "porque sí"
 
         while True:
             if hay_internet():                                                  # Si hay Internet, simplemente se esperará para hacer la próxima comprobación
                 for gpio in GPIOS:
-                    GPIO.output(gpio, GPIO.LOW)
+                    GPIO.output(gpio, GPIO.HIGH)
 
                 sleep(PAUSAS[3])
 
             else:                                                               # En caso contrario, se mandará la orden de apagado durante el tiempo mínimo establecido y después se restablecerá
                 for gpio in GPIOS:
-                    GPIO.output(gpio, GPIO.HIGH)
+                    GPIO.output(gpio, GPIO.LOW)
 
                 sleep(PAUSAS[0])
 
                 for gpio in GPIOS:
-                    GPIO.output(gpio, GPIO.LOW)
+                    GPIO.output(gpio, GPIO.HIGH)
 
                 sleep(PAUSAS[2])                                                # Al acabar, se esperará a que se haya levantado la conexión y se volverá a comprobar
 
