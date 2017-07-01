@@ -5,8 +5,8 @@
 # Title         : temperaturas.py
 # Description   : Sistema indicador led de la temperatura del procesador en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
 # Author        : Veltys
-# Date          : 01-07-2017
-# Version       : 2.0.1
+# Date          : 02-07-2017
+# Version       : 2.0.2
 # Usage         : python3 temperaturas.py
 # Notes         : Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual simplemente apaga todos los leds hasta que esta misma señal sea recibida de nuevo
@@ -19,7 +19,7 @@ import errno                                                                    
 import sys                                                                      # Funcionalidades varias del sistema
 
 try:
-  from config import cpu_config as config                                       # Configuración
+  from config import temperaturas_config as config                              # Configuración
 
 except ImportError:
   print('Error: Archivo de configuración no encontrado', file=sys.stderr)
