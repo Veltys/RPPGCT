@@ -27,5 +27,6 @@ def bloquear(nombre):
 def comprobar(nombre):
     return not(os.path.isfile('/var/lock/' + nombre[0:-3] + '.lock'))
 
+
 def desbloquear(nombre):
     os.remove('/var/lock/' + nombre[0:-3] + '.lock')

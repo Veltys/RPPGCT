@@ -1,0 +1,28 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
+# Title         : config.py
+# Description   : Módulo configurador para ser importado en el resto de módulos o sistemas que lo necesiten
+# Author        : Veltys
+# Date          : 01-07-2017
+# Version       : 1.0.0
+# Usage         : import config | from config import <clase>
+# Notes         : Se han estructurado en clases las distintas configuraciones
+
+
+class cpu_config:
+  GPIOS = []
+  PAUSA = 
+
+class internet_config:
+  HOSTS = []
+
+class reiniciar_router_config:
+  GPIOS = []
+  PAUSAS = []
+
+class temperaturas_config:
+  GPIOS = []
+  TEMPERATURAS = []
+  PAUSA = 

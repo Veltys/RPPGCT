@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Original title	: netisup.py
@@ -6,19 +6,24 @@
 # Description		: Módulo auxiliar para la comprobación de si hay o no Internet
 # Original author	: linuxitux
 # Author		: Veltys
-# Date			: 29-06-2017
-# Version		: 1.0.2
-# Usage			: python internet.py
+# Date			: 01-07-2017
+# Version		: 2.0.2
+# Usage			: python3 internet.py
 # Notes			: Se debe poder generar tráfico ICMP (ping), es decir, no debe ser bloqueado por un cortafuegos
 #			  Este módulo está pensado para ser llamado desde otros módulos y no directamente, aunque si es llamado de esta forma, también hará su trabajo e informará al usuario de si hay conexión a Internet
 
 
-from subprocess import call
-import sys
-import time
+import errno                                                                    # Códigos de error
+import sys                                                                      # Funcionalidades varias del sistema
 
+try:
+  from config import cpu_config as config                                       # Configuración
 
-hosts = ['***REMOVED***', '***REMOVED***', 'google.es']
+except ImportError:
+  print('Error: Archivo de configuración no encontrado', file=sys.stderr)
+  sys.exit(errno.ENOENT)
+
+from subprocess import call							# Llamadas a programas externos
 
 
 def ping(host):
@@ -29,7 +34,7 @@ def ping(host):
 def hay_internet():
     internet = 0
 
-    for host in hosts:
+    for host in config.HOSTS:
         if ping(host):
             internet = 1
             break
@@ -39,9 +44,9 @@ def hay_internet():
 
 def main(argv = sys.argv):
     if hay_internet():
-        print('Hay Internet')
+        print('¡Hay Internet! =D')
     else:
-        print('No hay Internet')
+        print('¡No hay Internet! D=')
 
 
 if __name__ == '__main__':
