@@ -26,12 +26,12 @@ except ImportError:
   sys.exit(errno.ENOENT)
 
 from time import sleep	                                                        # Para hacer pausas
-from shlex import split				        	                # Manejo de cadenas
-from subprocess import check_output		        	                # Llamadas a programas externos, recuperando su respuesta
-import os									# Funcionalidades varias del sistema operativo
+from shlex import split				        	                                # Manejo de cadenas
+from subprocess import check_output		        	                            # Llamadas a programas externos, recuperando su respuesta
+import os									                                    # Funcionalidades varias del sistema operativo
 import pid                                                                      # Módulo propio de acceso a las funciones relativas al PID
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
-import signal		        				                # Manejo de señales
+import signal		        				                                    # Manejo de señales
 
 
 def apagado():
@@ -100,8 +100,8 @@ def main(argv = sys.argv):
 
     if pid.comprobar(os.path.basename(argv[0])):
         if pid.bloquear(os.path.basename(argv[0])):
-            GPIO.setmode(GPIO.BCM)				                        # Establecemos el sistema de numeración BCM
-            GPIO.setwarnings(False)				                        # De esta forma no alertará de los problemas
+            GPIO.setmode(GPIO.BCM)				                                        # Establecemos el sistema de numeración BCM
+            GPIO.setwarnings(False)				                                        # De esta forma no alertará de los problemas
 
             for gpio in config.GPIOS:
                 GPIO.setup(gpio, GPIO.OUT)                                              # Configuramos los pines GPIO como salida

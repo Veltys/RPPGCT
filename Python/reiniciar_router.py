@@ -9,7 +9,7 @@
 # Version       : 2.0.1
 # Usage         : python3 reiniciar_router.py
 # Notes         : La idea es conectar un relé a este GPIO y al mismo la alimentación del sistema de acceso a Internet
-#		  Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
+#		          Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual simplemente apaga todos los leds hasta que esta misma señal sea recibida de nuevo
 
 
@@ -26,10 +26,10 @@ except ImportError:
 from internet import hay_internet                                               # Módulo propio de comprobación de Internet
 from time import sleep	                                                        # Gestión de pausas
 import errno                                                                    # Códigos de error
-import os									# Funcionalidades varias del sistema operativo
+import os									                                    # Funcionalidades varias del sistema operativo
 import pid                                                                      # Módulo propio de acceso a las funciones relativas al PID
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
-import signal		        				                # Manejo de señales
+import signal		        				                                    # Manejo de señales
 
 
 def cerrar():                                                                   # Tareas necesarias al invocar el cierre
@@ -55,7 +55,7 @@ def sig_test(signum, frame):
 def bucle():
     try:
         for gpio in config.GPIOS:
-            GPIO.output(gpio, GPIO.HIGH)					# Lo "normal" sería GPIO.LOW, pero parece ser que el relé que empleo es activo a "baja" y no a "alta"
+            GPIO.output(gpio, GPIO.HIGH)					                    # Lo "normal" sería GPIO.LOW, pero parece ser que el relé que empleo es activo a "baja" y no a "alta"
 
         sleep(config.PAUSAS[1])                                                 # Es necesario una pausa adicional, ya que al arrancar es posible que este script se ejecute antes de que haya red y no queremos que se reinicie el router "porque sí"
 
@@ -88,8 +88,8 @@ def main(argv = sys.argv):
 
     if pid.comprobar(os.path.basename(argv[0])):
         if pid.bloquear(os.path.basename(argv[0])):
-            GPIO.setmode(GPIO.BCM)				                # Establecemos el sistema de numeración BCM
-            GPIO.setwarnings(False)				                # De esta forma no alertará de los problemas
+            GPIO.setmode(GPIO.BCM)				                                # Establecemos el sistema de numeración BCM
+            GPIO.setwarnings(False)				                                # De esta forma no alertará de los problemas
 
             for gpio in config.GPIOS:
                 GPIO.setup(gpio, GPIO.OUT)                                      # Configuramos los pines GPIO como salida

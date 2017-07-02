@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 
@@ -7,7 +7,7 @@
 # Author        : Veltys
 # Date          : 29-06-2017
 # Version       : 0.0.2
-# Usage         : python boton.py
+# Usage         : python3 boton.py
 # Notes         : Concluidas las pruebas, éste será el germen del sistema de relés
 
 
@@ -30,11 +30,11 @@ def bucle():
 
         try:
                 while True:
-                        print 'Esperando un evento en el PIN GPIO' + str(GPIO_BOTON) + ' ID del evento: ' +str(i)
+                        print('Esperando un evento en el PIN GPIO' + str(GPIO_BOTON) + ' ID del evento: ' +str(i))
                         GPIO.wait_for_edge(GPIO_BOTON, GPIO.RISING)
-                        print 'Se ha detectado un evento de activación en el PIN GPIO' + str(GPIO_BOTON) + ' ID del evento: ' +str(i)
+                        print('Se ha detectado un evento de activación en el PIN GPIO' + str(GPIO_BOTON) + ' ID del evento: ' +str(i))
                         GPIO.wait_for_edge(GPIO_BOTON, GPIO.FALLING)
-                        print 'Se ha detectado un evento de desactivación en el PIN GPIO' + str(GPIO_BOTON) + ' ID del evento: ' +str(i)
+                        print('Se ha detectado un evento de desactivación en el PIN GPIO' + str(GPIO_BOTON) + ' ID del evento: ' +str(i))
                         i = i + 1
 
         except:
