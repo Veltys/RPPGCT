@@ -17,7 +17,7 @@ import errno                                                                    
 import sys                                                                      # Funcionalidades varias del sistema
 
 try:
-  from config import cpu_config as config                                       # Configuración
+  from config import reiniciar_router_config as config                          # Configuración
 
 except ImportError:
   print('Error: Archivo de configuración no encontrado', file=sys.stderr)
