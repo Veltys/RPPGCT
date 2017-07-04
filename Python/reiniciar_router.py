@@ -25,6 +25,7 @@ except ImportError:
 
 from internet import hay_internet                                               # Módulo propio de comprobación de Internet
 from time import sleep	                                                        # Gestión de pausas
+import comun                                                                    # Funciones comunes a varios sistemas
 import errno                                                                    # Códigos de error
 import os									                                    # Funcionalidades varias del sistema operativo
 import pid                                                                      # Módulo propio de acceso a las funciones relativas al PID
@@ -32,77 +33,43 @@ import RPi.GPIO as GPIO                                                         
 import signal		        				                                    # Manejo de señales
 
 
-def cerrar():                                                                   # Tareas necesarias al invocar el cierre
-    GPIO.cleanup()                                                              # Devolvemos los pines a su estado inicial
-    pid.desbloquear(os.path.basename(sys.argv[0]))
-    sys.exit()
+class reiniciar_router(comun.app):
+    def __init__(self, config):
+        super().__init__(config)
+
+    def bucle(self):
+        try:
+            for gpio, activacion in self._config.GPIOS.items():
+                GPIO.output(gpio, GPIO.HIGH if not(activacion) else GPIO.LOW)
+
+            sleep(config.PAUSAS[1])                                                 # Es necesario una pausa adicional, ya que al arrancar es posible que este script se ejecute antes de que haya red y no queremos que se reinicie el router "porque sí"
+
+            while True:
+                if hay_internet():                                                  # Si hay Internet, simplemente se esperará para hacer la próxima comprobación
+                    for gpio, activacion in self._config.GPIOS.items():
+                        GPIO.output(gpio, GPIO.HIGH if not(activacion) else GPIO.LOW)
+
+                    sleep(self._config.PAUSAS[3])
+
+                else:                                                               # En caso contrario, se mandará la orden de apagado durante el tiempo mínimo establecido y después se restablecerá
+                    for gpio, activacion in self._config.GPIOS.items():
+                        GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)
+
+                    sleep(self._config.PAUSAS[0])
+
+                    for gpio, activacion in self._config.GPIOS.items():
+                        GPIO.output(gpio, GPIO.HIGH if not(activacion) else GPIO.LOW)
+
+                    sleep(self._config.PAUSAS[2])                                         # Al acabar, se esperará a que se haya levantado la conexión y se volverá a comprobar
 
 
-def test():                                                                     # Función de testeo del sistema
-    for gpio in config.GPIOS:
-        GPIO.output(gpio, GPIO.LOW)
-
-
-def sig_cerrar(signum, frame):
-    cerrar()
-
-
-def sig_test(signum, frame):
-    test()
-    sleep(config.PAUSAS[0])
-
-
-def bucle():
-    try:
-        for gpio in config.GPIOS:
-            GPIO.output(gpio, GPIO.HIGH)					                    # Lo "normal" sería GPIO.LOW, pero parece ser que el relé que empleo es activo a "baja" y no a "alta"
-
-        sleep(config.PAUSAS[1])                                                 # Es necesario una pausa adicional, ya que al arrancar es posible que este script se ejecute antes de que haya red y no queremos que se reinicie el router "porque sí"
-
-        while True:
-            if hay_internet():                                                  # Si hay Internet, simplemente se esperará para hacer la próxima comprobación
-                for gpio in config.GPIOS:
-                    GPIO.output(gpio, GPIO.HIGH)
-
-                sleep(config.PAUSAS[3])
-
-            else:                                                               # En caso contrario, se mandará la orden de apagado durante el tiempo mínimo establecido y después se restablecerá
-                for gpio in config.GPIOS:
-                    GPIO.output(gpio, GPIO.LOW)
-
-                sleep(config.PAUSAS[0])
-
-                for gpio in config.GPIOS:
-                    GPIO.output(gpio, GPIO.HIGH)
-
-                sleep(config.PAUSAS[2])                                         # Al acabar, se esperará a que se haya levantado la conexión y se volverá a comprobar
-
-
-    except KeyboardInterrupt:
-        cerrar()
+        except KeyboardInterrupt:
+            cerrar()
 
 
 def main(argv = sys.argv):
-    signal.signal(signal.SIGTERM, sig_cerrar)
-    signal.signal(signal.SIGUSR1, sig_test)
-
-    if pid.comprobar(os.path.basename(argv[0])):
-        if pid.bloquear(os.path.basename(argv[0])):
-            GPIO.setmode(GPIO.BCM)				                                # Establecemos el sistema de numeración BCM
-            GPIO.setwarnings(False)				                                # De esta forma no alertará de los problemas
-
-            for gpio in config.GPIOS:
-                GPIO.setup(gpio, GPIO.OUT)                                      # Configuramos los pines GPIO como salida
-
-            bucle()
-
-        else:
-            print('Error: No se puede bloquear ' + os.path.basename(argv[0]), file=sys.stderr)
-            sys.exit(errno.EACCES)
-
-    else:
-        print('Error: Ya se ha iniciado una instancia de ' + os.path.basename(argv[0]), file=sys.stderr)
-        sys.exit(errno.EEXIST)
+    app = reiniciar_router(config)
+    app.arranque(os.path.basename(argv[0]))
 
 
 if __name__ == '__main__':

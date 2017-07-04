@@ -37,24 +37,27 @@ class temperaturas(comun.app):
     def bucle(self):
         try:
             while True:
-                for gpio in config.GPIOS:
-                    GPIO.output(gpio, GPIO.LOW)
-
                 if not(self._modo_apagado):
                     temperatura = check_output(split('/opt/vc/bin/vcgencmd measure_temp'))
                     temperatura = float(temperatura[5:-3])
 
-                    if temperatura < config.TEMPERATURAS[0]:
-                        GPIO.output(config.GPIOS[0], GPIO.HIGH)
-                    elif temperatura < config.TEMPERATURAS[1]:
-                        GPIO.output(config.GPIOS[1], GPIO.HIGH)
-                    elif temperatura < config.TEMPERATURAS[2]:
-                        GPIO.output(config.GPIOS[2], GPIO.HIGH)
+                    for gpio, activacion in self._config.GPIOS.items():
+                        GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
+
+                    (gpios, activaciones) = self.config.GPIOS.items()
+
+                    if temperatura < self.config.TEMPERATURAS[0]:
+                        GPIO.output(gpios[0], GPIO.HIGH if activaciones[0] else GPIO.LOW)
+                    elif temperatura < self.config.TEMPERATURAS[1]:
+                        GPIO.output(gpios[1], GPIO.HIGH if activaciones[1] else GPIO.LOW)
+                    elif temperatura < self.config.TEMPERATURAS[2]:
+                        GPIO.output(gpios[2], GPIO.HIGH if activaciones[2] else GPIO.LOW)
                     else:
-                        GPIO.output(config.GPIOS[3], GPIO.HIGH)
+                        GPIO.output(gpios[3], GPIO.HIGH if activaciones[3] else GPIO.LOW)
 
 
-                sleep(config.PAUSA)
+
+                sleep(self._config.PAUSA)
 
         except KeyboardInterrupt:
             self.cerrar()

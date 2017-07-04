@@ -32,8 +32,8 @@ class app(object):
     def apagado(self):
         self._modo_apagado = not(self._modo_apagado)
 
-        for gpio in self._config.GPIOS:
-            GPIO.output(gpio, GPIO.LOW)
+        for gpio, activacion in self._config.GPIOS.items():
+            GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
 
 
     def arranque(self, nombre):
@@ -42,7 +42,7 @@ class app(object):
                 GPIO.setmode(GPIO.BCM)                                                # Establecemos el sistema de numeración BCM
                 GPIO.setwarnings(False)                                                # De esta forma no alertará de los problemas
     
-                for gpio in self._config.GPIOS:
+                for gpio in self._config.GPIOS.keys():
                     GPIO.setup(gpio, GPIO.OUT)                                      # Configuramos los pines GPIO como salida
     
                 self.bucle()
@@ -72,8 +72,8 @@ class app(object):
 
 
     def test(self):
-        for gpio in self._config.GPIOS:
-            GPIO.output(gpio, GPIO.HIGH)
+        for gpio, activacion in self._config.GPIOS.items():
+            GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)
 
 
     def sig_apagado(self, signum, frame):

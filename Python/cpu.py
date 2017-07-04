@@ -12,9 +12,6 @@
 #		  Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual simplemente apaga todos los leds hasta que esta misma señal sea recibida de nuevo
 
 
-modo_apagado = False
-
-
 import errno                                                                    # Códigos de error
 import sys                                                                      # Funcionalidades varias del sistema
 
@@ -28,103 +25,58 @@ except ImportError:
 from time import sleep	                                                        # Para hacer pausas
 from shlex import split				        	                                # Manejo de cadenas
 from subprocess import check_output                                             # Llamadas a programas externos
+import comun                                                                    # Funciones comunes a varios sistemas
 import os                                                                       # Funcionalidades varias del sistema operativo
 import pid                                                                      # Módulo propio de acceso a las funciones relativas al PID
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
-import signal		        				                                    # Manejo de señales
 
 
-def apagado():
-    global modo_apagado
+class cpu(comun.app):
+    def __init__(self, config):
+        super().__init__(config)
 
-    modo_apagado = not(modo_apagado)
+    def bucle(self):
+        alarma = 0
 
-    for gpio in config.GPIOS:
-        GPIO.output(gpio, GPIO.LOW)
+        try:
+            while True:
+                if self._modo_apagado:
+                    for gpio, activacion in self._config.GPIOS.items():
+                        GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
 
+                else:
+                    cpu = check_output(split('cat /proc/loadavg'))
+                    cpu = float(cpu[0:4]) * 100
 
-def cerrar():
-    GPIO.cleanup()                                                              # Devolvemos los pines a su estado inicial
-    pid.desbloquear(os.path.basename(sys.argv[0]))
-    sys.exit()
+                    i = 0
+                    for gpio, activacion in self._config.GPIOS.items():
+                        if i < len(config.GPIOS) - 1:
+                            if cpu >= 100 / (len(config.GPIOS) - 1) * i:
+                                GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)
+                            else:
+                                GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
 
+                        elif cpu >= 95:
+                            alarma = alarma + 1
 
-def test():
-    for gpio in config.GPIOS:
-        GPIO.output(gpio, GPIO.HIGH)
+                            if alarma >= 5:
+                                GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)
 
-
-def sig_apagado(signum, frame):
-    apagado()
-
-
-def sig_cerrar(signum, frame):
-    cerrar()
-
-
-def sig_test(signum, frame):
-    test()
-    sleep(PAUSA)
-
-
-def bucle():
-    alarma = 0
-
-    try:
-        while True:
-            if modo_apagado:
-                for gpio in config.GPIOS:
-                    GPIO.output(gpio, GPIO.LOW)
-
-            else:
-                cpu = check_output(split('cat /proc/loadavg'))
-                cpu = float(cpu[0:4]) * 100
-
-                for i in range(len(config.GPIOS)):
-                    if i < len(config.GPIOS) - 1:
-                        if cpu >= 100 / (len(config.GPIOS) - 1) * i:
-                            GPIO.output(config.GPIOS[i], GPIO.HIGH)
                         else:
-                            GPIO.output(config.GPIOS[i], GPIO.LOW)
+                            alarma = 0
+                            GGPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
 
-                    elif cpu >= 95:
-                        alarma = alarma + 1
+                i += 1
 
-                        if alarma >= 5:
-                            GPIO.output(config.GPIOS[i], GPIO.HIGH)
+                sleep(self._config.PAUSA)
 
-                    else:
-                        alarma = 0
-                        GPIO.output(config.GPIOS[i], GPIO.LOW)
-
-            sleep(config.PAUSA)
-
-    except KeyboardInterrupt:
-        cerrar()
+        except KeyboardInterrupt:
+            cerrar()
 
 
 def main(argv = sys.argv):
-    signal.signal(signal.SIGTERM, sig_cerrar)
-    signal.signal(signal.SIGUSR1, sig_test)
-    signal.signal(signal.SIGUSR2, sig_apagado)
-
-    if pid.comprobar(os.path.basename(argv[0])):
-        if pid.bloquear(os.path.basename(argv[0])):
-            GPIO.setmode(GPIO.BCM)				                                # Establecemos el sistema de numeración BCM
-            GPIO.setwarnings(False)                                             # De esta forma no alertará de los problemas
-
-            for gpio in config.GPIOS:
-                GPIO.setup(gpio, GPIO.OUT)                                      # Configuramos los pines GPIO como salida
-
-            bucle()
-
-        else:
-            print('Error: No se puede bloquear ' + os.path.basename(argv[0]), file=sys.stderr)
-            sys.exit(errno.EACCES)
-
-    else:
-        print('Error: Ya se ha iniciado una instancia de ' + os.path.basename(argv[0]), file=sys.stderr)
-        sys.exit(errno.EEXIST)
+    app = cpu(config)
+    app.arranque(os.path.basename(argv[0]))
 
 
 if __name__ == '__main__':
