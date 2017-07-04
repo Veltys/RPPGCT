@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 
 ### BEGIN INIT INFO
@@ -13,8 +13,8 @@
 # Title         : temperaturas
 # Description   : Script de init.d para el arranque automático del sistema "temperaturas.py".
 # Author        : Veltys
-# Date          : 01-07-2017
-# Version       : 1.0.3
+# Date          : 04-07-2017
+# Version       : 1.1.0
 # Usage         : /etc/init.d/temperaturas {start|stop|restart|status}
 # Notes         :
 
@@ -23,14 +23,12 @@ if [ "$UID" -ne '0' ]; then
 	echo 'Este script debe ser lanzado con permisos de root. ¿Quizá anteponiéndole la orden sudo?'
 
 	exit -1
-
 else
 	nombre=temperaturas
 	directorio='/opt/RPPGCT'
-	
-	
+
 	case "$1" in
-	
+
 		start)
 			if [ -f /var/lock/${nombre}.lock ]; then
 				echo "${nombre}.py ya está en ejecucuón"
@@ -39,7 +37,7 @@ else
 				${directorio}/${nombre}.py &
 			fi
 			;;
-	
+
 		stop)
 			if [ -f /var/lock/${nombre}.lock ]; then
 				echo "Deteniendo ${nombre}.py"
@@ -48,11 +46,11 @@ else
 				echo "${nombre}.py no está en ejecucuón"
 			fi
 			;;
-	
+
 			restart)
 				/etc/init.d/${nombre} stop && /etc/init.d/${nombre} start
 				;;
-	
+
 			status)
 				if [ -f /var/lock/${nombre}.lock ]; then
 					echo "${nombre}.py está en ejecución"
@@ -60,12 +58,13 @@ else
 					echo "${nombre}.py no está en ejecución"
 				fi
 				;;
-	
+
 			*)
 				echo "Uso: /etc/init.d/${nombre} {start|stop|restart|status}"
 				exit 1
 				;;
-	
+
 		esac
-	
+
 	exit 0
+fi

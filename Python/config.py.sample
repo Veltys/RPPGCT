@@ -6,7 +6,7 @@
 # Description   : Módulo configurador para ser importado en el resto de módulos o sistemas que lo necesiten
 # Author        : Veltys
 # Date          : 04-07-2017
-# Version       : 1.0.1
+# Version       : 1.1.0
 # Usage         : import config | from config import <clase>
 # Notes         : Se han estructurado en clases las distintas configuraciones
 #                 GPIOS contiene pares de datos en formato "diccionario", siendo el úndice el número (BCM) de puerto GPIO a manipular y True si es activo a alto nivel o False si es a bajo nivel

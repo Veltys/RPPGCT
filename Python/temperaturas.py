@@ -6,7 +6,7 @@
 # Description   : Sistema indicador led de la temperatura del procesador en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
 # Author        : Veltys
 # Date          : 02-07-2017
-# Version       : 2.0.2
+# Version       : 2.1.1
 # Usage         : python3 temperaturas.py
 # Notes         : Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual simplemente apaga todos los leds hasta que esta misma señal sea recibida de nuevo
@@ -40,22 +40,18 @@ class temperaturas(comun.app):
                 if not(self._modo_apagado):
                     temperatura = check_output(split('/opt/vc/bin/vcgencmd measure_temp'))
                     temperatura = float(temperatura[5:-3])
-
+                    
                     for gpio, activacion in self._config.GPIOS.items():
                         GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
 
-                    (gpios, activaciones) = self.config.GPIOS.items()
-
-                    if temperatura < self.config.TEMPERATURAS[0]:
-                        GPIO.output(gpios[0], GPIO.HIGH if activaciones[0] else GPIO.LOW)
-                    elif temperatura < self.config.TEMPERATURAS[1]:
-                        GPIO.output(gpios[1], GPIO.HIGH if activaciones[1] else GPIO.LOW)
-                    elif temperatura < self.config.TEMPERATURAS[2]:
-                        GPIO.output(gpios[2], GPIO.HIGH if activaciones[2] else GPIO.LOW)
+                    if temperatura < self._config.TEMPERATURAS[0]:
+                        GPIO.output(self._config.GPIOS[0][0], GPIO.HIGH if self._config.GPIOS[0][1] else GPIO.LOW)
+                    elif temperatura < self._config.TEMPERATURAS[1]:
+                        GPIO.output(self._config.GPIOS[1][0], GPIO.HIGH if self._config.GPIOS[1][1] else GPIO.LOW)
+                    elif temperatura < self._config.TEMPERATURAS[2]:
+                        GPIO.output(self._config.GPIOS[2][0], GPIO.HIGH if self._config.GPIOS[2][1] else GPIO.LOW)
                     else:
-                        GPIO.output(gpios[3], GPIO.HIGH if activaciones[3] else GPIO.LOW)
-
-
+                        GPIO.output(self._config.GPIOS[3][0], GPIO.HIGH if self._config.GPIOS[3][1] else GPIO.LOW)
 
                 sleep(self._config.PAUSA)
 

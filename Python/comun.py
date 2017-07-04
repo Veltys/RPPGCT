@@ -6,7 +6,7 @@
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
 # Date          : 04-07-2017
-# Version       : 1.0.0
+# Version       : 1.0.1
 # Usage         : import comun | from comun import <clase>
 # Notes         : 
 
@@ -32,18 +32,18 @@ class app(object):
     def apagado(self):
         self._modo_apagado = not(self._modo_apagado)
 
-        for gpio, activacion in self._config.GPIOS.items():
+        for gpio, activacion in self._config.GPIOS:
             GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
 
 
     def arranque(self, nombre):
         if pid.comprobar(nombre):
             if pid.bloquear(nombre):
-                GPIO.setmode(GPIO.BCM)                                                # Establecemos el sistema de numeración BCM
-                GPIO.setwarnings(False)                                                # De esta forma no alertará de los problemas
+                GPIO.setmode(GPIO.BCM)                                          # Establecemos el sistema de numeración BCM
+                GPIO.setwarnings(False)                                         # De esta forma no alertará de los problemas
     
-                for gpio in self._config.GPIOS.keys():
-                    GPIO.setup(gpio, GPIO.OUT)                                      # Configuramos los pines GPIO como salida
+                for gpio in self._config.GPIOS:
+                    GPIO.setup(gpio[0], GPIO.OUT)                               # Configuramos los pines GPIO como salida
     
                 self.bucle()
     

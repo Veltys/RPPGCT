@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 
 ### BEGIN INIT INFO
@@ -13,8 +13,8 @@
 # Title         : cpu
 # Description   : Script de init.d para el arranque automático del sistema "cpu.py".
 # Author        : Veltys
-# Date          : 01-07-2017
-# Version       : 1.0.3
+# Date          : 04-07-2017
+# Version       : 1.1.0
 # Usage         : /etc/init.d/cpu {start|stop|restart|status}
 # Notes         : 
 
@@ -27,9 +27,8 @@ else
 	nombre=cpu
 	directorio='/opt/RPPGCT'
 	
-	
 	case "$1" in
-	
+
 		start)
 			if [ -f /var/lock/${nombre}.lock ]; then
 				echo "${nombre}.py ya está en ejecucuón"
@@ -38,7 +37,7 @@ else
 				${directorio}/${nombre}.py &
 			fi
 			;;
-	
+
 		stop)
 			if [ -f /var/lock/${nombre}.lock ]; then
 				echo "Deteniendo ${nombre}.py"
@@ -47,11 +46,11 @@ else
 				echo "${nombre}.py no está en ejecucuón"
 			fi
 			;;
-	
+
 			restart)
 				/etc/init.d/${nombre} stop && /etc/init.d/${nombre} start
 				;;
-	
+
 			status)
 				if [ -f /var/lock/${nombre}.lock ]; then
 					echo "${nombre}.py está en ejecución"
@@ -59,12 +58,13 @@ else
 					echo "${nombre}.py no está en ejecución"
 				fi
 				;;
-	
+
 			*)
 				echo "Uso: /etc/init.d/${nombre} {start|stop|restart|status}"
 				exit 1
 				;;
-	
+
 		esac
-	
+
 	exit 0
+fi
