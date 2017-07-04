@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 
 ### BEGIN INIT INFO
@@ -13,52 +13,58 @@
 # Title         : reiniciar_router
 # Description   : Script de init.d para el arranque automático del sistema "reiniciar_router.py".
 # Author        : Veltys
-# Date          : 01-07-2017
-# Version       : 1.0.3
+# Date          : 04-07-2017
+# Version       : 1.1.0
 # Usage         : /etc/init.d/reiniciar_router {start|stop|restart|status}
 # Notes         :
 
 
-nombre=reiniciar_router
-directorio='/opt/RPPGCT'
+if [ "$UID" -ne '0' ]; then
+	echo 'Este script debe ser lanzado con permisos de root. ¿Quizá anteponiéndole la orden sudo?'
 
-case "$1" in
+	exit -1
+else
+	nombre=reiniciar_router
+	directorio='/opt/RPPGCT'
 
-  start)
-    if [ -f /var/lock/${nombre}.lock ]; then
-      echo "${nombre}.py ya está en ejecucuón"
-    else
-      echo "Iniciando ${nombre}.py"
-      ${directorio}/${nombre}.py &
-    fi
-    ;;
+	case "$1" in
 
-  stop)
-    if [ -f /var/lock/${nombre}.lock ]; then
-      echo "Deteniendo ${nombre}.py"
-      pkill -f ${directorio}/${nombre}.py
-    else
-      echo "${nombre}.py no está en ejecucuón"
-    fi
-    ;;
+		start)
+			if [ -f /var/lock/${nombre}.lock ]; then
+				echo "${nombre}.py ya está en ejecucuón"
+			else
+				echo "Iniciando ${nombre}.py"
+				${directorio}/${nombre}.py &
+			fi
+			;;
 
-  restart)
-    /etc/init.d/${nombre} stop && /etc/init.d/${nombre} start
-    ;;
+		stop)
+			if [ -f /var/lock/${nombre}.lock ]; then
+				echo "Deteniendo ${nombre}.py"
+				pkill -f ${directorio}/${nombre}.py
+			else
+				echo "${nombre}.py no está en ejecucuón"
+			fi
+			;;
 
-  status)
-    if [ -f /var/lock/${nombre}.lock ]; then
-      echo "${nombre}.py está en ejecución"
-    else
-      echo "${nombre}.py no está en ejecución"
-    fi
-    ;;
+			restart)
+				/etc/init.d/${nombre} stop && /etc/init.d/${nombre} start
+				;;
 
-  *)
-    echo "Uso: /etc/init.d/${nombre} {start|stop|restart|status}"
-    exit 1
-    ;;
+			status)
+				if [ -f /var/lock/${nombre}.lock ]; then
+					echo "${nombre}.py está en ejecución"
+				else
+					echo "${nombre}.py no está en ejecución"
+				fi
+				;;
 
-esac
+			*)
+				echo "Uso: /etc/init.d/${nombre} {start|stop|restart|status}"
+				exit 1
+				;;
 
-exit 0
+		esac
+
+	exit 0
+fi

@@ -7,6 +7,7 @@ Colección de utilidades varias para el control GPIO en Python
 ## Contenido
 - **boton.py**: Sistema de respuesta a un evento en un determinado pin GPIO, como una pulsación de un botón. *Aún en pruebas*.
 - **cpu.py**: Sistema indicador led de la carga de CPU en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
+- **indice_gpio.py**: Sistema indicador de los puertos GPIO que quedan libres.
 - **internet.py**: Módulo auxiliar para la comprobación de si hay o no Internet.
 - **pid.py**: Módulo auxiliar para ciertas funciones de bloqueo y de PIDs.
 - **reiniciar_router.py**: Sistema que comprueba si hay acceso a Internet. Si no, manda una señal en un puerto GPIO determinado. La idea es conectar un relé a este GPIO y al mismo la alimentación del sistema de acceso a Internet.
@@ -26,6 +27,8 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.2.1: Arreglo de bug en los scripts de **./init/**.
 - 0.2.2: Arreglo de bug en el script de **./Python/temperaturas.py**.
 - 0.2.3: Arreglos menores, cambio de editor (lo que puede provocar algún desajuste) y comienzo del proceso de hacerlo independiente del sistema operativo (así algunas cosas podré probarlas con mayor rapidez)
+- 0.2.4: Movido todo el código común a **comun.py**, arreglados fallos varios, rediseñado el bucle de **temperaturas.py**, añadida comprobación de superusuario en los scripts de **init** y añadido **indice_gpio.py**.
+- 0.3.0: Mejora en la documentación de **config.py**, homogeneizado de este documento e implementación inicial de **domotica.py**.
 
 ## Agradecimientos y otros créditos
 * A *linuxitux*, por [su script *netisup.py*](https://www.linuxito.com/programacion/635-netisup-py-script-python-para-verificar-el-estado-de-la-red), el cual he utilizado (adaptado) en mi **internet.py**
