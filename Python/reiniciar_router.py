@@ -28,7 +28,6 @@ from time import sleep                                                          
 import comun                                                                                # Funciones comunes a varios sistemas
 import errno                                                                                # Códigos de error
 import os                                                                                   # Funcionalidades varias del sistema operativo
-import pid                                                                                  # Módulo propio de acceso a las funciones relativas al PID
 import RPi.GPIO as GPIO                                                                     # Acceso a los pines GPIO
 import signal                                                                               # Manejo de señales
 
@@ -38,33 +37,33 @@ class reiniciar_router(comun.app):
         super().__init__(config)
 
     def bucle(self):
-        for gpio, activacion in self._config.GPIOS:
-            GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
-
-        sleep(config.PAUSAS[1])                                                             # Es necesario una pausa adicional, ya que al arrancar es posible que este script se ejecute antes de que haya red y no queremos que se reinicie el router "porque sí"
-
         try:
+            for gpio, activacion in self._config.GPIOS:
+                GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
+
+            sleep(self._config.PAUSA * 4)                                                   # Es necesario una pausa adicional, ya que al arrancar es posible que este script se ejecute antes de que haya red y no queremos que se reinicie el router "porque sí"
+
             while True:
                 if hay_internet():                                                          # Si hay Internet, simplemente se esperará para hacer la próxima comprobación
                     for gpio, activacion in self._config.GPIOS:
                         GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
 
-                    sleep(self._config.PAUSAS[3])
+                    sleep(self._config.PAUSA * 60)
 
                 else:                                                                       # En caso contrario, se mandará la orden de apagado durante el tiempo mínimo establecido y después se restablecerá
                     for gpio, activacion in self._config.GPIOS:
                         GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)
 
-                    sleep(self._config.PAUSAS[0])
+                    sleep(self._config.PAUSA)
 
                     for gpio, activacion in self._config.GPIOS.items():
                         GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
 
-                    sleep(self._config.PAUSAS[2])                                           # Al acabar, se esperará a que se haya levantado la conexión y se volverá a comprobar
+                    sleep(self._config.PAUSA * 12)                                          # Al acabar, se esperará a que se haya levantado la conexión y se volverá a comprobar
 
 
         except KeyboardInterrupt:
-            cerrar()
+            self.cerrar()
 
 
 def main(argv = sys.argv):

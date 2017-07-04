@@ -22,12 +22,11 @@ except ImportError:
   print('Error: Archivo de configuración no encontrado', file=sys.stderr)
   sys.exit(errno.ENOENT)
 
-from time import sleep	                                                        # Para hacer pausas
-from shlex import split				        	                                # Manejo de cadenas
-from subprocess import check_output		        	                            # Llamadas a programas externos, recuperando su respuesta
+from time import sleep                                                          # Para hacer pausas
+from shlex import split                                                         # Manejo de cadenas
+from subprocess import check_output                                             # Llamadas a programas externos, recuperando su respuesta
 import comun                                                                    # Funciones comunes a varios sistemas
-import os									                                    # Funcionalidades varias del sistema operativo
-import pid                                                                      # Módulo propio de acceso a las funciones relativas al PID
+import os                                                                       # Funcionalidades varias del sistema operativo
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 class temperaturas(comun.app):
@@ -41,7 +40,7 @@ class temperaturas(comun.app):
                     temperatura = check_output(split('/opt/vc/bin/vcgencmd measure_temp'))
                     temperatura = float(temperatura[5:-3])
                     
-                    for gpio, activacion in self._config.GPIOS.items():
+                    for gpio, activacion in self._config.GPIOS:
                         GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
 
                     if temperatura < self._config.TEMPERATURAS[0]:

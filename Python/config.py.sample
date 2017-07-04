@@ -17,12 +17,12 @@
 
 
 class cpu_config:
-  GPIOS = {26: True,
-           19: True,
-           13: True,
-            6: True,
-            5: True,
-          }
+  GPIOS = [(26, True),
+           (19, True),
+           (13, True),
+           ( 6, True),
+           ( 5, True),
+          ]
   PAUSA = 10
   senyales = {'SIGTERM': 'sig_cerrar',
               'SIGUSR1': 'sig_test',
@@ -33,20 +33,20 @@ class internet_config:
   HOSTS = ['google.es', '8.8.8.8', '8.8.4.4', '208.67.222.222', '208.67.220.220']
 
 class reiniciar_router_config:
-  GPIOS = { 4: False,
-          }
-  PAUSAS = [15, 60, 180, 900]
+  GPIOS = [(4, False),
+          ]
+  PAUSA = 15
   senyales = {'SIGTERM': 'sig_cerrar',
               'SIGUSR1': 'sig_test',
              }
 
 
 class temperaturas_config:
-  GPIOS = {21: True,
-           20: True,
-           16: True,
-           12: True,
-          }
+  GPIOS = [(21, True),
+           (20, True),
+           (16, True),
+           (12, True),
+          ]
   TEMPERATURAS = [36, 41, 46]
   PAUSA = 60
   senyales = {'SIGTERM': 'sig_cerrar',

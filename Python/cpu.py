@@ -9,25 +9,25 @@
 # Version       : 2.1.1
 # Usage         : python3 cpu.py
 # Notes         : Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
-#		  Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual simplemente apaga todos los leds hasta que esta misma señal sea recibida de nuevo
+#                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual simplemente apaga todos los leds hasta que esta misma señal sea recibida de nuevo
 
 
 import errno                                                                    # Códigos de error
 import sys                                                                      # Funcionalidades varias del sistema
 
 try:
-  from config import cpu_config as config  	                                    # Configuración
+  from config import cpu_config as config                                       # Configuración
 
 except ImportError:
   print('Error: Archivo de configuración no encontrado', file=sys.stderr)
   sys.exit(errno.ENOENT)
 
+from psutil import cpu_percent                                                  # Obtención del porcentaje de uso de la CPU
 from time import sleep	                                                        # Para hacer pausas
-from shlex import split				        	                                # Manejo de cadenas
-from subprocess import check_output                                             # Llamadas a programas externos
+from shlex import split                                                         # Manejo de cadenas
+import subprocess                                                               # Llamadas a programas externos
 import comun                                                                    # Funciones comunes a varios sistemas
 import os                                                                       # Funcionalidades varias del sistema operativo
-import pid                                                                      # Módulo propio de acceso a las funciones relativas al PID
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 
@@ -36,17 +36,21 @@ class cpu(comun.app):
         super().__init__(config)
 
     def bucle(self):
-        alarma = 0
-
         try:
+            alarma = 0
+
             while True:
                 if self._modo_apagado:
                     for gpio, activacion in self._config.GPIOS:
                         GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
 
                 else:
-                    cpu = check_output(split('cat /proc/loadavg'))
-                    cpu = float(cpu[0:4]) * 100
+                    print(cpu_percent())
+                    system.exit(0)
+
+                    cpu = subprocess.Popen(split("grep 'cpu ' /proc/stat"), stdout = subprocess.PIPE)
+                    cpu = subprocess.check_output(split("awk '{print ($2+$4)*100/($2+$4+$5)}'"), stdin = cpu.stdout)
+                    cpu = float(cpu[0:4])
 
                     i = 0
                     for gpio, activacion in self._config.GPIOS:
@@ -64,14 +68,14 @@ class cpu(comun.app):
 
                         else:
                             alarma = 0
-                            GGPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
+                            GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
 
-                i += 1
+                        i += 1
 
                 sleep(self._config.PAUSA)
 
         except KeyboardInterrupt:
-            cerrar()
+            self.cerrar()
 
 
 def main(argv = sys.argv):

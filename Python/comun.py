@@ -11,6 +11,7 @@
 # Notes         : 
 
 from abc import ABCMeta, abstractmethod                                         # Clases abstractas
+from time import sleep                                                          # Para hacer pausas
 import errno                                                                    # Códigos de error
 import os                                                                       # Funcionalidades varias del sistema operativo
 import pid                                                                      # Módulo propio de acceso a las funciones relativas al PID
@@ -72,7 +73,7 @@ class app(object):
 
 
     def test(self):
-        for gpio, activacion in self._config.GPIOS.items():
+        for gpio, activacion in self._config.GPIOS:
             GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)
 
 
@@ -86,4 +87,4 @@ class app(object):
 
     def sig_test(self, signum, frame):
         self.test()
-        sleep(config.PAUSA)
+        sleep(self._config.PAUSA)
