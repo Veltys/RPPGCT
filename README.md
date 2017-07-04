@@ -28,6 +28,7 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.2.2: Arreglo de bug en el script de **./Python/temperaturas.py**.
 - 0.2.3: Arreglos menores, cambio de editor (lo que puede provocar algún desajuste) y comienzo del proceso de hacerlo independiente del sistema operativo (así algunas cosas podré probarlas con mayor rapidez)
 - 0.2.4: Movido todo el código común a **comun.py**, arreglados fallos varios, rediseñado el bucle de **temperaturas.py**, añadida comprobación de superusuario en los scripts de **init** y añadido **indice_gpio.py**.
+- 0.3.0: Mejora en la documentación de **config.py**, homogeneizado de este documento e implementación inicial de **domotica.py**.
 
 ## Agradecimientos y otros créditos
 * A *linuxitux*, por [su script *netisup.py*](https://www.linuxito.com/programacion/635-netisup-py-script-python-para-verificar-el-estado-de-la-red), el cual he utilizado (adaptado) en mi **internet.py**
