@@ -19,6 +19,7 @@ else
   install ./Python/config.py.sample $directorio/
   echo "Recuerde editar ${directorio}/config.py.sample y guardarlo como config.py con los valores adecuados"
 
+  install ./Python/comun.py $directorio/
   install ./Python/pid.py $directorio/
   install ./Python/temperaturas.py $directorio/
   install ./init/temperaturas.sh /etc/init.d/temperaturas

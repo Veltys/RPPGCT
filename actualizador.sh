@@ -20,6 +20,7 @@ else
   rm $directorio/pid.py
   rm $directorio/temperaturas.py
   rm /etc/init.d/temperaturas
+  install ./Python/comun.py $directorio/
   install ./Python/pid.py $directorio/
   install ./Python/temperaturas.py $directorio/
   install ./init/temperaturas.sh /etc/init.d/temperaturas
