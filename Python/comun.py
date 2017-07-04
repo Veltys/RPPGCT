@@ -11,8 +11,11 @@
 # Notes         : 
 
 from abc import ABCMeta, abstractmethod                                         # Clases abstractas
+import errno                                                                    # Códigos de error
+import os                                                                       # Funcionalidades varias del sistema operativo
 import pid                                                                      # Módulo propio de acceso a las funciones relativas al PID
 import signal                                                                   # Manejo de señales
+import sys                                                                      # Funcionalidades varias del sistema
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 
@@ -42,14 +45,14 @@ class app(object):
                 for gpio in self._config.GPIOS:
                     GPIO.setup(gpio, GPIO.OUT)                                      # Configuramos los pines GPIO como salida
     
-                bucle()
+                self.bucle()
     
             else:
-                print('Error: No se puede bloquear ' + os.path.basename(argv[0]), file=sys.stderr)
+                print('Error: No se puede bloquear ' + nombre, file=sys.stderr)
                 sys.exit(errno.EACCES)
     
         else:
-            print('Error: Ya se ha iniciado una instancia de ' + os.path.basename(argv[0]), file=sys.stderr)
+            print('Error: Ya se ha iniciado una instancia de ' + nombre, file=sys.stderr)
             sys.exit(errno.EEXIST)
 
 

@@ -26,6 +26,7 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.2.1: Arreglo de bug en los scripts de **./init/**.
 - 0.2.2: Arreglo de bug en el script de **./Python/temperaturas.py**.
 - 0.2.3: Arreglos menores, cambio de editor (lo que puede provocar algún desajuste) y comienzo del proceso de hacerlo independiente del sistema operativo (así algunas cosas podré probarlas con mayor rapidez)
+- 0.2.4: Movido todo el código común a **comun.py**.
 - 0.3.0: Mejora en la documentación de **config.py**, homogeneizado de este documento e implementación inicial de **domotica.py**.
 
 ## Agradecimientos y otros créditos

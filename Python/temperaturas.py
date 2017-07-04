@@ -34,13 +34,13 @@ class temperaturas(comun.app):
     def __init__(self, config):
         super().__init__(config)
 
-    def bucle():
+    def bucle(self):
         try:
             while True:
                 for gpio in config.GPIOS:
                     GPIO.output(gpio, GPIO.LOW)
 
-                if not(modo_apagado):
+                if not(self._modo_apagado):
                     temperatura = check_output(split('/opt/vc/bin/vcgencmd measure_temp'))
                     temperatura = float(temperatura[5:-3])
 
