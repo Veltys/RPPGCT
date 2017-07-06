@@ -5,8 +5,8 @@
 # Title         : comun.py
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
-# Date          : 04-07-2017
-# Version       : 1.0.1
+# Date          : 06-07-2017
+# Version       : 1.0.2
 # Usage         : import comun | from comun import <clase>
 # Notes         : 
 
@@ -43,8 +43,8 @@ class app(object):
                 GPIO.setmode(GPIO.BCM)                                          # Establecemos el sistema de numeración BCM
                 GPIO.setwarnings(False)                                         # De esta forma no alertará de los problemas
     
-                for gpio in self._config.GPIOS:
-                    GPIO.setup(gpio[0], GPIO.OUT)                               # Configuramos los pines GPIO como salida
+                for gpio, modo, activacion in self._config.GPIOS:
+                    GPIO.setup(gpio, GPIO.OUT if modo else GPIO.IN)             # Configuramos los pines GPIO como salida
     
                 self.bucle()
     
@@ -88,3 +88,6 @@ class app(object):
     def sig_test(self, signum, frame):
         self.test()
         sleep(self._config.PAUSA)
+
+    def __del__(self):
+        self.cerrar()

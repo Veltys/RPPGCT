@@ -6,7 +6,7 @@
 # Description   : Módulo configurador para ser importado en el resto de módulos o sistemas que lo necesiten
 # Author        : Veltys
 # Date          : 04-07-2017
-# Version       : 1.1.0
+# Version       : 1.2.0
 # Usage         : import config | from config import <clase>
 # Notes         : Se han estructurado en clases las distintas configuraciones
 #                 GPIOS contiene pares de datos en formato "diccionario", siendo el úndice el número (BCM) de puerto GPIO a manipular y True si es activo a alto nivel o False si es a bajo nivel
@@ -17,39 +17,64 @@
 
 
 class cpu_config:
-  GPIOS = [(26, True),
-           (19, True),
-           (13, True),
-           ( 6, True),
-           ( 5, True),
-          ]
-  PAUSA = 10
-  senyales = {'SIGTERM': 'sig_cerrar',
-              'SIGUSR1': 'sig_test',
-              'SIGUSR2': 'sig_apagado',
-             }
+    GPIOS           = [(26, True,  True ),
+                       (19, True,  True ),
+                       (13, True,  True ),
+                       ( 6, True,  True ),
+                       ( 5, True,  True ),
+                      ]
+
+    PAUSA           = 10
+
+    senyales        = {'SIGTERM': 'sig_cerrar',
+                       'SIGUSR1': 'sig_test',
+                       'SIGUSR2': 'sig_apagado',
+                      }
+
+
+class domotica_config:
+    GPIOS           = [(17, False, True ),
+                       (27, True,  True ),
+                      ]
+
+    PAUSA           = 10
+
+    senyales        = {'SIGTERM': 'sig_cerrar',
+                       'SIGUSR1': 'sig_test',
+                      }
 
 class internet_config:
-  HOSTS = ['google.es', '8.8.8.8', '8.8.4.4', '208.67.222.222', '208.67.220.220']
+    HOSTS           = ['google.es',
+                       '8.8.8.8',
+                       '8.8.4.4',
+                       '208.67.222.222',
+                       '208.67.220.220',
+                      ]
+
 
 class reiniciar_router_config:
-  GPIOS = [(4, False),
-          ]
-  PAUSA = 15
-  senyales = {'SIGTERM': 'sig_cerrar',
-              'SIGUSR1': 'sig_test',
-             }
+    GPIOS           = [( 4, True,  False),
+                      ]
+
+    PAUSA           = 15
+
+    senyales        = {'SIGTERM': 'sig_cerrar',
+                       'SIGUSR1': 'sig_test',
+                      }
 
 
 class temperaturas_config:
-  GPIOS = [(21, True),
-           (20, True),
-           (16, True),
-           (12, True),
-          ]
-  TEMPERATURAS = [36, 41, 46]
-  PAUSA = 60
-  senyales = {'SIGTERM': 'sig_cerrar',
-              'SIGUSR1': 'sig_test',
-              'SIGUSR2': 'sig_apagado',
-             }
+    GPIOS           = [(21, True,  True ),
+                       (20, True,  True ),
+                       (16, True,  True ),
+                       (12, True,  True ),
+                      ]
+
+    TEMPERATURAS    = [36, 41, 46]
+
+    PAUSA           = 60
+
+    senyales        = {'SIGTERM': 'sig_cerrar',
+                       'SIGUSR1': 'sig_test',
+                       'SIGUSR2': 'sig_apagado',
+                      }
