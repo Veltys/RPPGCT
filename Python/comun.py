@@ -90,4 +90,4 @@ class app(object):
         sleep(self._config.PAUSA)
 
     def __del__(self):
-        self.cerrar()
+        pass

@@ -41,12 +41,18 @@ class domotica(comun.app):
         try:
             while True:
                 for i in range(0, int(len(self._config.GPIOS)), 2):
-                    if GPIO.input(config.GPIOS[i][0]):                              # Se comprueba si el pin se ha leavantado
+                    if GPIO.input(config.GPIOS[i][0]):                          # Se comprueba si el pin se ha leavantado
+                        if debug:
+                            print('El pin GPIO', config.GPIOS[i][0], ' se ha levantado. Encendiendo el LED asociado al ping GPIO', config.GPIOS[i + 1][0])
+
                         GPIO.output(self._config.GPIOS[i + 1][0], GPIO.HIGH if self._config.GPIOS[i + 1][2] else GPIO.LOW)
                     else:
+                        if debug:
+                            print('El pin GPIO', config.GPIOS[i][0], ' se ha bajado. Apagando el LED asociado al ping GPIO', config.GPIOS[i + 1][0])
+
                         GPIO.output(self._config.GPIOS[i + 1][0], GPIO.LOW if self._config.GPIOS[i + 1][2] else GPIO.HIGH)
             
-                sleep(PAUSA)
+                sleep(self._config.PAUSA)
 
         except KeyboardInterrupt:
             self.cerrar()

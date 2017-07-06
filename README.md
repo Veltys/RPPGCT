@@ -37,7 +37,6 @@ Colección de utilidades varias para el control GPIO en Python
 ## Agradecimientos y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
 * A *linuxitux*, por [su script *netisup.py*](https://www.linuxito.com/programacion/635-netisup-py-script-python-para-verificar-el-estado-de-la-red), el cual he utilizado (adaptado) en mi **internet.py**
-* A *Juanmi Taboada*, por su [entrada sobre *Multiprocessing*](http://www.juanmitaboada.com/multiprocessing-python/), la cual me ha ayudado bastante a implementar el multiproceso que he necesitado en mi **domotica.py**.
 
 ## Por hacer (*TODO*)
 * Añadir el control de GPIOs general: leds y relés.
