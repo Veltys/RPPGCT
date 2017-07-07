@@ -5,8 +5,8 @@
 # Title         : cpu.py
 # Description   : Sistema indicador led de la carga de CPU en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma"
 # Author        : Veltys
-# Date          : 05-07-2017
-# Version       : 2.1.3
+# Date          : 07-07-2017
+# Version       : 2.1.4
 # Usage         : python3 cpu.py
 # Notes         : Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual simplemente apaga todos los leds hasta que esta misma señal sea recibida de nuevo
@@ -25,7 +25,6 @@ except ImportError:
 from psutil import cpu_percent                                                  # Obtención del porcentaje de uso de la CPU
 from time import sleep	                                                        # Para hacer pausas
 from shlex import split                                                         # Manejo de cadenas
-import subprocess                                                               # Llamadas a programas externos
 import comun                                                                    # Funciones comunes a varios sistemas
 import os                                                                       # Funcionalidades varias del sistema operativo
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
@@ -45,12 +44,7 @@ class cpu(comun.app):
                         GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
 
                 else:
-                    print(cpu_percent())
-                    system.exit(0)
-
-                    cpu = subprocess.Popen(split("grep 'cpu ' /proc/stat"), stdout = subprocess.PIPE)
-                    cpu = subprocess.check_output(split("awk '{print ($2+$4)*100/($2+$4+$5)}'"), stdin = cpu.stdout)
-                    cpu = float(cpu[0:4])
+                    cpu = cpu_percent()
 
                     i = 0
                     for gpio, modo, activacion in self._config.GPIOS:

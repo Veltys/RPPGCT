@@ -34,7 +34,7 @@ class app(object):
     def apagado(self):
         self._modo_apagado = not(self._modo_apagado)
 
-        for gpio, activacion in self._config.GPIOS:
+        for gpio, modo, activacion in self._config.GPIOS:
             GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
 
 
@@ -83,7 +83,7 @@ class app(object):
 
 
     def test(self):
-        for gpio, activacion in self._config.GPIOS:
+        for gpio, modo, activacion in self._config.GPIOS:
             GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)
 
 
