@@ -6,7 +6,7 @@
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
 # Date          : 06-07-2017
-# Version       : 1.0.3
+# Version       : 0.1.3
 # Usage         : import comun | from comun import <clase>
 # Notes         : 
 
@@ -45,7 +45,10 @@ class app(object):
     
                 for i in range(len(self._config.GPIOS)):
                     # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
-                    GPIO.setup(self._config.GPIOS[i][0], GPIO.OUT if self._config.GPIOS[i][1] else GPIO.IN)
+                    if self._config.GPIOS[i][1]:
+                        GPIO.setup(self._config.GPIOS[i][0], GPIO.OUT)
+                    else:
+                        GPIO.setup(self._config.GPIOS[i][0], GPIO.IN, pull_up_down=GPIO.PUD_DOWN) 
 
                     if not(self._config.GPIOS[i][1]):
                         # En el caso de tener un pin GPIO de entrada, se necesitará transformar en lista la tupla, ya que es posible que haga falta modificar su contenido
