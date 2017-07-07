@@ -31,7 +31,7 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.2.4: Movido todo el código común a **comun.py**, arreglados fallos varios, rediseñado el bucle de **temperaturas.py**, añadida comprobación de superusuario en los scripts de **init** y añadido **indice_gpio.py**.
 - 0.3.0: Actualización de la configuración de **config.py** para permitir puertos GPIO tanto de entrada, como de salida; actualizados todos los demás archivos para adecuarse a la nueva configuración; homogeneizado de este documento e implementación inicial de **domotica.py**.
 - 0.3.1: Arreglo de fallos en los scripts de instalación, actualización y desinstalación.
-- 0.3.2: Arreglo de fallos varios
+- 0.3.2: Arreglo de fallos varios y limpieza de código en el actualizador.
 
 ## Agradecimientos y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
