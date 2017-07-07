@@ -6,15 +6,13 @@
 # Description   : Sistema gestor de domótica
 # Author        : Veltys
 # Date          : 07-07-2017
-# Version       : 1.0.0
+# Version       : 0.1.0
 # Usage         : python3 domotica.py
 # Notes         : Sistema en el que se gestionarán pares de puertos GPIO
 #                 Las entradas impares en la variable de configuración asociada GPIOS corresponderán a los relés que se gestionarán
 #                 Las pares, a los pulsadores que irán asociados a dichos relés, para su conmutación
+#                 Pendiente (TODO): Por ahora solamente responde a un pulsador local, queda pendiente la implementación remota (sockets)
 #                 Se está estudiando, para futuras versiones, la integración con servicios IoT, especuialmente con el "AWS IoT Button" --> http://amzn.eu/dsgsHvv
-
-
-debug = True
 
 
 import errno                                                                    # Códigos de error
@@ -41,13 +39,7 @@ class domotica(comun.app):
         try:
             while True:
                 for i in range(0, int(len(self._config.GPIOS)), 2):
-                    if debug:
-                        print('i =', i, sep = ' ')
-
                     if GPIO.input(self._config.GPIOS[i][0]) and not(self._config.GPIOS[i][1]):
-                        if debug:
-                            print('El pin GPIO', self._config.GPIOS[i][0], ' se ha levantado. ', 'apagando' if self._config.GPIOS[i][2] else 'encendiendo' ,' el LED asociado al ping GPIO', self._config.GPIOS[i + 1][0], '.', sep = '')
-
                         if(self._config.GPIOS[i][2]):
                             GPIO.output(self._config.GPIOS[i + 1][0], GPIO.LOW if self._config.GPIOS[i + 1][2] else GPIO.HIGH)
                         else:
@@ -57,14 +49,9 @@ class domotica(comun.app):
                         self._config.GPIOS[i][1] = not(self._config.GPIOS[i][1])
 
                     elif not(GPIO.input(self._config.GPIOS[i][0])) and self._config.GPIOS[i][1]:
-                        if debug:
-                            print('El pin GPIO', self._config.GPIOS[i][0], ' se ha bajado. ', sep = '')
-
                         self._config.GPIOS[i][1] = not(self._config.GPIOS[i][1])
 
-                    else:
-                        if debug:
-                            print('Estoy esperando a que el pin GPIO', self._config.GPIOS[i][0], ' haga algo', sep = '')
+                    # else:
 
                 sleep(self._config.PAUSA)
 

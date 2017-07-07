@@ -40,4 +40,5 @@ Colección de utilidades varias para el control GPIO en Python
 * A *alex*, por [la documentación en la web *raspi.tv*](http://raspi.tv/2013/rpi-gpio-basics-6-using-inputs-and-outputs-together-with-rpi-gpio-pull-ups-and-pull-downs), la cual me ha sido muy útil para mi **domitica.py**
 
 ## Por hacer (*TODO*)
-* Añadir el control de GPIOs general: leds y relés.
+* ~~Añadir el control de GPIOs general: leds y relés.~~ (Anulado)
+* Implementar la domótica remota.
