@@ -45,18 +45,18 @@ class reiniciar_router(comun.app):
 
             while True:
                 if hay_internet():                                                          # Si hay Internet, simplemente se esperará para hacer la próxima comprobación
-                    for gpio, activacion in self._config.GPIOS:
+                    for gpio, modo, activacion in self._config.GPIOS:
                         GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
 
                     sleep(self._config.PAUSA * 60)
 
                 else:                                                                       # En caso contrario, se mandará la orden de apagado durante el tiempo mínimo establecido y después se restablecerá
-                    for gpio, activacion in self._config.GPIOS:
+                    for gpio, modo, activacion in self._config.GPIOS:
                         GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)
 
                     sleep(self._config.PAUSA)
 
-                    for gpio, activacion in self._config.GPIOS.items():
+                    for gpio, modo, activacion in self._config.GPIOS.items():
                         GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
 
                     sleep(self._config.PAUSA * 12)                                          # Al acabar, se esperará a que se haya levantado la conexión y se volverá a comprobar
