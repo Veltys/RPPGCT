@@ -30,8 +30,7 @@ except ImportError:
 from time import sleep                                                          # Para hacer pausas
 import comun                                                                    # Funciones comunes a varios sistemas
 import os                                                                       # Funcionalidades varias del sistema operativo
-# import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
-import RPIO as GPIO
+import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 
 class domotica(comun.app):
@@ -40,18 +39,29 @@ class domotica(comun.app):
 
     def bucle(self):
         try:
-            for i in range(0, int(len(self._config.GPIOS)), 2):
-                # GPIO interrupt callbacks
-                RPIO.add_interrupt_callback(config.GPIOS[i][0], gpio_callback)
-
             while True:
-                GPIO.wait_for_interrupts()
+                for i in range(0, int(len(self._config.GPIOS)), 2):
+                    if GPIO.input(self._config.GPIOS[i][0]):                          # Se comprueba si el pin se ha leavantado
+                        if debug:
+                            print('El pin GPIO', self._config.GPIOS[i][0], ' se ha levantado. ', 'encendiendo' if self._config.GPIOS[i][1] else 'apagando' ,' el LED asociado al ping GPIO', self._config.GPIOS[i + 1][0], '.', sep = '')
+
+                        if(self._config.GPIOS[i][1]):
+                            GPIO.output(self._config.GPIOS[i + 1][0], GPIO.HIGH if self._config.GPIOS[i + 1][2] else GPIO.LOW)
+                        else:
+                            GPIO.output(self._config.GPIOS[i + 1][0], GPIO.LOW if self._config.GPIOS[i + 1][2] else GPIO.HIGH)
+
+                        self._config.GPIOS[i][1] = not(self._config.GPIOS[i][1])
+
+#                    else:
+#                        if debug:
+#                            print('El pin GPIO', self._config.GPIOS[i][0], ' se ha bajado. Apagando el LED asociado al ping GPIO', self._config.GPIOS[i + 1][0], '.', sep = '')
+#
+#                        GPIO.output(self._config.GPIOS[i + 1][0], GPIO.LOW if self._config.GPIOS[i + 1][2] else GPIO.HIGH)
+            
+                sleep(self._config.PAUSA)
+
         except KeyboardInterrupt:
             self.cerrar()
-
-
-def gpio_callback(gpio_id, val):
-    print("gpio %s: %s" % (gpio_id, val))
 
 
 def main(argv = sys.argv):
