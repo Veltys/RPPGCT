@@ -11,9 +11,6 @@
 # Notes         : 
 
 
-debug = True
-
-
 from abc import ABCMeta, abstractmethod                                         # Clases abstractas
 from time import sleep                                                          # Para hacer pausas
 import errno                                                                    # Códigos de error
@@ -50,14 +47,8 @@ class app(object):
                 for i in range(len(self._config.GPIOS)):
                     # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
                     if self._config.GPIOS[i][1]:
-                        if debug:
-                            print('Configurando como salida el pin GPIO', self._config.GPIOS[i][0], sep = '')
-
                         GPIO.setup(self._config.GPIOS[i][0], GPIO.OUT)
                     else:
-                        if debug:
-                            print('Configurando como entrada el pin GPIO', self._config.GPIOS[i][0], sep = '')
-
                         GPIO.setup(self._config.GPIOS[i][0], GPIO.IN, pull_up_down=GPIO.PUD_DOWN) 
 
                     if not(self._config.GPIOS[i][1]):
