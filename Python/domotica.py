@@ -41,7 +41,7 @@ class domotica(comun.app):
         try:
             while True:
                 for i in range(0, int(len(self._config.GPIOS)), 2):
-                    if GPIO.input(self._config.GPIOS[i][0]) and not(self._config.GPIOS[i][0]):
+                    if GPIO.input(self._config.GPIOS[i][0]) and not(self._config.GPIOS[i][1]):
                         if debug:
                             print('El pin GPIO', self._config.GPIOS[i][0], ' se ha levantado. ', 'apagando' if self._config.GPIOS[i][2] else 'encendiendo' ,' el LED asociado al ping GPIO', self._config.GPIOS[i + 1][0], '.', sep = '')
 
@@ -53,7 +53,7 @@ class domotica(comun.app):
                         self._config.GPIOS[i][2] = not(self._config.GPIOS[i][2])
                         self._config.GPIOS[i][0] = not(self._config.GPIOS[i][0])
 
-                    elif not(GPIO.input(self._config.GPIOS[i][0])) and self._config.GPIOS[i][0]:
+                    elif not(GPIO.input(self._config.GPIOS[i][0])) and self._config.GPIOS[i][1]:
                         if debug:
                             print('El pin GPIO', self._config.GPIOS[i][0], ' se ha bajado. ', sep = '')
 
