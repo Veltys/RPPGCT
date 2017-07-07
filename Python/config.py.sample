@@ -33,7 +33,7 @@ class cpu_config:
 
 
 class domotica_config:
-    GPIOS           = [(17, False, True ),
+    GPIOS           = [(17, False, False),
                        (27, True,  True ),
                       ]
 

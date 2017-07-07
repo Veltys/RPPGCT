@@ -6,7 +6,7 @@
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
 # Date          : 06-07-2017
-# Version       : 1.0.2
+# Version       : 1.0.3
 # Usage         : import comun | from comun import <clase>
 # Notes         : 
 
@@ -43,8 +43,14 @@ class app(object):
                 GPIO.setmode(GPIO.BCM)                                          # Establecemos el sistema de numeración BCM
                 GPIO.setwarnings(False)                                         # De esta forma no alertará de los problemas
     
-                for gpio, modo, activacion in self._config.GPIOS:
-                    GPIO.setup(gpio, GPIO.OUT if modo else GPIO.IN)             # Configuramos los pines GPIO como salida
+                for i in range(len(self._config.GPIOS)):
+                    # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
+                    GPIO.setup(self._config.GPIOS[i][0], GPIO.OUT if self._config.GPIOS[i][1] else GPIO.IN)
+
+                    if not(self._config.GPIOS[i][1]):
+                        # En el caso de tener un pin GPIO de entrada, se necesitará transformar en lista la tupla, ya que es posible que haga falta modificar su contenido
+                        self._config.GPIOS[i] = list(self._config.GPIOS[i])
+                        
     
                 self.bucle()
     

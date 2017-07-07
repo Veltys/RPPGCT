@@ -43,14 +43,14 @@ class domotica(comun.app):
                 for i in range(0, int(len(self._config.GPIOS)), 2):
                     if GPIO.input(self._config.GPIOS[i][0]):                          # Se comprueba si el pin se ha leavantado
                         if debug:
-                            print('El pin GPIO', self._config.GPIOS[i][0], ' se ha levantado. ', 'encendiendo' if self._config.GPIOS[i][1] else 'apagando' ,' el LED asociado al ping GPIO', self._config.GPIOS[i + 1][0], '.', sep = '')
+                            print('El pin GPIO', self._config.GPIOS[i][0], ' se ha levantado. ', 'encendiendo' if self._config.GPIOS[i][2] else 'apagando' ,' el LED asociado al ping GPIO', self._config.GPIOS[i + 1][0], '.', sep = '')
 
-                        if(self._config.GPIOS[i][1]):
+                        if(self._config.GPIOS[i][2]):
                             GPIO.output(self._config.GPIOS[i + 1][0], GPIO.HIGH if self._config.GPIOS[i + 1][2] else GPIO.LOW)
                         else:
                             GPIO.output(self._config.GPIOS[i + 1][0], GPIO.LOW if self._config.GPIOS[i + 1][2] else GPIO.HIGH)
 
-                        self._config.GPIOS[i][1] = not(self._config.GPIOS[i][1])
+                        self._config.GPIOS[i][2] = not(self._config.GPIOS[i][2])
 
 #                    else:
 #                        if debug:
