@@ -3,8 +3,8 @@
 # Title		: instalador.sh
 # Description	: Instala los scripts y los configura para iniciarse automáticamente
 # Author	: Veltys
-# Date		: 29-06-2017
-# Version	: 1.1.0
+# Date          : 07-07-2017
+# Version       : 1.1.1
 # Usage		: sudo bash instalador.sh
 # Notes		: Es necesario ser superusuario para su correcto funcionamiento
 
@@ -36,14 +36,29 @@ else
 	install ./init/cpu.sh /etc/init.d/cpu
 	update-rc.d cpu defaults
 
-	install ./Python/temperaturas.py $directorio/
-	install ./init/temperaturas.sh /etc/init.d/temperaturas
-	update-rc.d temperaturas defaults
-
 	install ./Python/internet.py $directorio/
 	install ./Python/reiniciar_router.py $directorio/
 	install ./init/reiniciar_router.sh /etc/init.d/reiniciar_router
 	update-rc.d reiniciar_router defaults
 
+	install ./Python/temperaturas.py $directorio/
+	install ./init/temperaturas.sh /etc/init.d/temperaturas
+	update-rc.d temperaturas defaults
+
 	install ./Python/indice_gpio.py
+
+	echo 'Es necesario instalar el paquete RPIO'
+	read -p "¿Desea instalarlo de forma automática? (S/n): " eleccion
+	case "$eleccion" in
+		n|N )
+			echo "Omitiendo instalación..."
+			;;
+		* )
+			echo "Instalando..."
+			pip3 install RPIO
+			;;
+	esac
+	install ./Python/domotica.py $directorio/
+	install ./init/domotica.sh /etc/init.d/domotica
+	update-rc.d domotica defaults
 fi

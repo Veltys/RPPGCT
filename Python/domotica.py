@@ -5,7 +5,7 @@
 # Title         : domotica.py
 # Description   : Sistema gestor de domótica
 # Author        : Veltys
-# Date          : 06-07-2017
+# Date          : 07-07-2017
 # Version       : 1.0.0
 # Usage         : python3 domotica.py
 # Notes         : Sistema en el que se gestionarán pares de puertos GPIO
@@ -30,7 +30,8 @@ except ImportError:
 from time import sleep                                                          # Para hacer pausas
 import comun                                                                    # Funciones comunes a varios sistemas
 import os                                                                       # Funcionalidades varias del sistema operativo
-import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
+# import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
+import RPIO as GPIO
 
 
 class domotica(comun.app):
@@ -39,23 +40,18 @@ class domotica(comun.app):
 
     def bucle(self):
         try:
+            for i in range(0, int(len(self._config.GPIOS)), 2):
+                # GPIO interrupt callbacks
+                RPIO.add_interrupt_callback(config.GPIOS[i][0], gpio_callback)
+
             while True:
-                for i in range(0, int(len(self._config.GPIOS)), 2):
-                    if GPIO.input(config.GPIOS[i][0]):                          # Se comprueba si el pin se ha leavantado
-                        if debug:
-                            print('El pin GPIO', config.GPIOS[i][0], ' se ha levantado. Encendiendo el LED asociado al ping GPIO', config.GPIOS[i + 1][0], '.', sep = '')
-
-                        GPIO.output(self._config.GPIOS[i + 1][0], GPIO.HIGH if self._config.GPIOS[i + 1][2] else GPIO.LOW)
-                    else:
-                        if debug:
-                            print('El pin GPIO', config.GPIOS[i][0], ' se ha bajado. Apagando el LED asociado al ping GPIO', config.GPIOS[i + 1][0], '.', sep = '')
-
-                        GPIO.output(self._config.GPIOS[i + 1][0], GPIO.LOW if self._config.GPIOS[i + 1][2] else GPIO.HIGH)
-            
-                sleep(self._config.PAUSA)
-
+                GPIO.wait_for_interrupts()
         except KeyboardInterrupt:
             self.cerrar()
+
+
+def gpio_callback(gpio_id, val):
+    print("gpio %s: %s" % (gpio_id, val))
 
 
 def main(argv = sys.argv):

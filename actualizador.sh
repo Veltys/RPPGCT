@@ -3,8 +3,8 @@
 # Title         : actualizador.sh
 # Description   : Actualiza los scripts sin alterar la configuración de inicio automático
 # Author        : Veltys
-# Date          : 01-07-2017
-# Version       : 1.1.0
+# Date          : 07-07-2017
+# Version       : 1.1.1
 # Usage         : sudo bash actualizador.sh
 # Notes         : Es necesario ser superusuario para su correcto funcionamiento
 
@@ -27,12 +27,6 @@ else
 	install ./Python/cpu.py $directorio/
 	install ./init/cpu.sh /etc/init.d/cpu
 
-	/etc/init.d/temperaturas stop
-	rm $directorio/temperaturas.py
-	rm /etc/init.d/temperaturas
-	install ./Python/temperaturas.py $directorio/
-	install ./init/temperaturas.sh /etc/init.d/temperaturas
-
 	/etc/init.d/reiniciar_router stop
 	rm $directorio/internet.py
 	rm $directorio/reiniciar_router.py
@@ -41,6 +35,19 @@ else
 	install ./Python/reiniciar_router.py $directorio/
 	install ./init/reiniciar_router.sh /etc/init.d/reiniciar_router
 
+	/etc/init.d/temperaturas stop
+	rm $directorio/temperaturas.py
+	rm /etc/init.d/temperaturas
+	install ./Python/temperaturas.py $directorio/
+	install ./init/temperaturas.sh /etc/init.d/temperaturas
+
 	rm $directorio/indice_gpio.py
 	install ./Python/indice_gpio.py
+
+	echo 'Es necesario que esté instalado el paquete RPIO. No olvide instalarlo con "pip3 install RPIO" si aún no está instalado'
+	/etc/init.d/domotica stop
+	rm $directorio/domotica.py
+	rm /etc/init.d/domotica
+	install ./Python/domotica.py $directorio/
+	install ./init/domotica.sh /etc/init.d/domotica
 fi
