@@ -6,7 +6,7 @@
 # Description   : Sistema indizador de puertos GPIO
 # Author        : Veltys
 # Date          : 04-07-2017
-# Version       : 1.0.0
+# Version       : 1.0.1
 # Usage         : python3 indice_gpio.py
 # Notes         : Sistema que lee las distintas configuraciones y muestra cuáles puertos están ocupados y cuáles no
 
@@ -52,8 +52,15 @@ def main(argv = sys.argv):
           len(gpios_bcm_normales_libres),   '/', len(gpios_bcm_normales),   ' normales', os.linesep,
           len(gpios_bcm_extendidos_libres), '/', len(gpios_bcm_extendidos), ' extendidos', os.linesep,
           len(gpios_bcm_especiales_libres), '/', len(gpios_bcm_especiales), ' especiales', os.linesep,
+          sep = '',
          )
-
+    print('Los puertos GPIO libres son:', sorted(gpios_libres), sep = ' ')
+    print('De los cuales:', os.linesep,
+          'Normales: ', sorted(gpios_bcm_normales_libres), os.linesep,
+          'Extendidos: ', sorted(gpios_bcm_extendidos_libres), os.linesep,
+          'Especiales: ', sorted(gpios_bcm_especiales_libres), os.linesep,
+          sep = '',
+         )
 
 if __name__ == '__main__':
     main(sys.argv)

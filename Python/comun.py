@@ -5,10 +5,11 @@
 # Title         : comun.py
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
-# Date          : 04-07-2017
-# Version       : 1.0.1
+# Date          : 06-07-2017
+# Version       : 0.1.3
 # Usage         : import comun | from comun import <clase>
 # Notes         : 
+
 
 from abc import ABCMeta, abstractmethod                                         # Clases abstractas
 from time import sleep                                                          # Para hacer pausas
@@ -43,8 +44,17 @@ class app(object):
                 GPIO.setmode(GPIO.BCM)                                          # Establecemos el sistema de numeración BCM
                 GPIO.setwarnings(False)                                         # De esta forma no alertará de los problemas
     
-                for gpio in self._config.GPIOS:
-                    GPIO.setup(gpio[0], GPIO.OUT)                               # Configuramos los pines GPIO como salida
+                for i in range(len(self._config.GPIOS)):
+                    # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
+                    if self._config.GPIOS[i][1]:
+                        GPIO.setup(self._config.GPIOS[i][0], GPIO.OUT)
+                    else:
+                        GPIO.setup(self._config.GPIOS[i][0], GPIO.IN, pull_up_down=GPIO.PUD_DOWN) 
+
+                    if not(self._config.GPIOS[i][1]):
+                        # En el caso de tener un pin GPIO de entrada, se necesitará transformar en lista la tupla, ya que es posible que haga falta modificar su contenido
+                        self._config.GPIOS[i] = list(self._config.GPIOS[i])
+                        
     
                 self.bucle()
     
@@ -88,3 +98,6 @@ class app(object):
     def sig_test(self, signum, frame):
         self.test()
         sleep(self._config.PAUSA)
+
+    def __del__(self):
+        pass
