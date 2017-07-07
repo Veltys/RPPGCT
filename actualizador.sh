@@ -42,9 +42,8 @@ else
 	install ./init/temperaturas.sh /etc/init.d/temperaturas
 
 	rm $directorio/indice_gpio.py
-	install ./Python/indice_gpio.py
+	install ./Python/indice_gpio.py $directorio/
 
-	echo 'Es necesario que esté instalado el paquete RPIO. No olvide instalarlo con "pip3 install RPIO" si aún no está instalado'
 	/etc/init.d/domotica stop
 	rm $directorio/domotica.py
 	rm /etc/init.d/domotica
