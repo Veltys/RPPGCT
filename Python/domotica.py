@@ -60,11 +60,11 @@ class domotica(comun.app):
                         if debug:
                             print('El pin GPIO', self._config.GPIOS[i][0], ' se ha bajado. ', sep = '')
 
-                        self._config.GPIOS[i][0] = not(self._config.GPIOS[i][0])
+                        self._config.GPIOS[i][1] = not(self._config.GPIOS[i][1])
 
                     else:
                         if debug:
-                            print('Estoy esperando a que el pin GPIO', self._config.GPIOS[i][0], ' se baje', sep = '')
+                            print('Estoy esperando a que el pin GPIO', self._config.GPIOS[i][0], ' haga algo', sep = '')
 
                 sleep(self._config.PAUSA)
 
