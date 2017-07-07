@@ -37,6 +37,7 @@ Colección de utilidades varias para el control GPIO en Python
 ## Agradecimientos y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
 * A *linuxitux*, por [su script *netisup.py*](https://www.linuxito.com/programacion/635-netisup-py-script-python-para-verificar-el-estado-de-la-red), el cual he utilizado (adaptado) en mi **internet.py**
+* A *alex*, por [la documentación en la web *raspi.tv*](http://raspi.tv/2013/rpi-gpio-basics-6-using-inputs-and-outputs-together-with-rpi-gpio-pull-ups-and-pull-downs), la cual me ha sido muy útil para mi **domitica.py**
 
 ## Por hacer (*TODO*)
 * Añadir el control de GPIOs general: leds y relés.
