@@ -45,19 +45,8 @@ else
 	install ./init/temperaturas.sh /etc/init.d/temperaturas
 	update-rc.d temperaturas defaults
 
-	install ./Python/indice_gpio.py
+	install ./Python/indice_gpio.py $directorio/
 
-	echo 'Es necesario instalar el paquete RPIO'
-	read -p "¿Desea instalarlo de forma automática? (S/n): " eleccion
-	case "$eleccion" in
-		n|N )
-			echo "Omitiendo instalación..."
-			;;
-		* )
-			echo "Instalando..."
-			pip3 install RPIO
-			;;
-	esac
 	install ./Python/domotica.py $directorio/
 	install ./init/domotica.sh /etc/init.d/domotica
 	update-rc.d domotica defaults

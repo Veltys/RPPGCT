@@ -39,17 +39,6 @@ else
 	/etc/init.d/domotica stop
 	rm /etc/init.d/domotica
 	update-rc.d -f domotica remove
-	echo 'Es posible que ya no sea necesario el paquete RPIO'
-	read -p "¿Desea desinstalarlo de forma automática? (S/n): " eleccion
-	case "$eleccion" in
-		n|N )
-			echo "Omitiendo desinstalación..."
-			;;
-		* )
-			echo "Desnstalando..."
-			pip3 uninstall RPIO
-			;;
-	esac
 
 	rm -r $directorio/
 fi

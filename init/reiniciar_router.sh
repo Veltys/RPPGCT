@@ -13,8 +13,8 @@
 # Title         : reiniciar_router
 # Description   : Script de init.d para el arranque automático del sistema "reiniciar_router.py".
 # Author        : Veltys
-# Date          : 04-07-2017
-# Version       : 1.1.0
+# Date          : 07-07-2017
+# Version       : 1.1.1
 # Usage         : /etc/init.d/reiniciar_router {start|stop|restart|status}
 # Notes         :
 
@@ -31,7 +31,7 @@ else
 
 		start)
 			if [ -f /var/lock/${nombre}.lock ]; then
-				echo "${nombre}.py ya está en ejecucuón"
+				echo "${nombre}.py ya está en ejecución"
 			else
 				echo "Iniciando ${nombre}.py"
 				${directorio}/${nombre}.py &
@@ -43,7 +43,7 @@ else
 				echo "Deteniendo ${nombre}.py"
 				pkill -f ${directorio}/${nombre}.py
 			else
-				echo "${nombre}.py no está en ejecucuón"
+				echo "${nombre}.py no está en ejecución"
 			fi
 			;;
 
