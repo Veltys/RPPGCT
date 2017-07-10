@@ -3,8 +3,8 @@
 # Title         : actualizador.sh
 # Description   : Actualiza los scripts sin alterar la configuración de inicio automático
 # Author        : Veltys
-# Date          : 07-07-2017
-# Version       : 1.2.0
+# Date          : 10-07-2017
+# Version       : 1.2.1
 # Usage         : sudo bash actualizador.sh
 # Notes         : Es necesario ser superusuario para su correcto funcionamiento
 
@@ -14,8 +14,9 @@ if [ "$UID" -ne '0' ]; then
 else
 	directorio='/opt/RPPGCT'
 	scripts[0]='cpu'
-	scripts[1]='reiniciar_router'
-	scripts[2]='temperaturas'
+	scripts[1]='domotica'
+	scripts[2]='reiniciar_router'
+	scripts[3]='temperaturas'
 	dependencias[0]='comun'
 	dependencias[1]='pid'
 	dependencias[2]='internet'
