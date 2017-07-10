@@ -24,8 +24,8 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.1.7: Añadidas cabeceras en todos los archivos, eliminada funcionalidad no necesaria en **reiniciar_router.py** y arreglo de bugs menores.
 - 0.1.8: Añadido el script actualizador.
 - 0.2.0: Configuración exportada a un único archivo, añadido un sistema de comprobación para alertar de una mala configuración, actualizados instalador, actualizador y desinstalador, eliminado import innecesario en **internet.py** y editado **.gitignore** para que no suba el archivo **./Python/config.py**.
-- 0.2.1: Arreglo de bug en los scripts de **./init/**.
-- 0.2.2: Arreglo de bug en el script de **./Python/temperaturas.py**.
+- 0.2.1: Arreglo de fallo en los scripts de **./init/**.
+- 0.2.2: Arreglo de fallo en el script de **./Python/temperaturas.py**.
 - 0.2.3: Arreglos menores, cambio de editor (lo que puede provocar algún desajuste) y comienzo del proceso de hacerlo independiente del sistema operativo (así algunas cosas podré probarlas con mayor rapidez)
 - 0.2.4: Movido todo el código común a **comun.py**, arreglados fallos varios, rediseñado el bucle de **temperaturas.py**, añadida comprobación de superusuario en los scripts de **init** y añadido **indice_gpio.py**.
 - 0.3.0: Actualización de la configuración de **config.py** para permitir puertos GPIO tanto de entrada, como de salida; actualizados todos los demás archivos para adecuarse a la nueva configuración; homogeneizado de este documento e implementación inicial de **domotica.py**.
