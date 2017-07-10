@@ -5,7 +5,6 @@ Raspberry Pi Python GPIO Control Tools
 Colección de utilidades varias para el control GPIO en Python
 
 ## Contenido
-- **boton.py**: Sistema de respuesta a un evento en un determinado pin GPIO, como una pulsación de un botón. *Aún en pruebas*.
 - **cpu.py**: Sistema indicador led de la carga de CPU en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
 - **domotica.py**: Sistema gestor de domótica.
 - **indice_gpio.py**: Sistema indicador de los puertos GPIO que quedan libres.
@@ -32,7 +31,7 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.3.0: Actualización de la configuración de **config.py** para permitir puertos GPIO tanto de entrada, como de salida; actualizados todos los demás archivos para adecuarse a la nueva configuración; homogeneizado de este documento e implementación inicial de **domotica.py**.
 - 0.3.1: Arreglo de fallos en los scripts de instalación, actualización y desinstalación.
 - 0.3.2: Arreglo de fallos varios y limpieza de código en el actualizador.
-- 0.3.3: Arreglo de un fallo en **reiniciar_router.py**.
+- 0.3.3: Arreglo de bug en **reiniciar_router.py**, añadido domotica.py en **actualizador.sh** y limpieza de código en los scripts de instalación.
 
 ## Agradecimientos y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
@@ -40,5 +39,4 @@ Colección de utilidades varias para el control GPIO en Python
 * A *alex*, por [la documentación en la web *raspi.tv*](http://raspi.tv/2013/rpi-gpio-basics-6-using-inputs-and-outputs-together-with-rpi-gpio-pull-ups-and-pull-downs), la cual me ha sido muy útil para mi **domitica.py**
 
 ## Por hacer (*TODO*)
-* ~~Añadir el control de GPIOs general: leds y relés.~~ (Anulado)
 * Implementar la domótica remota.
