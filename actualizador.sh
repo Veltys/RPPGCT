@@ -17,10 +17,11 @@ else
 	scripts[1]='domotica'
 	scripts[2]='reiniciar_router'
 	scripts[3]='temperaturas'
-	dependencias[0]='comun'
-	dependencias[1]='pid'
-	dependencias[2]='internet'
-	dependencias[3]='indice_gpio'
+	dependencias[0]='config.py.sample'
+	dependencias[1]='comun.py'
+	dependencias[2]='pid.py'
+	dependencias[3]='internet.py'
+	dependencias[4]='indice_gpio.py'
 
 	echo 'Recuerde revisar ./Python/config.py.sample por si la configuración ha cambiado'
 	echo 'Es necesario que esté instalado el paquete psutil. No olvide instalarlo con "pip3 install psutil" si aún no está instalado'
@@ -32,11 +33,11 @@ else
 		rm ${directorio}/${script}.py
 
 		install ./Python/${script}.py ${directorio}/
-        	install ./init/${script}.sh /etc/init.d/${script}
+        install ./init/${script}.sh /etc/init.d/${script}
 	done
 
 	for dependencia in "${dependencias[@]}"; do
-		rm ${directorio}/${dependencia}.py
-		install ./Python/${dependencia}.py ${directorio}/
+		rm ${directorio}/${dependencia}
+		install ./Python/${dependencia} ${directorio}/
 	done
 fi
