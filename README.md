@@ -60,6 +60,7 @@ Colección de utilidades varias para el control GPIO en Python
 		 Pasado **pid.py** a estilo orientado a objetos.
 		 Actualizados **comun.py**, **cpu.py**, **domotica_servidor.py**, **reiniciar_router.py** y **temperaturas.py** para adecuarse al nuevo **pid.py**.
 		 Actualización menor en **domotica_servidor.py**, **comun.py**, **cpu.py**, **reiniciar_router.py** y **temperaturas.py** para que la salida se lleve a cabo a través del destructor de la clase *app*.
+		 Actualizado **config.py.sample** con los parámetros correspondientes a las novedades
 		 Homogeneizado de este documento.
 		 Implementación inicial de **domotica_cliente.py**.
 

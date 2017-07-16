@@ -18,7 +18,7 @@ import errno                                                                    
 import os                                                                       # Funcionalidades varias del sistema operativo
 import signal                                                                   # Manejo de señales
 import sys                                                                      # Funcionalidades varias del sistema
-# import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
+import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 
 class app(object):
@@ -155,5 +155,5 @@ class app(object):
             - Desbloquea la posible ejecución de otra futura instancia del mismo sistema
         '''
 
-#        GPIO.cleanup()                                                          # Devolvemos los pines a su estado inicial
+        GPIO.cleanup()                                                          # Devolvemos los pines a su estado inicial
         self._bloqueo.desbloquear()
