@@ -28,6 +28,7 @@ Colección de utilidades varias para el control GPIO en Python
 		 Eliminada funcionalidad no necesaria en **reiniciar_router.py**.
 		 Arreglo de bugs menores.
 - 0.1.8: Añadido el script actualizador.
+<<<<<<< HEAD
 - 0.2.0: Configuración exportada a un único archivo.
 		 Añadido un sistema de comprobación para alertar de una mala configuración.
 		 Actualizados **instalador.sh**, **actualizador.sh** y **desinstalador.sh**.
@@ -62,6 +63,17 @@ Colección de utilidades varias para el control GPIO en Python
 		 Actualización menor en **domotica_servidor.py**, **comun.py**, **cpu.py**, **reiniciar_router.py** y **temperaturas.py** para que la salida se lleve a cabo a través del destructor de la clase *app*.
 		 Homogeneizado de este documento.
 		 Implementación inicial de **domotica_cliente.py**.
+=======
+- 0.2.0: Configuración exportada a un único archivo, añadido un sistema de comprobación para alertar de una mala configuración, actualizados instalador, actualizador y desinstalador, eliminado import innecesario en **internet.py** y editado **.gitignore** para que no suba el archivo **./Python/config.py**.
+- 0.2.1: Arreglo de fallo en los scripts de **./init/**.
+- 0.2.2: Arreglo de fallo en el script de **./Python/temperaturas.py**.
+- 0.2.3: Arreglos menores, cambio de editor (lo que puede provocar algún desajuste) y comienzo del proceso de hacerlo independiente del sistema operativo (así algunas cosas podré probarlas con mayor rapidez)
+- 0.2.4: Movido todo el código común a **comun.py**, arreglados fallos varios, rediseñado el bucle de **temperaturas.py**, añadida comprobación de superusuario en los scripts de **init** y añadido **indice_gpio.py**.
+- 0.3.0: Actualización de la configuración de **config.py** para permitir puertos GPIO tanto de entrada, como de salida; actualizados todos los demás archivos para adecuarse a la nueva configuración; homogeneizado de este documento e implementación inicial de **domotica.py**.
+- 0.3.1: Arreglo de fallos en los scripts de instalación, actualización y desinstalación.
+- 0.3.2: Arreglo de fallos varios y limpieza de código en el actualizador.
+- 0.3.3: Arreglo de bug en **reiniciar_router.py**, añadido domotica.py en **actualizador.sh** y limpieza de código en los scripts de instalación.
+>>>>>>> branch 'testing' of https://github.com/Veltys/RPPGCT.git
 
 ## Agradecimientos y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
@@ -69,4 +81,8 @@ Colección de utilidades varias para el control GPIO en Python
 * A *alex*, por [la documentación en la web *raspi.tv*](http://raspi.tv/2013/rpi-gpio-basics-6-using-inputs-and-outputs-together-with-rpi-gpio-pull-ups-and-pull-downs), la cual me ha sido muy útil para mi **domitica_servidor.py**
 
 ## Por hacer (*TODO*)
+<<<<<<< HEAD
 * ¡Mucho más!
+=======
+* Implementar la domótica remota.
+>>>>>>> branch 'testing' of https://github.com/Veltys/RPPGCT.git
