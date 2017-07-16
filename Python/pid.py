@@ -5,13 +5,14 @@
 # Title         : pid.py
 # Description   : Módulo auxiliar para ciertas funciones de bloqueo y de PIDs
 # Author        : Veltys
-# Date          : 16-07-2017
+# Date          : 17-07-2017
 # Version       : 0.2.0
 # Usage         : python3 pid.py
 # Notes         : TODO: Trabajar con PIDs, aún no es necesario y no está implementado
 
 
 import os                                                                       # Funciones del sistema operativo
+from _overlapped import NULL
 
 if os.name == 'nt':
     from tempfile import gettempdir                                             # Obtención del directorio temporal
@@ -46,7 +47,7 @@ class bloqueo(object):
             return not(os.path.isfile('/var/lock/' + self._nombre[0:-3] + '.lock'))
     
         elif os.name == 'nt':
-            return not(os.path.isfile(gettempdir() + '/' + self._nombre[0:-3] + '.lock'))
+            return not(os.path.isfile(gettempdir() + '\\' + self._nombre[0:-3] + '.lock'))
     
         else:
             return False
@@ -58,9 +59,16 @@ class bloqueo(object):
                 os.remove('/var/lock/' + self._nombre[0:-3] + '.lock')
 
             elif os.name == 'nt':
-                os.remove(gettempdir() + '/' + self._nombre[0:-3] + '.lock')
+                os.remove(gettempdir() + '\\' + self._nombre[0:-3] + '.lock')
 
             else:
                 pass
 
             self._bloqueado = False
+
+
+    def nombre(self, nombre = NULL):
+        if nombre == NULL:
+            return self._nombre
+        else:
+            self._nombre = nombre

@@ -5,7 +5,7 @@
 # Title         : comun.py
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
-# Date          : 15-07-2017
+# Date          : 16-07-2017
 # Version       : 0.2.2
 # Usage         : import comun | from comun import <clase>
 # Notes         : 
@@ -35,7 +35,7 @@ class app(object):
         '''
 
         self._config = config
-        self._bloqueo = bloqueo(nombre)
+        self._bloqueo = bloqueo(nombre) if not(nombre == False) else False      # No siempre va a ser necesario realizar un bloqueo
         self._modo_apagado = False
         self.asignar_senyales()
 
@@ -61,8 +61,8 @@ class app(object):
             - Llama a la función self.bucle()
         '''
 
-        if self._bloqueo.comprobar():
-            if self._bloqueo.bloquear():
+        if self._bloqueo == False or self._bloqueo.comprobar():
+            if self._bloqueo == False or self._bloqueo.bloquear():
                 try:
                     self._config.GPIOS
 
@@ -85,11 +85,11 @@ class app(object):
                 self.bucle()
     
             else:
-                print('Error: No se puede bloquear ' + nombre, file=sys.stderr)
+                print('Error: No se puede bloquear ' + self._bloqueo.nombre(), file=sys.stderr)
                 sys.exit(errno.EACCES)
     
         else:
-            print('Error: Ya se ha iniciado una instancia de ' + nombre, file=sys.stderr)
+            print('Error: Ya se ha iniciado una instancia de ' + self._bloqueo.nombre(), file=sys.stderr)
             sys.exit(errno.EEXIST)
 
 
@@ -164,4 +164,5 @@ class app(object):
         else:
             GPIO.cleanup()                                                          # Devolvemos los pines a su estado inicial
 
-        self._bloqueo.desbloquear()
+        if not(self._bloqueo == False):
+            self._bloqueo.desbloquear() 

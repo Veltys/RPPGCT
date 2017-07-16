@@ -15,18 +15,22 @@
 #                 Se está estudiando, para futuras versiones, la integración con servicios IoT, especuialmente con el "AWS IoT Button" --> http://amzn.eu/dsgsHvv
 
 
+DEBUG = True
+
+
 import errno                                                                    # Códigos de error
 import sys                                                                      # Funcionalidades varias del sistema
 
 try:
-  from config import domotica_servidor_config as config                         # Configuración
+    from config import domotica_servidor_config as config                       # Configuración
 
 except ImportError:
-  print('Error: Archivo de configuración no encontrado', file=sys.stderr)
-  sys.exit(errno.ENOENT)
+    print('Error: Archivo de configuración no encontrado', file=sys.stderr)
+    sys.exit(errno.ENOENT)
 
 from time import sleep                                                          # Para hacer pausas
 import comun                                                                    # Funciones comunes a varios sistemas
+import multiprocessing                                                          # Multiprocesamiento
 import os                                                                       # Funcionalidades varias del sistema operativo
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
@@ -37,6 +41,74 @@ class domotica_servidor(comun.app):
 
     def bucle(self):
         try:
+            if DEBUG:
+                print('Padre #', os.getpid(), "\tMi configuración es: ", self._config.GPIOS, sep = '')
+                print('Padre #', os.getpid(), "\tPienso iniciar ", int(len(self._config.GPIOS) / 2), ' hijos', sep = '')
+ 
+            # Preparación de los parámetros que van a recibir los hijos
+            parametros = []
+            for i in range(int(len(self._config.GPIOS) / 2)):
+                parametros.append([])
+
+            for i in range(len(self._config.GPIOS)):
+                if i % 2 == 0:
+                    parametros[int(i / 2)].append(self._config.GPIOS[i])
+
+                else:
+                    parametros[int(i / 2)].append(self._config.GPIOS[i])
+
+            # Creación de la piscina
+            hijos = []
+            for i in range(int(len(self._config.GPIOS) / 2)):
+                if DEBUG:
+                    print('Padre #', os.getpid(), "\tCreando hijo: ", i, sep = '')
+
+                hijos.append(multiprocessing.Process(name = 'Hijo ' + str(i), target = domotica_servidor_hijos(parametros[i]).bucle))
+
+            # Arrancamos los hijos
+            if DEBUG:
+                print('Padre #', os.getpid(), "\tArrancando hijos")
+
+            for hijo in hijos:
+                hijo.start()
+
+            # Bucle para finalización y procesamiento
+            while hijos:
+                for hijo in hijos:
+                    if not(hijo.is_alive()):
+                        hijo.join()
+                        hijos.remove(hijo)
+                        del(hijo)
+                
+                if DEBUG:
+                    print('Padre #', os.getpid(), "\tEsperando...")
+                    
+                sleep(self._config.PAUSA)
+ 
+            print('Padre #', os.getpid(), "\tTodos los hijos han terminado, cierro")
+
+        except KeyboardInterrupt:
+            sys.exit(0)
+
+
+class domotica_servidor_hijos(comun.app):
+    def __init__(self, config_GPIOS, nombre = False):
+        if DEBUG:
+            print('Hijo #', os.getpid(), "\tMis parámetros son: ", config_GPIOS, sep = '')
+            print('Hijo #', os.getpid(), "\tMi configuración de GPIOS heredada es: ", config.GPIOS, sep = '')
+
+        config.GPIOS = config_GPIOS
+
+        super().__init__(config, nombre)
+
+        if DEBUG:
+            print('Hijo #', os.getpid(), "\tLa he sustituido por: ", self._config.GPIOS, sep = '')
+
+
+    def bucle(self):
+        if DEBUG:
+            print('Hijo #', os.getpid(), "\tTrabajando...", sep = '')
+
             while True:
                 for i in range(0, int(len(self._config.GPIOS)), 2):
                     if GPIO.input(self._config.GPIOS[i][0]) and not(self._config.GPIOS[i][1]):
@@ -54,9 +126,6 @@ class domotica_servidor(comun.app):
                     # else:
 
                 sleep(self._config.PAUSA)
-
-        except KeyboardInterrupt:
-            sys.exit(0)
 
 
 def main(argv = sys.argv):
