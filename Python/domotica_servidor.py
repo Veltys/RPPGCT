@@ -2,13 +2,13 @@
 # -*- coding: utf-8 -*-
 
 
-# Title         : domotica.py
-# Description   : Sistema gestor de domótica
+# Title         : domotica_servidor.py
+# Description   : Parte servidor del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 07-07-2017
-# Version       : 0.1.0
-# Usage         : python3 domotica.py
-# Notes         : Sistema en el que se gestionarán pares de puertos GPIO
+# Date          : 15-07-2017
+# Version       : 0.2.0
+# Usage         : python3 domotica_servidor.py
+# Notes         : Parte servidor del sistema en el que se gestionarán pares de puertos GPIO
 #                 Las entradas impares en la variable de configuración asociada GPIOS corresponderán a los relés que se gestionarán
 #                 Las pares, a los pulsadores que irán asociados a dichos relés, para su conmutación
 #                 Pendiente (TODO): Por ahora solamente responde a un pulsador local, queda pendiente la implementación remota (sockets)
@@ -19,7 +19,7 @@ import errno                                                                    
 import sys                                                                      # Funcionalidades varias del sistema
 
 try:
-  from config import domotica_config as config                                  # Configuración
+  from config import domotica_servidor_config as config                         # Configuración
 
 except ImportError:
   print('Error: Archivo de configuración no encontrado', file=sys.stderr)
@@ -31,7 +31,7 @@ import os                                                                       
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 
-class domotica(comun.app):
+class domotica_servidor(comun.app):
     def __init__(self, config):
         super().__init__(config)
 
@@ -56,12 +56,12 @@ class domotica(comun.app):
                 sleep(self._config.PAUSA)
 
         except KeyboardInterrupt:
-            self.cerrar()
+            sys.exit(0)
 
 
 def main(argv = sys.argv):
-     app = domotica(config)
-     app.arranque(os.path.basename(argv[0]))
+     app = domotica_servidor(config, os.path.basename(sys.argv[0]))
+     app.arranque()
 
 
 if __name__ == '__main__':

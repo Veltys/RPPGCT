@@ -68,7 +68,7 @@ class temperaturas_config:
                        (12, True,  True ),
                       ]
 
-    TEMPERATURAS    = [36, 41, 46]
+    TEMPERATURAS    = [40, 45, 50]
 
     PAUSA           = 60
 

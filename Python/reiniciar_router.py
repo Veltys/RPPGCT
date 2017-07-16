@@ -5,8 +5,8 @@
 # Title         : reiniciar_router.py
 # Description   : Sistema que comprueba si hay acceso a Internet. Si no, manda una señal en un puerto GPIO determinado
 # Author        : Veltys
-# Date          : 10-07-2017
-# Version       : 2.1.4
+# Date          : 16-07-2017
+# Version       : 2.1.5
 # Usage         : python3 reiniciar_router.py
 # Notes         : La idea es conectar un relé a este GPIO y al mismo la alimentación del sistema de acceso a Internet
 #		          Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
@@ -62,15 +62,15 @@ class reiniciar_router(comun.app):
                     sleep(self._config.PAUSA * 12)                                          # Al acabar, se esperará a que se haya levantado la conexión y se volverá a comprobar
 
         except KeyboardInterrupt:
-            self.cerrar()
+            sys.exit(0)
 
     def __del__(self):
         super().__del__()
 
 
 def main(argv = sys.argv):
-    app = reiniciar_router(config)
-    app.arranque(os.path.basename(argv[0]))
+    app = reiniciar_router(config, os.path.basename(argv[0]))
+    app.arranque()
 
 
 if __name__ == '__main__':
