@@ -69,12 +69,12 @@ class domotica_servidor(comun.app):
             if DEBUG:
                 print('Padre #', os.getpid(), "\tArrancando hijos")
 
-            for hijo in hijos:
+            for hijo in self._hijos:
                 hijo.start()
 
             # Bucle para finalización y procesamiento
-            while hijos:
-                for hijo in hijos:
+            while self._hijos:
+                for hijo in self._hijos:
                     if not(hijo.is_alive()):
                         hijo.join()
                         hijos.remove(hijo)
@@ -91,12 +91,19 @@ class domotica_servidor(comun.app):
     def __del__(self):
         if DEBUG:
             print('Padre #', os.getpid(), "\tTerminando...")
-                    
-        for hijo in self._hijos:
-            if hijo.is_alive():
-                hijo.join()
-                hijo.terminate()
-                del(hijo)
+
+        try:
+            self._hijos
+
+        except AttributeError:
+            pass
+
+        else:
+            for hijo in self._hijos:
+                if hijo.is_alive():
+                    hijo.join()
+                    hijo.terminate()
+                    del(hijo)
 
         super().__del__()
 
@@ -108,7 +115,6 @@ class domotica_servidor_hijos(comun.app):
             print('Hijo #', os.getpid(), "\tMi configuración de GPIOS heredada es: ", config.GPIOS, sep = '')
 
         config.GPIOS = config_GPIOS
-        del(self._hijos)
 
         super().__init__(config, nombre)
 
