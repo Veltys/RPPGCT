@@ -42,6 +42,7 @@ class domotica_cliente(comun.app):
             while True:
                 comando = input('Introduzca un comando: ')
 
+                # conectar
                 if comando[0:8].lower() == 'conectar' and comando[8] == ' ' and comando[9:] != '':
                     print('Conectando a ' + comando[9:])
 
@@ -55,6 +56,15 @@ class domotica_cliente(comun.app):
                     except ConnectionRefusedError:
                         print('Error: Imposible conectar a ' + comando[9:], file=sys.stderr)
 
+                # listar
+                elif comando[0:6].lower() == 'listar':
+                    self._socket.send(comando[0:6])
+                    self._lista_GPIOs = self._socket.recv(1024)
+                    self._lista_GPIOs = self._lista_GPIOs.split(',')
+
+                    self.mostrar_lista_GPIOs()
+
+                # salir
                 elif comando[0:5].lower() == 'salir':
                     sys.exit(0)
 
@@ -66,6 +76,23 @@ class domotica_cliente(comun.app):
 
         except KeyboardInterrupt:
             sys.exit(0)
+
+    def mostrar_lista_GPIOs(self):
+        try:
+            self._lista_GPIOs
+
+        except AttributeError:
+            print('Error: No hay ninguna lista de puertos GPIO cargada', file=sys.stderr)
+
+            return False
+
+        else:
+            print('Puertos GPIO que están activos:')
+            for i, puerto in self._lista_GPIOs:
+                print("\t" + i, sep = '')
+
+            return True
+
 
     def __del__(self):
         super().__del__()
