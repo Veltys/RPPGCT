@@ -30,8 +30,8 @@ import os                                                                       
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 class temperaturas(comun.app):
-    def __init__(self, config):
-        super().__init__(config)
+    def __init__(self, config, nombre):
+        super().__init__(config, nombre)
 
     def bucle(self):
         try:

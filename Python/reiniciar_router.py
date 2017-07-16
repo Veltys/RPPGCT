@@ -33,8 +33,8 @@ import signal                                                                   
 
 
 class reiniciar_router(comun.app):
-    def __init__(self, config):
-        super().__init__(config)
+    def __init__(self, config, nombre):
+        super().__init__(config, nombre)
 
     def bucle(self):
         try:

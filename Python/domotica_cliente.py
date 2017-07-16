@@ -28,7 +28,6 @@ except ImportError:
 from time import sleep                                                          # Para hacer pausas
 import comun                                                                    # Funciones comunes a varios sistemas
 import os                                                                       # Funcionalidades varias del sistema operativo
-# import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 import socket                                                                   # Tratamiento de sockets
 
 
@@ -52,6 +51,9 @@ class domotica_cliente(comun.app):
 
                     except TimeoutError:
                         print('Error: Tiempo de espera agotado al conectar a ' + comando[9:], file=sys.stderr)
+
+                    except ConnectionRefusedError:
+                        print('Error: Imposible conectar a ' + comando[9:], file=sys.stderr)
 
                 elif comando[0:5].lower() == 'salir':
                     sys.exit(0)

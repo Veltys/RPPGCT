@@ -32,8 +32,8 @@ import RPi.GPIO as GPIO                                                         
 
 
 class domotica_servidor(comun.app):
-    def __init__(self, config):
-        super().__init__(config)
+    def __init__(self, config, nombre):
+        super().__init__(config, nombre)
 
     def bucle(self):
         try:
