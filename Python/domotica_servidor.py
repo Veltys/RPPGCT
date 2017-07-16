@@ -58,12 +58,12 @@ class domotica_servidor(comun.app):
                     parametros[int(i / 2)].append(self._config.GPIOS[i])
 
             # Creación de la piscina
-            hijos = []
+            self._hijos = []
             for i in range(int(len(self._config.GPIOS) / 2)):
                 if DEBUG:
                     print('Padre #', os.getpid(), "\tCreando hijo: ", i, sep = '')
 
-                hijos.append(multiprocessing.Process(name = 'Hijo ' + str(i), target = domotica_servidor_hijos(parametros[i]).bucle))
+                self._hijos.append(multiprocessing.Process(name = 'Hijo ' + str(i), target = domotica_servidor_hijos(parametros[i]).bucle))
 
             # Arrancamos los hijos
             if DEBUG:
@@ -85,10 +85,20 @@ class domotica_servidor(comun.app):
                     
                 sleep(self._config.PAUSA)
  
-            print('Padre #', os.getpid(), "\tTodos los hijos han terminado, cierro")
-
         except KeyboardInterrupt:
             sys.exit(0)
+
+    def __del__(self):
+        if DEBUG:
+            print('Padre #', os.getpid(), "\tTerminando...")
+                    
+        for hijo in self._hijos:
+            if hijo.is_alive():
+                hijo.join()
+                hijo.terminate()
+                del(hijo)
+
+        super().__del__()
 
 
 class domotica_servidor_hijos(comun.app):
@@ -98,6 +108,7 @@ class domotica_servidor_hijos(comun.app):
             print('Hijo #', os.getpid(), "\tMi configuración de GPIOS heredada es: ", config.GPIOS, sep = '')
 
         config.GPIOS = config_GPIOS
+        del(self._hijos)
 
         super().__init__(config, nombre)
 
@@ -126,6 +137,13 @@ class domotica_servidor_hijos(comun.app):
                     # else:
 
                 sleep(self._config.PAUSA)
+
+    def __del__(self):
+        if DEBUG:
+            print('Hijo #', os.getpid(), "\tRecibida orden de cierre. Terminando...")
+                    
+        super().__del__()
+
 
 
 def main(argv = sys.argv):
