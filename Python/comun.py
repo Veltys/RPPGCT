@@ -155,5 +155,13 @@ class app(object):
             - Desbloquea la posible ejecución de otra futura instancia del mismo sistema
         '''
 
-        GPIO.cleanup()                                                          # Devolvemos los pines a su estado inicial
+        try:
+            self._config.GPIOS
+
+        except AttributeError:
+            pass
+
+        else:
+            GPIO.cleanup()                                                          # Devolvemos los pines a su estado inicial
+
         self._bloqueo.desbloquear()
