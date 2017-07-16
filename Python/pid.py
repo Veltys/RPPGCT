@@ -12,7 +12,6 @@
 
 
 import os                                                                       # Funciones del sistema operativo
-from _overlapped import NULL
 
 if os.name == 'nt':
     from tempfile import gettempdir                                             # Obtención del directorio temporal
@@ -67,8 +66,8 @@ class bloqueo(object):
             self._bloqueado = False
 
 
-    def nombre(self, nombre = NULL):
-        if nombre == NULL:
+    def nombre(self, nombre = False):
+        if nombre == False:
             return self._nombre
         else:
             self._nombre = nombre
