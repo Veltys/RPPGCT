@@ -100,5 +100,10 @@ ENV/
 # mypy
 .mypy_cache/
 
+# Archivos de Eclipse
+/.project
+/.pydevproject
+/.settings/
+
 # Archivos de configuración
 config*.py

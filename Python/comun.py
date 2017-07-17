@@ -40,6 +40,27 @@ class app(object):
         self.asignar_senyales()
 
 
+    def _sig_apagado(self, signum, frame):
+        ''' Funcion "wrapper" para el procesamiento de la señal de apagado
+        '''
+
+        self.apagado()
+
+
+    def _sig_cerrar(self, signum, frame):
+        ''' Funcion "wrapper" para el procesamiento de la señal de cierre
+        '''
+
+        self.cerrar()
+
+
+    def _sig_test(self, signum, frame):
+        ''' Funcion "wrapper" para el procesamiento de la señal de pruebas
+        '''
+
+        self.test()
+
+
     def apagado(self):
         ''' Activador / desactivador del "modo apagado":
             - Conmuta el "modo apagado"
@@ -108,7 +129,7 @@ class app(object):
 
         else:
             for senyal, funcion in self._config.senyales.items():
-                signal.signal(eval('signal.' + senyal), eval('self.' + funcion))
+                signal.signal(eval('signal.' + senyal), eval('self._' + funcion))
 
     @abstractmethod
     def bucle(self):
@@ -116,6 +137,24 @@ class app(object):
         '''
 
         pass
+
+
+    def cerrar(self):
+        ''' Realiza las operaciones necesarias para el cierre del sistema:
+            - "Limpia" los puertos GPIO que hayan podido usarse
+            - Desbloquea la posible ejecución de otra futura instancia del mismo sistema
+        '''
+        try:
+            self._config.GPIOS
+
+        except AttributeError:
+            pass
+
+        else:
+            GPIO.cleanup()                                                          # Devolvemos los pines a su estado inicial
+
+        if not(self._bloqueo == False):
+            self._bloqueo.desbloquear() 
 
 
     def test(self):
@@ -135,34 +174,8 @@ class app(object):
             sleep(self._config.PAUSA)
 
 
-    def sig_apagado(self, signum, frame):
-        ''' Funcion "wrapper" para el procesamiento de la señal de apagado
-        '''
-
-        self.apagado()
-
-
-    def sig_test(self, signum, frame):
-        ''' Funcion "wrapper" para el procesamiento de la señal de pruebas
-        '''
-
-        self.test()
-
-
     def __del__(self):
-        ''' Destructor de la clase: Realiza las operaciones necesarias para el cierre del sistema:
-            - "Limpia" los puertos GPIO que hayan podido usarse
-            - Desbloquea la posible ejecución de otra futura instancia del mismo sistema
+        ''' Destructor de la clase: Llama a la función de cierre del sistema
         '''
 
-        try:
-            self._config.GPIOS
-
-        except AttributeError:
-            pass
-
-        else:
-            GPIO.cleanup()                                                          # Devolvemos los pines a su estado inicial
-
-        if not(self._bloqueo == False):
-            self._bloqueo.desbloquear() 
+        self.cerrar() 
