@@ -5,10 +5,13 @@
 # Title         : comun.py
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
-# Date          : 16-07-2017
+# Date          : 18-07-2017
 # Version       : 0.2.2
 # Usage         : import comun | from comun import <clase>
 # Notes         : 
+
+
+DEBUG = True
 
 
 from abc import ABCMeta, abstractmethod                                         # Clases abstractas
@@ -144,6 +147,10 @@ class app(object):
             - "Limpia" los puertos GPIO que hayan podido usarse
             - Desbloquea la posible ejecución de otra futura instancia del mismo sistema
         '''
+
+        if DEBUG:
+            print('Disparado el evento de cierre')
+
         try:
             self._config.GPIOS
 

@@ -26,7 +26,8 @@ class cpu_config:
 
     PAUSA           = 10
 
-    senyales        = {'SIGUSR1': 'sig_test',
+    senyales        = {'SIGTERM': 'sig_cerrar',
+                       'SIGUSR1': 'sig_test',
                        'SIGUSR2': 'sig_apagado',
                       }
 
@@ -40,9 +41,10 @@ class domotica_servidor_config:
                        (27, True,  True ),
                       ]
 
-    PAUSA           = 0.1
+    PAUSA           = 1
 
-    senyales        = {'SIGUSR1': 'sig_test',
+    senyales        = {'SIGTERM': 'sig_cerrar',
+                       'SIGUSR1': 'sig_test',
                       }
 
 
@@ -61,7 +63,8 @@ class reiniciar_router_config:
 
     PAUSA           = 15
 
-    senyales        = {'SIGUSR1': 'sig_test',
+    senyales        = {'SIGTERM': 'sig_cerrar',
+                       'SIGUSR1': 'sig_test',
                       }
 
 
@@ -76,6 +79,7 @@ class temperaturas_config:
 
     PAUSA           = 60
 
-    senyales        = {'SIGUSR1': 'sig_test',
+    senyales        = {'SIGTERM': 'sig_cerrar',
+                       'SIGUSR1': 'sig_test',
                        'SIGUSR2': 'sig_apagado',
                       }

@@ -88,7 +88,8 @@ class domotica_servidor(comun.app):
         except KeyboardInterrupt:
             sys.exit(0)
 
-    def __del__(self):
+
+    def cerrar(self):
         if DEBUG:
             print('Padre #', os.getpid(), "\tTerminando...")
 
@@ -105,6 +106,10 @@ class domotica_servidor(comun.app):
                     hijo.terminate()
                     del(hijo)
 
+        super().cerrar()
+
+
+    def __del__(self):
         super().__del__()
 
 
