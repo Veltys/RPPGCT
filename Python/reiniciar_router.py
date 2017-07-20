@@ -9,7 +9,7 @@
 # Version       : 2.1.5
 # Usage         : python3 reiniciar_router.py
 # Notes         : La idea es conectar un relé a este GPIO y al mismo la alimentación del sistema de acceso a Internet
-#		          Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
+#                 Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual simplemente apaga todos los leds hasta que esta misma señal sea recibida de nuevo
 
 

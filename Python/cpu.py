@@ -23,7 +23,7 @@ except ImportError:
   sys.exit(errno.ENOENT)
 
 from psutil import cpu_percent                                                  # Obtención del porcentaje de uso de la CPU
-from time import sleep	                                                        # Para hacer pausas
+from time import sleep                                                            # Para hacer pausas
 from shlex import split                                                         # Manejo de cadenas
 import comun                                                                    # Funciones comunes a varios sistemas
 import os                                                                       # Funcionalidades varias del sistema operativo
