@@ -32,7 +32,8 @@ except ImportError:
 from copy import deepcopy                                                       # Copia "segura" de objetos
 from threading import Thread                                                    # Capacidades multihilo
 from time import sleep                                                          # Para hacer pausas
-import comun as comun                                                           # Funciones comunes a varios sistemas
+import comun                                                                    # Funciones comunes a varios sistemas
+import socket                                                                   # Tratamiento de sockets
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 
@@ -40,27 +41,38 @@ class domotica_servidor(comun.app):
     def __init__(self, config, nombre):
         super().__init__(config, nombre)
 
+        self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._socket.bind(('', self._config.puerto))
+        self._socket.listen(1)
+        self._sc, self._dir = self._socket.accept()
+
     def bucle(self):
-        if DEBUG:
-            print('Padre #', os.getpid(), "\tMi configuración es: ", self._config.GPIOS, sep = '')
-            print('Padre #', os.getpid(), "\tPienso iniciar ", int(len(self._config.GPIOS) / 2), ' hijos', sep = '')
-
-        hijos = list()
-        for i in range(int(len(self._config.GPIOS) / 2)):
+        try:
             if DEBUG:
-                print('Padre #', os.getpid(), "\tPreparando hijo ", i, sep = '')
+                print('Padre #', os.getpid(), "\tMi configuración es: ", self._config.GPIOS, sep = '')
+                print('Padre #', os.getpid(), "\tPienso iniciar ", int(len(self._config.GPIOS) / 2), ' hijos', sep = '')
 
-            hijos.append(Thread(target = main_hijos, args = (i,)))
+            hijos = list()
+            for i in range(int(len(self._config.GPIOS) / 2)):
+                if DEBUG:
+                    print('Padre #', os.getpid(), "\tPreparando hijo ", i, sep = '')
 
-            if DEBUG:
-                print('Padre #', os.getpid(), "\tArrancando hijo ", i, sep = '')
+                hijos.append(Thread(target = main_hijos, args = (i,)))
 
-            hijos[i].start()
+                if DEBUG:
+                    print('Padre #', os.getpid(), "\tArrancando hijo ", i, sep = '')
 
-            # TODO: Bucle de funciones de red
-            # self.cerrar()
+                hijos[i].start()
 
-        sleep(self._config.PAUSA)
+                comando = self._sc.recv(1024)
+                while comando[0:5].lower() != 'salir':
+                    print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
+
+            sleep(self._config.PAUSA)
+
+        except KeyboardInterrupt:
+            self.cerrar()
+            return
 
 
     def cerrar(self):
@@ -97,36 +109,39 @@ class domotica_servidor_hijos(comun.app):
 
 
     def bucle(self):
-        while True:
-            for i in range(0, int(len(self._GPIOS)), 2):                                            # Se recorre la configuración propia (no la general), tomandos un paso de 2, ya que los puertos se trabajan por pares
-                if DEBUG:
-                    print('Hijo  #', self._id_hijo, "\tRecorriendo puertos GPIO. Voy por el puerto GPIO", self._GPIOS[i][0], sep = '')
-
-                if GPIO.input(self._GPIOS[i][0]) and not(self._GPIOS[i][2]):                        # Se comprueba el puerto que ha sido activado y que no sea recurrente (dejar el botón pulsado)
+        try:
+            while True:
+                for i in range(0, int(len(self._GPIOS)), 2):                                            # Se recorre la configuración propia (no la general), tomandos un paso de 2, ya que los puertos se trabajan por pares
                     if DEBUG:
-                        print('Hijo  #', self._id_hijo, "\tOrden de conmutación recibida en el puerto GPIO", self._GPIOS[i][0], sep = '')
-                        print('Hijo  #', self._id_hijo, "\tComutando el puerto GPIO", self._GPIOS[i + 1][0], sep = '')
+                        print('Hijo  #', self._id_hijo, "\tRecorriendo puertos GPIO. Voy por el puerto GPIO", self._GPIOS[i][0], sep = '')
 
-                    GPIO.output(self._GPIOS[i + 1][0], not(GPIO.input(self._GPIOS[i + 1][0])))      # Se conmuta la salida del puerto GPIO
+                    if GPIO.input(self._GPIOS[i][0]) and not(self._GPIOS[i][2]):                        # Se comprueba el puerto que ha sido activado y que no sea recurrente (dejar el botón pulsado)
+                        if DEBUG:
+                            print('Hijo  #', self._id_hijo, "\tOrden de conmutación recibida en el puerto GPIO", self._GPIOS[i][0], sep = '')
+                            print('Hijo  #', self._id_hijo, "\tComutando el puerto GPIO", self._GPIOS[i + 1][0], sep = '')
 
-                    self._GPIOS[i][2] = not(self._GPIOS[i][2])                                      # Se indica que el puerto que ha sido activado
+                        GPIO.output(self._GPIOS[i + 1][0], not(GPIO.input(self._GPIOS[i + 1][0])))      # Se conmuta la salida del puerto GPIO
 
-                elif not(GPIO.input(self._GPIOS[i][0])) and self._GPIOS[i][2]:                      # Se comprueba el puerto que ha sido desactivado y que antes había sido activado
-                    if DEBUG:
-                        print('Hijo  #', self._id_hijo, "\tEl puerto GPIO", self._GPIOS[i][0], ' ha sido levantado', sep = '')
+                        self._GPIOS[i][2] = not(self._GPIOS[i][2])                                      # Se indica que el puerto que ha sido activado
 
-                    self._GPIOS[i][2] = not(self._GPIOS[i][2])                                      # Se indica que el el puerto que ha sido desactivado
+                    elif not(GPIO.input(self._GPIOS[i][0])) and self._GPIOS[i][2]:                      # Se comprueba el puerto que ha sido desactivado y que antes había sido activado
+                        if DEBUG:
+                            print('Hijo  #', self._id_hijo, "\tEl puerto GPIO", self._GPIOS[i][0], ' ha sido levantado', sep = '')
 
-                # else:
+                        self._GPIOS[i][2] = not(self._GPIOS[i][2])                                      # Se indica que el el puerto que ha sido desactivado
 
-            sleep(self._config.PAUSA)
+                    # else:
+
+                sleep(self._config.PAUSA)
+
+        except KeyboardInterrupt:
+            self.cerrar()
+            return
 
 
     def cerrar(self):
         if DEBUG:
             print('Proc. #', os.getpid(), "\tDisparado el evento de cierre", sep = '')
-
-        os._exit(0)
 
         # super().cerrar()
 

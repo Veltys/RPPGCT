@@ -62,7 +62,8 @@ class reiniciar_router(comun.app):
                     sleep(self._config.PAUSA * 12)                                          # Al acabar, se esperará a que se haya levantado la conexión y se volverá a comprobar
 
         except KeyboardInterrupt:
-            sys.exit(0)
+            self.cerrar()
+            return
 
     def __del__(self):
         super().__del__()

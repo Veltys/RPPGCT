@@ -69,7 +69,8 @@ class cpu(comun.app):
                 sleep(self._config.PAUSA)
 
         except KeyboardInterrupt:
-            sys.exit(0)
+            self.cerrar()
+            return
 
     def __del__(self):
         super().__del__()

@@ -33,22 +33,21 @@ import socket                                                                   
 
 class domotica_cliente(comun.app):
     def __init__(self, config, nombre):
-        self._socket = socket.socket()
-
         super().__init__(config, nombre)
+
+        self._socket = socket.socket()
 
     def bucle(self):
         try:
-            while True:
-                comando = input('Introduzca un comando: ')
-
+            comando = input('Introduzca un comando: ')
+            comando = comando.lower()
+            while comando[0:5] != 'salir':
                 # conectar
-                if comando[0:8].lower() == 'conectar' and comando[8] == ' ' and comando[9:] != '':
+                if comando[0:8] == 'conectar' and comando[8] == ' ' and comando[9:] != '':
                     print('Conectando a ' + comando[9:])
 
                     try:
-                        self._socket.connect((comando[9:], 4710))               # El puerto 4710 ha sido escogido arbitrariamente por estar libre, según la IANA:
-                                                                                # https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?&page=85
+                        self._socket.connect((comando[9:], self._config.puerto))
 
                     except TimeoutError:
                         print('Error: Tiempo de espera agotado al conectar a ' + comando[9:], file=sys.stderr)
@@ -57,16 +56,16 @@ class domotica_cliente(comun.app):
                         print('Error: Imposible conectar a ' + comando[9:], file=sys.stderr)
 
                 # listar
-                elif comando[0:6].lower() == 'listar':
-                    self._socket.send(comando[0:6])
+                elif comando == 'listar':
+                    self._socket.send(comando)
                     self._lista_GPIOs = self._socket.recv(1024)
                     self._lista_GPIOs = self._lista_GPIOs.split(',')
 
                     self.mostrar_lista_GPIOs()
 
-                # salir
-                elif comando[0:5].lower() == 'salir':
-                    sys.exit(0)
+                # salir                                                        # La salida propiamente dicha será ejecutada en la siguiente vuelta del bucle
+                elif comando == 'salir':
+                    self._socket.send(comando)
 
                 else:
                     print('Error: El comando "' + comando + '" no ha sido reconocido. Por favor, inténtelo de nuevo.', file=sys.stderr)
@@ -74,8 +73,11 @@ class domotica_cliente(comun.app):
 
                 sleep(self._config.PAUSA)
 
+                comando = input('Introduzca un comando: ')
+
         except KeyboardInterrupt:
-            sys.exit(0)
+            self.cerrar()
+            return
 
     def mostrar_lista_GPIOs(self):
         try:
