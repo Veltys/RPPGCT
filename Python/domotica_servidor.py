@@ -99,12 +99,22 @@ class domotica_servidor_hijos(comun.app):
     def bucle(self):
         while True:
             for i in range(0, int(len(self._GPIOS)), 2):                                            # Se recorre la configuración propia (no la general), tomandos un paso de 2, ya que los puertos se trabajan por pares
-                if GPIO.input(self._GPIOS[i][0]) and not(self._GPIOS[i][2]):                        # Se comprueba el puerto que ha sido activado y que no sea recurrente (dejar el botón pulsado) 
+                if DEBUG:
+                    print('Hijo  #', self._id_hijo, "\tRecorriendo puertos GPIO. Voy por el puerto GPIO", self._GPIOS[i][0], sep = '')
+
+                if GPIO.input(self._GPIOS[i][0]) and not(self._GPIOS[i][2]):                        # Se comprueba el puerto que ha sido activado y que no sea recurrente (dejar el botón pulsado)
+                    if DEBUG:
+                        print('Hijo  #', self._id_hijo, "\tOrden de conmutación recibida en el puerto GPIO", self._GPIOS[i][0], sep = '')
+                        print('Hijo  #', self._id_hijo, "\tComutando el puerto GPIO", self._GPIOS[i + 1][0], sep = '')
+
                     GPIO.output(self._GPIOS[i + 1][0], not(GPIO.input(self._GPIOS[i + 1][0])))      # Se conmuta la salida del puerto GPIO
 
                     self._GPIOS[i][2] = not(self._GPIOS[i][2])                                      # Se indica que el puerto que ha sido activado
 
                 elif not(GPIO.input(self._GPIOS[i][0])) and self._GPIOS[i][2]:                      # Se comprueba el puerto que ha sido desactivado y que antes había sido activado
+                    if DEBUG:
+                        print('Hijo  #', self._id_hijo, "\tEl puerto GPIO", self._GPIOS[i][0], ' ha sido levantado', sep = '')
+
                     self._GPIOS[i][2] = not(self._GPIOS[i][2])                                      # Se indica que el el puerto que ha sido desactivado
 
                 # else:
