@@ -20,6 +20,7 @@ DEBUG = True
 
 import errno                                                                    # Códigos de error
 import sys                                                                      # Funcionalidades varias del sistema
+import os                                                                       # Funcionalidades varias del sistema operativo
 
 try:
     from config import domotica_servidor_config as config                       # Configuración
@@ -28,11 +29,11 @@ except ImportError:
     print('Error: Archivo de configuración no encontrado', file=sys.stderr)
     sys.exit(errno.ENOENT)
 
+from copy import deepcopy                                                       # Copia "segura" de objetos
+from threading import Thread                                                    # Capacidades multihilo
 from time import sleep                                                          # Para hacer pausas
-import comun                                                                    # Funciones comunes a varios sistemas
-import multiprocessing                                                          # Multiprocesamiento
-import os                                                                       # Funcionalidades varias del sistema operativo
-import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
+import comun as comun                                                           # Funciones comunes a varios sistemas
+#Windows import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 
 class domotica_servidor(comun.app):
@@ -40,72 +41,29 @@ class domotica_servidor(comun.app):
         super().__init__(config, nombre)
 
     def bucle(self):
-        try:
+        if DEBUG:
+            print('Padre #', os.getpid(), "\tMi configuración es: ", self._config.GPIOS, sep = '')
+            print('Padre #', os.getpid(), "\tPienso iniciar ", int(len(self._config.GPIOS) / 2), ' hijos', sep = '')
+
+        hijos = list()
+        for i in range(int(len(self._config.GPIOS) / 2)):
             if DEBUG:
-                print('Padre #', os.getpid(), "\tMi configuración es: ", self._config.GPIOS, sep = '')
-                print('Padre #', os.getpid(), "\tPienso iniciar ", int(len(self._config.GPIOS) / 2), ' hijos', sep = '')
- 
-            # Preparación de los parámetros que van a recibir los hijos
-            parametros = []
-            for i in range(int(len(self._config.GPIOS) / 2)):
-                parametros.append([])
+                print('Padre #', os.getpid(), "\tPreparando hijo ", i, sep = '')
 
-            for i in range(len(self._config.GPIOS)):
-                if i % 2 == 0:
-                    parametros[int(i / 2)].append(self._config.GPIOS[i])
+            hijos.append(Thread(target = main_hijos, args = (i,)))
 
-                else:
-                    parametros[int(i / 2)].append(self._config.GPIOS[i])
-
-            # Creación de la piscina
-            self._hijos = []
-            for i in range(int(len(self._config.GPIOS) / 2)):
-                if DEBUG:
-                    print('Padre #', os.getpid(), "\tCreando hijo: ", i, sep = '')
-
-                self._hijos.append(multiprocessing.Process(name = 'Hijo ' + str(i), target = domotica_servidor_hijos(parametros[i]).bucle))
-
-            # Arrancamos los hijos
             if DEBUG:
-                print('Padre #', os.getpid(), "\tArrancando hijos")
+                print('Padre #', os.getpid(), "\tArrancando hijo ", i, sep = '')
 
-            for hijo in self._hijos:
-                hijo.start()
+            hijos[i].start()
 
-            # Bucle para finalización y procesamiento
-            while self._hijos:
-                for hijo in self._hijos:
-                    if not(hijo.is_alive()):
-                        hijo.join()
-                        hijos.remove(hijo)
-                        del(hijo)
-                
-                if DEBUG:
-                    print('Padre #', os.getpid(), "\tEsperando...")
-                    
-                sleep(self._config.PAUSA)
- 
-        except KeyboardInterrupt:
-            sys.exit(0)
+            # TODO: Bucle de funciones de red
+            # self.cerrar()
+
+        sleep(self._config.PAUSA)
 
 
     def cerrar(self):
-        if DEBUG:
-            print('Padre #', os.getpid(), "\tTerminando...")
-
-        try:
-            self._hijos
-
-        except AttributeError:
-            pass
-
-        else:
-            for hijo in self._hijos:
-                if hijo.is_alive():
-                    hijo.join()
-                    hijo.terminate()
-                    del(hijo)
-
         super().cerrar()
 
 
@@ -114,52 +72,55 @@ class domotica_servidor(comun.app):
 
 
 class domotica_servidor_hijos(comun.app):
-    def __init__(self, config_GPIOS, nombre = False):
+    def __init__(self, id_hijo, config):
+        ''' Constructor de la clase:
+            - Inicializa variables
+            - Carga la configuración
+        '''
+
+        # super().__init__()                                                    # La llamada al constructor de la clase padre está comentada a propósito
+
+        self._bloqueo = False
+        self._config = config
+        self._modo_apagado = False
+
+        self._id_hijo = id_hijo
+
+        self._GPIOS = list()
+        self._GPIOS.append(self._config.GPIOS[self._id_hijo * 2])
+        self._GPIOS.append(self._config.GPIOS[self._id_hijo * 2 + 1])
+        
         if DEBUG:
-            print('Hijo #', os.getpid(), "\tMis parámetros son: ", config_GPIOS, sep = '')
-            print('Hijo #', os.getpid(), "\tMi configuración de GPIOS heredada es: ", config.GPIOS, sep = '')
+            print('Hijo  #', self._id_hijo, "\tMi configuración es ", self._GPIOS, sep = '')
+            print('Hijo  #', self._id_hijo, "\tDeberé escuchar en el puerto GPIO", self._GPIOS[0][0] , ' y conmutar el puerto GPIO', self._GPIOS[1][0], sep = '')
 
-        config.GPIOS = config_GPIOS
-
-        super().__init__(config, nombre)
-
-        if DEBUG:
-            print('Hijo #', os.getpid(), "\tLa he sustituido por: ", self._config.GPIOS, sep = '')
 
 
     def bucle(self):
+        sleep(self._config.PAUSA)
+
+
+    def cerrar(self):
         if DEBUG:
-            print('Hijo #', os.getpid(), "\tTrabajando...", sep = '')
+            print('Proc. #', os.getpid(), "\tDisparado el evento de cierre", sep = '')
 
-            while True:
-                for i in range(0, int(len(self._config.GPIOS)), 2):
-                    if GPIO.input(self._config.GPIOS[i][0]) and not(self._config.GPIOS[i][1]):
-                        if(self._config.GPIOS[i][2]):
-                            GPIO.output(self._config.GPIOS[i + 1][0], GPIO.LOW if self._config.GPIOS[i + 1][2] else GPIO.HIGH)
-                        else:
-                            GPIO.output(self._config.GPIOS[i + 1][0], GPIO.HIGH if self._config.GPIOS[i + 1][2] else GPIO.LOW)
+        os._exit(0)
 
-                        self._config.GPIOS[i][2] = not(self._config.GPIOS[i][2])
-                        self._config.GPIOS[i][1] = not(self._config.GPIOS[i][1])
+        # super().cerrar()
 
-                    elif not(GPIO.input(self._config.GPIOS[i][0])) and self._config.GPIOS[i][1]:
-                        self._config.GPIOS[i][1] = not(self._config.GPIOS[i][1])
-
-                    # else:
-
-                sleep(self._config.PAUSA)
 
     def __del__(self):
-        if DEBUG:
-            print('Hijo #', os.getpid(), "\tRecibida orden de cierre. Terminando...")
-                    
         super().__del__()
 
 
-
 def main(argv = sys.argv):
-     app = domotica_servidor(config, os.path.basename(sys.argv[0]))
-     app.arranque()
+    app = domotica_servidor(config, os.path.basename(sys.argv[0]))
+    app.arranque()
+
+
+def main_hijos(argv):
+    app = domotica_servidor_hijos(argv, config)
+    app.arranque()
 
 
 if __name__ == '__main__':
