@@ -21,7 +21,7 @@ import errno                                                                    
 import os                                                                       # Funcionalidades varias del sistema operativo
 import signal                                                                   # Manejo de señales
 import sys                                                                      # Funcionalidades varias del sistema
-#Windows import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
+import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 
 class app(object):
@@ -95,14 +95,14 @@ class app(object):
                     pass
 
                 else:
-#Windows                    GPIO.setmode(GPIO.BCM)                                      # Establecemos el sistema de numeración BCM
-#Windows                    GPIO.setwarnings(False)                                     # De esta forma no alertará de los problemas
+                    GPIO.setmode(GPIO.BCM)                                      # Establecemos el sistema de numeración BCM
+                    GPIO.setwarnings(False)                                     # De esta forma no alertará de los problemas
 
                     for i in range(len(self._config.GPIOS)):                    # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
-#Windows                        if self._config.GPIOS[i][1]:
-#Windows                            GPIO.setup(self._config.GPIOS[i][0], GPIO.OUT)
-#Windows                        else:
-#Windows                            GPIO.setup(self._config.GPIOS[i][0], GPIO.IN, pull_up_down=GPIO.PUD_DOWN) 
+                        if self._config.GPIOS[i][1]:
+                            GPIO.setup(self._config.GPIOS[i][0], GPIO.OUT)
+                        else:
+                            GPIO.setup(self._config.GPIOS[i][0], GPIO.IN, pull_up_down=GPIO.PUD_DOWN) 
 
                         if not(self._config.GPIOS[i][1]):                       # En el caso de tener un pin GPIO de entrada, se necesitará transformar en lista la tupla, ya que es posible que
                             self._config.GPIOS[i] = list(self._config.GPIOS[i]) # haga falta modificar su contenido
@@ -158,8 +158,8 @@ class app(object):
         except AttributeError:
             pass
 
-#Windows        else:
-#Windows            GPIO.cleanup()                                                          # Devolvemos los pines a su estado inicial
+        else:
+            GPIO.cleanup()                                                          # Devolvemos los pines a su estado inicial
 
         if not(self._bloqueo == False):
             self._bloqueo.desbloquear()

@@ -33,7 +33,7 @@ from copy import deepcopy                                                       
 from threading import Thread                                                    # Capacidades multihilo
 from time import sleep                                                          # Para hacer pausas
 import comun as comun                                                           # Funciones comunes a varios sistemas
-#Windows import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
+import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 
 class domotica_servidor(comun.app):
@@ -78,7 +78,7 @@ class domotica_servidor_hijos(comun.app):
             - Carga la configuración
         '''
 
-        # super().__init__()                                                    # La llamada al constructor de la clase padre está comentada a propósito
+        # super().__init__()                                                                        # La llamada al constructor de la clase padre está comentada a propósito
 
         self._bloqueo = False
         self._config = config
@@ -97,7 +97,19 @@ class domotica_servidor_hijos(comun.app):
 
 
     def bucle(self):
-        sleep(self._config.PAUSA)
+        while True:
+            for i in range(0, int(len(self._GPIOS)), 2):                                            # Se recorre la configuración propia (no la general), tomandos un paso de 2, ya que los puertos se trabajan por pares
+                if GPIO.input(self._GPIOS[i][0]) and not(self._GPIOS[i][2]):                        # Se comprueba el puerto que ha sido activado y que no sea recurrente (dejar el botón pulsado) 
+                    GPIO.output(self._GPIOS[i + 1][0], not(GPIO.input(self._GPIOS[i + 1][0])))      # Se conmuta la salida del puerto GPIO
+
+                    self._GPIOS[i][2] = not(self._GPIOS[i][2])                                      # Se indica que el puerto que ha sido activado
+
+                elif not(GPIO.input(self._GPIOS[i][0])) and self._GPIOS[i][2]:                      # Se comprueba el puerto que ha sido desactivado y que antes había sido activado
+                    self._GPIOS[i][2] = not(self._GPIOS[i][2])                                      # Se indica que el el puerto que ha sido desactivado
+
+                # else:
+
+            sleep(self._config.PAUSA)
 
 
     def cerrar(self):
@@ -110,7 +122,7 @@ class domotica_servidor_hijos(comun.app):
 
 
     def __del__(self):
-        # super().__del__()                                                     # La llamada al constructor de la clase padre está comentada a propósito
+        # super().__del__()                                                                         # La llamada al constructor de la clase padre está comentada a propósito
         pass
 
 
