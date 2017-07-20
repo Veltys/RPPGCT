@@ -110,7 +110,8 @@ class domotica_servidor_hijos(comun.app):
 
 
     def __del__(self):
-        super().__del__()
+        # super().__del__()                                                     # La llamada al constructor de la clase padre está comentada a propósito
+        pass
 
 
 def main(argv = sys.argv):
