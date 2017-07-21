@@ -11,9 +11,6 @@
 # Notes         : 
 
 
-DEBUG = True
-
-
 from abc import ABCMeta, abstractmethod                                         # Clases abstractas
 from pid import bloqueo                                                         # Módulo propio para bloquear la ejecución de más de una instancia
 from time import sleep                                                          # Para hacer pausas
@@ -21,7 +18,7 @@ import errno                                                                    
 import os                                                                       # Funcionalidades varias del sistema operativo
 import signal                                                                   # Manejo de señales
 import sys                                                                      # Funcionalidades varias del sistema
-# import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
+import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 
 class app(object):
@@ -149,9 +146,6 @@ class app(object):
             - Desbloquea la posible ejecución de otra futura instancia del mismo sistema
         '''
 
-        if DEBUG:
-            print('Proc. #', os.getpid(), "\tDisparado el evento de cierre", sep = '')
-
         try:
             self._config.GPIOS
 
@@ -183,7 +177,7 @@ class app(object):
 
 
     def __del__(self):
-        ''' Destructor de la clase: Llama a la función de cierre del sistema
+        ''' Destructor de la clase: Ya que su ejecución no está asegurada, no hace nada
         '''
 
-        self.cerrar() 
+        pass

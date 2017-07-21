@@ -157,6 +157,8 @@ class domotica_servidor_hijos(comun.app):
 
                 sleep(self._config.PAUSA)
 
+            self.cerrar()
+
         except KeyboardInterrupt:
             self.cerrar()
             return
