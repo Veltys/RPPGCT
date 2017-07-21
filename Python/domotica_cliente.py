@@ -57,7 +57,7 @@ class domotica_cliente(comun.app):
 
                 # listar
                 elif comando == 'listar':
-                    self._socket.send(comando)
+                    self._socket.sendall(comando.encode('utf-8'))
                     self._lista_GPIOs = self._socket.recv(1024)
                     self._lista_GPIOs = self._lista_GPIOs.split(',')
 
@@ -65,7 +65,7 @@ class domotica_cliente(comun.app):
 
                 # salir                                                        # La salida propiamente dicha será ejecutada en la siguiente vuelta del bucle
                 elif comando == 'salir':
-                    self._socket.send(comando)
+                    self._socket.send(comando.encode('utf-8'))
 
                 else:
                     print('Error: El comando "' + comando + '" no ha sido reconocido. Por favor, inténtelo de nuevo.', file=sys.stderr)

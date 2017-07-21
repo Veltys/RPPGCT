@@ -21,7 +21,7 @@ import errno                                                                    
 import os                                                                       # Funcionalidades varias del sistema operativo
 import signal                                                                   # Manejo de señales
 import sys                                                                      # Funcionalidades varias del sistema
-import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
+# import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 
 class app(object):

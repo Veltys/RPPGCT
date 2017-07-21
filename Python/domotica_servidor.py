@@ -16,7 +16,7 @@
 
 
 DEBUG = True
-
+salir = False
 
 import errno                                                                    # Códigos de error
 import sys                                                                      # Funcionalidades varias del sistema
@@ -34,7 +34,7 @@ from threading import Thread                                                    
 from time import sleep                                                          # Para hacer pausas
 import comun                                                                    # Funciones comunes a varios sistemas
 import socket                                                                   # Tratamiento de sockets
-import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
+#Windows import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 
 class domotica_servidor(comun.app):
@@ -47,31 +47,39 @@ class domotica_servidor(comun.app):
 
     def bucle(self):
         try:
-            if DEBUG:
-                print('Padre #', os.getpid(), "\tMi configuración es: ", self._config.GPIOS, sep = '')
-                print('Padre #', os.getpid(), "\tPienso iniciar ", int(len(self._config.GPIOS) / 2), ' hijos', sep = '')
+#Windows             if DEBUG:
+#Windows                 print('Padre #', os.getpid(), "\tMi configuración es: ", self._config.GPIOS, sep = '')
+#Windows                 print('Padre #', os.getpid(), "\tPienso iniciar ", int(len(self._config.GPIOS) / 2), ' hijos', sep = '')
 
-            hijos = list()
-            for i in range(int(len(self._config.GPIOS) / 2)):
-                if DEBUG:
-                    print('Padre #', os.getpid(), "\tPreparando hijo ", i, sep = '')
+#Windows             self._hijos = list()
+#Windows             for i in range(int(len(self._config.GPIOS) / 2)):
+#Windows                 if DEBUG:
+#Windows                     print('Padre #', os.getpid(), "\tPreparando hijo ", i, sep = '')
 
-                hijos.append(Thread(target = main_hijos, args = (i,)))
+#Windows                 self._hijos.append(Thread(target = main_hijos, args = (i,)))
 
-                if DEBUG:
-                    print('Padre #', os.getpid(), "\tArrancando hijo ", i, sep = '')
+#Windows                 if DEBUG:
+#Windows                     print('Padre #', os.getpid(), "\tArrancando hijo ", i, sep = '')
 
-                hijos[i].start()
+#Windows                 self._hijos[i].start()
 
             sc, dir = self._socket.accept()
             comando = sc.recv(1024)
+
+            if DEBUG:
+                print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
+
+            comando = comando.decode('utf_8')
+
+            if DEBUG:
+                print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
+
             comando = comando.lower()
 
             if DEBUG:
                 print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
-            
-            while comando[0:5] != 'salir':
 
+            while comando[0:5] != 'salir':
                 sleep(self._config.PAUSA)
                 comando = sc.recv(1024)
 
@@ -84,6 +92,13 @@ class domotica_servidor(comun.app):
 
 
     def cerrar(self):
+        global salir
+
+        salir = True
+
+        if DEBUG:
+            print('Padre #', os.getpid(), "\tDisparado el evento de cierre", sep = '')
+
         super().cerrar()
 
 
@@ -118,7 +133,7 @@ class domotica_servidor_hijos(comun.app):
 
     def bucle(self):
         try:
-            while True:
+            while not(salir):
                 for i in range(0, int(len(self._GPIOS)), 2):                                            # Se recorre la configuración propia (no la general), tomandos un paso de 2, ya que los puertos se trabajan por pares
                     if DEBUG:
                         print('Hijo  #', self._id_hijo, "\tRecorriendo puertos GPIO. Voy por el puerto GPIO", self._GPIOS[i][0], sep = '')
@@ -149,7 +164,7 @@ class domotica_servidor_hijos(comun.app):
 
     def cerrar(self):
         if DEBUG:
-            print('Proc. #', os.getpid(), "\tDisparado el evento de cierre", sep = '')
+            print('Hijo #', self._id_hijo, "\tDisparado el evento de cierre", sep = '')
 
         # super().cerrar()
 
