@@ -44,7 +44,6 @@ class domotica_servidor(comun.app):
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._socket.bind(('', self._config.puerto))
         self._socket.listen(1)
-        self._sc, self._dir = self._socket.accept()
 
     def bucle(self):
         try:
@@ -64,11 +63,20 @@ class domotica_servidor(comun.app):
 
                 hijos[i].start()
 
-                comando = self._sc.recv(1024)
-                while comando[0:5].lower() != 'salir':
-                    print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
+            sc, dir = self._socket.accept()
+            comando = sc.recv(1024)
+            comando = comando.lower()
 
-            sleep(self._config.PAUSA)
+            if DEBUG:
+                print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
+            
+            while comando[0:5] != 'salir':
+
+                sleep(self._config.PAUSA)
+                comando = sc.recv(1024)
+
+                if DEBUG:
+                    print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
 
         except KeyboardInterrupt:
             self.cerrar()
