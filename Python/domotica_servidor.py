@@ -16,7 +16,7 @@
 
 
 DEBUG = True
-salir = False
+salir = False                                                                   # Ya que no es posible matar a un hilo, esta "bandera" global servirá para indicarle a los hilos que deben terminar 
 
 import errno                                                                    # Códigos de error
 import sys                                                                      # Funcionalidades varias del sistema
@@ -34,7 +34,7 @@ from threading import Thread                                                    
 from time import sleep                                                          # Para hacer pausas
 import comun                                                                    # Funciones comunes a varios sistemas
 import socket                                                                   # Tratamiento de sockets
-#Windows import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
+import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 
 class domotica_servidor(comun.app):
@@ -47,21 +47,21 @@ class domotica_servidor(comun.app):
 
     def bucle(self):
         try:
-#Windows             if DEBUG:
-#Windows                 print('Padre #', os.getpid(), "\tMi configuración es: ", self._config.GPIOS, sep = '')
-#Windows                 print('Padre #', os.getpid(), "\tPienso iniciar ", int(len(self._config.GPIOS) / 2), ' hijos', sep = '')
+            if DEBUG:
+                print('Padre #', os.getpid(), "\tMi configuración es: ", self._config.GPIOS, sep = '')
+                print('Padre #', os.getpid(), "\tPienso iniciar ", int(len(self._config.GPIOS) / 2), ' hijos', sep = '')
 
-#Windows             self._hijos = list()
-#Windows             for i in range(int(len(self._config.GPIOS) / 2)):
-#Windows                 if DEBUG:
-#Windows                     print('Padre #', os.getpid(), "\tPreparando hijo ", i, sep = '')
+            self._hijos = list()
+            for i in range(int(len(self._config.GPIOS) / 2)):
+                if DEBUG:
+                    print('Padre #', os.getpid(), "\tPreparando hijo ", i, sep = '')
 
-#Windows                 self._hijos.append(Thread(target = main_hijos, args = (i,)))
+                self._hijos.append(Thread(target = main_hijos, args = (i,)))
 
-#Windows                 if DEBUG:
-#Windows                     print('Padre #', os.getpid(), "\tArrancando hijo ", i, sep = '')
+                if DEBUG:
+                    print('Padre #', os.getpid(), "\tArrancando hijo ", i, sep = '')
 
-#Windows                 self._hijos[i].start()
+                self._hijos[i].start()
 
             sc, dir = self._socket.accept()
             comando = sc.recv(1024)
