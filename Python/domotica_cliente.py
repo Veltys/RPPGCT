@@ -32,7 +32,7 @@ import socket                                                                   
 
 
 class domotica_cliente(comun.app):
-    def __init__(self, config, nombre):
+    def __init__(self, config, nombre = False):
         super().__init__(config, nombre)
 
         self._socket = socket.socket()
@@ -41,7 +41,7 @@ class domotica_cliente(comun.app):
         try:
             comando = input('Introduzca un comando: ')
             comando = comando.lower()
-            while comando[0:5] != 'salir':
+            while comando != 'salir':
                 # conectar
                 if comando[0:8] == 'conectar' and comando[8] == ' ' and comando[9:] != '':
                     print('Conectando a ' + comando[9:])
@@ -57,23 +57,27 @@ class domotica_cliente(comun.app):
 
                 # listar
                 elif comando == 'listar':
-                    self._socket.sendall(comando.encode('utf-8'))
+                    self._socket.send(comando.encode('utf-8'))
                     self._lista_GPIOs = self._socket.recv(1024)
-                    self._lista_GPIOs = self._lista_GPIOs.split(',')
+                    self._lista_GPIOs = self._lista_GPIOs.decode('utf-8')
+
+                    self._lista_GPIOs = self._lista_GPIOs.split(' ')
 
                     self.mostrar_lista_GPIOs()
 
-                # salir                                                        # La salida propiamente dicha será ejecutada en la siguiente vuelta del bucle
-                elif comando == 'salir':
-                    self._socket.send(comando.encode('utf-8'))
-
                 else:
                     print('Error: El comando "' + comando + '" no ha sido reconocido. Por favor, inténtelo de nuevo.', file=sys.stderr)
+                    
+                    self._socket.send(comando.encode('utf-8'))
                     
 
                 sleep(self._config.PAUSA)
 
                 comando = input('Introduzca un comando: ')
+
+            # salir                                                             # La salida propiamente dicha será ejecutada en la siguiente vuelta del bucle
+            if comando == 'salir':
+                self._socket.sendall(comando.encode('utf-8'))
 
         except KeyboardInterrupt:
             self.cerrar()
@@ -90,8 +94,9 @@ class domotica_cliente(comun.app):
 
         else:
             print('Puertos GPIO que están activos:')
-            for i, puerto in self._lista_GPIOs:
-                print("\t" + i, sep = '')
+
+            for puerto in self._lista_GPIOs:
+                print("\t" + puerto, sep = '')
 
             return True
 
@@ -101,7 +106,7 @@ class domotica_cliente(comun.app):
 
 
 def main(argv = sys.argv):
-     app = domotica_cliente(config, os.path.basename(sys.argv[0]))
+     app = domotica_cliente(config)
      app.arranque()
 
 

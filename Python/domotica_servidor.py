@@ -63,28 +63,38 @@ class domotica_servidor(comun.app):
 
                 self._hijos[i].start()
 
-            sc, dir = self._socket.accept()
-            comando = sc.recv(1024)
-
-            if DEBUG:
-                print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
-
-            comando = comando.decode('utf_8')
-
-            if DEBUG:
-                print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
-
-            comando = comando.lower()
-
-            if DEBUG:
-                print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
-
-            while comando[0:5] != 'salir':
-                sleep(self._config.PAUSA)
+            while True:
+                sc, dir = self._socket.accept()
                 comando = sc.recv(1024)
+                comando = comando.decode('utf_8')
+                comando = comando.lower()
 
                 if DEBUG:
                     print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
+
+                while comando[0:5] != 'salir':
+                    # listar
+                    if comando == 'listar':
+                        mensaje = ''
+
+                        for entrada in self._config.GPIOS:
+                            for puerto, modo, activacion in entrada:
+                                mensaje = mensaje + str(puerto) + ' '
+
+                        if DEBUG:
+                            print('Padre #', os.getpid(), "\tVoy a mandarle el mensaje: ", mensaje, sep = '')
+
+                        sc.send(mensaje.encode('utf_8'))
+
+                    comando = sc.recv(1024)
+                    comando = comando.decode('utf_8')
+                    comando = comando.lower()
+
+                    if DEBUG:
+                        print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
+
+                if comando[0:5] == 'salir':
+                    sc.close()
 
         except KeyboardInterrupt:
             self.cerrar()
@@ -166,7 +176,7 @@ class domotica_servidor_hijos(comun.app):
 
     def cerrar(self):
         if DEBUG:
-            print('Hijo #', self._id_hijo, "\tDisparado el evento de cierre", sep = '')
+            print('Hijo  #', self._id_hijo, "\tDisparado el evento de cierre", sep = '')
 
         # super().cerrar()
 
