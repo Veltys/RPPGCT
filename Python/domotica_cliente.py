@@ -22,7 +22,7 @@ try:
   from config import domotica_cliente_config as config                          # Configuración
 
 except ImportError:
-  print('Error: Archivo de configuración no encontrado', file=sys.stderr)
+  print('Error: Archivo de configuración no encontrado', file = sys.stderr)
   sys.exit(errno.ENOENT)
 
 from time import sleep                                                          # Para hacer pausas
@@ -35,39 +35,69 @@ class domotica_cliente(comun.app):
     def __init__(self, config, nombre = False):
         super().__init__(config, nombre)
 
-        self._socket = socket.socket()
+        self._estado = 0
+        self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def bucle(self):
         try:
             comando = input('Introduzca un comando: ')
             comando = comando.lower()
+
             while comando != 'salir':
                 # conectar
                 if comando[0:8] == 'conectar' and comando[8] == ' ' and comando[9:] != '':
-                    print('Conectando a ' + comando[9:])
+                    if self._estado == 0:
+                        print('Conectando a ' + comando[9:])
 
-                    try:
-                        self._socket.connect((comando[9:], self._config.puerto))
+                        try:
+                            self._socket.connect((comando[9:], self._config.puerto))
 
-                    except TimeoutError:
-                        print('Error: Tiempo de espera agotado al conectar a ' + comando[9:], file=sys.stderr)
+                        except TimeoutError:
+                            print('Error: Tiempo de espera agotado al conectar a ' + comando[9:], file = sys.stderr)
 
-                    except ConnectionRefusedError:
-                        print('Error: Imposible conectar a ' + comando[9:], file=sys.stderr)
+                        except ConnectionRefusedError:
+                            print('Error: Imposible conectar a ' + comando[9:], file = sys.stderr)
+
+                        else:
+                            print('Conectado a ' + comando[9:])
+                            self._estado = 1
+
+                    else:
+                        print('Error: Imposible conectar a ' + comando[9:] + ', ya hay una conexión activa', file = sys.stderr)
 
                 # listar
                 elif comando == 'listar':
-                    self._socket.send(comando.encode('utf-8'))
-                    self._lista_GPIOs = self._socket.recv(1024)
-                    self._lista_GPIOs = self._lista_GPIOs.decode('utf-8')
+                    if self._estado >= 1:
+                        self._socket.send(comando.encode('utf-8'))
+                        self._lista_GPIOs = self._socket.recv(1024)
+                        self._lista_GPIOs = self._lista_GPIOs.decode('utf-8')
 
-                    self._lista_GPIOs = self._lista_GPIOs.split(' ')
+                        self._lista_GPIOs = self._lista_GPIOs.split(' ')
 
-                    self.mostrar_lista_GPIOs()
+                        if self.mostrar_lista_GPIOs():
+                            self._estado = 2
+
+                    else:
+                        print('Error: Imposible solicitar una lista de puertos GPIO, no ' + self.estado(self._estado + 1), file = sys.stderr)
+
+                # conmutar, pulsar, encender o apagar
+                elif (comando[0:8] == 'conmutar' and comando[8] == ' ' and comando[9:] != '') \
+                  or (comando[0:6] == 'pulsar'   and comando[6] == ' ' and comando[7:] != '') \
+                  or (comando[0:8] == 'encender' and comando[8] == ' ' and comando[9:] != '') \
+                  or (comando[0:6] == 'apagar'   and comando[6] == ' ' and comando[7:] != ''):
+                    if self._estado >= 2:
+                        self._socket.send(comando.encode('utf-8'))
+                        mensaje = self._socket.recv(1024)
+                        mensaje = mensaje.decode('utf-8')
+
+                        
+
+                    else:
+                        print('Error: Imposible interaccionar con el puerto GPIO solicitado, no ' + self.estado(self._estado + 1), file = sys.stderr)
 
                 else:
-                    print('Error: El comando "' + comando + '" no ha sido reconocido. Por favor, inténtelo de nuevo.', file=sys.stderr)
-                    
+                    print('Error: El comando "' + comando + '" no ha sido reconocido. Por favor, inténtelo de nuevo.', file = sys.stderr)
+
                     self._socket.send(comando.encode('utf-8'))
                     
 
@@ -83,12 +113,24 @@ class domotica_cliente(comun.app):
             self.cerrar()
             return
 
+
+    def estado(self, estado = self._estado):
+        if estado == 0:
+            return 'no hay una conexión activa'
+
+        elif estado == 1:
+            return 'hay una conexión activa'
+
+        elif estado == 2:
+            return 'hay una lista de puertos GPIO cargada'
+
+
     def mostrar_lista_GPIOs(self):
         try:
             self._lista_GPIOs
 
         except AttributeError:
-            print('Error: No hay ninguna lista de puertos GPIO cargada', file=sys.stderr)
+            print('Error: No hay ninguna lista de puertos GPIO cargada', file = sys.stderr)
 
             return False
 

@@ -16,7 +16,7 @@ else
 	scripts[0]='cpu'
 	scripts[1]='domotica'
 	scripts[2]='reiniciar_router'
-	scripts[3]='temperaturas'
+	scripts[3]='temperatura'
 
 	for script in "${scripts[@]}"; do
 		/etc/init.d/${script} stop

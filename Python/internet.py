@@ -20,7 +20,7 @@ try:
   from config import internet_config as config                                  # Configuración
 
 except ImportError:
-  print('Error: Archivo de configuración no encontrado', file=sys.stderr)
+  print('Error: Archivo de configuración no encontrado', file = sys.stderr)
   sys.exit(errno.ENOENT)
 
 import os                                                                       # Funciones del sistema operativo

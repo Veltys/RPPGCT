@@ -26,7 +26,7 @@ try:
     from config import domotica_servidor_config as config                       # Configuración
 
 except ImportError:
-    print('Error: Archivo de configuración no encontrado', file=sys.stderr)
+    print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
 
 from copy import deepcopy                                                       # Copia "segura" de objetos
@@ -77,13 +77,16 @@ class domotica_servidor(comun.app):
                     if comando == 'listar':
                         mensaje = ''
 
-                        for entrada in self._config.GPIOS:
-                            for puerto, modo, activacion in entrada:
-                                mensaje = mensaje + str(puerto) + ' '
+                        for i in range(0, int(len(self._config.GPIOS)), 2):
+                            mensaje = mensaje + str(self._config.GPIOS[i][0]) + ' '
 
                         if DEBUG:
                             print('Padre #', os.getpid(), "\tVoy a mandarle el mensaje: ", mensaje, sep = '')
 
+                        sc.send(mensaje.encode('utf_8'))
+
+                    else:
+                        mensaje = comando
                         sc.send(mensaje.encode('utf_8'))
 
                     comando = sc.recv(1024)

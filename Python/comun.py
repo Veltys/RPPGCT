@@ -107,11 +107,11 @@ class app(object):
                 self.bucle()
     
             else:
-                print('Error: No se puede bloquear ' + self._bloqueo.nombre(), file=sys.stderr)
+                print('Error: No se puede bloquear ' + self._bloqueo.nombre(), file = sys.stderr)
                 sys.exit(errno.EACCES)
     
         else:
-            print('Error: Ya se ha iniciado una instancia de ' + self._bloqueo.nombre(), file=sys.stderr)
+            print('Error: Ya se ha iniciado una instancia de ' + self._bloqueo.nombre(), file = sys.stderr)
             sys.exit(errno.EEXIST)
 
 

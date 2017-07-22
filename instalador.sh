@@ -16,7 +16,7 @@ else
 	scripts[0]='cpu'
 	scripts[1]='domotica'
 	scripts[2]='reiniciar_router'
-	scripts[3]='temperaturas'
+	scripts[3]='temperatura'
 	dependencias[0]='config.py.sample'
 	dependencias[1]='comun.py'
 	dependencias[2]='pid.py'

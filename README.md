@@ -30,7 +30,7 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.1.8: Añadido el script actualizador.
 - 0.2.0: Configuración exportada a un único archivo.
 		 Añadido un sistema de comprobación para alertar de una mala configuración.
-		 Actualizados **instalador.sh**, **actualizador.sh** y **desinstalador.sh**.
+		 Actualizados **actualizador.sh**, **instalador.sh** y **desinstalador.sh**.
 		 Eliminado import innecesario en **internet.py**.
 		 Editado **.gitignore** para que no suba el archivo **config.py**.
 - 0.2.1: Arreglo de bug en los scripts de init.
@@ -59,10 +59,12 @@ Colección de utilidades varias para el control GPIO en Python
 		 Modificado **pid.py** para ser compatible con Windows.
 		 Pasado **pid.py** a estilo orientado a objetos.
 		 Actualizados **comun.py**, **cpu.py**, **domotica_servidor.py**, **reiniciar_router.py** y **temperaturas.py** para adecuarse al nuevo **pid.py**.
-		 Actualizado **config.py.sample** con los parámetros correspondientes a las novedades
+		 Actualizado **config.py.sample** con los parámetros correspondientes a las novedades.
 		 Homogeneizado de este documento.
-		 Implementación inicial de **domotica_cliente.py** y de **domotica_gpios.py**.
-		 Movidos varios módulos (**comun.py**, **config.py**, **domotica_cliente.py**, **domotica_gpios.py** y **domotica_servidor.py**) a carpetas independientes.
+		 Implementación inicial de **domotica_cliente.py**.
+		 Renombrado **temperaturas.py** a **temperatura.py** por convención de nombres.
+		 Actualizados **actualizador.sh**, **instalador.sh** y **desinstalador.sh** para adecuarse al cambio de nombre.
+		 
 
 ## Agradecimientos y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
