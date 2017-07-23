@@ -16,6 +16,7 @@
 
 
 DEBUG = True
+DEBUG_PADRE = True
 salir = False                                                                   # Ya que no es posible matar a un hilo, esta "bandera" global servirá para indicarle a los hilos que deben terminar 
 
 import errno                                                                    # Códigos de error
@@ -68,17 +69,18 @@ class domotica_servidor(comun.app):
                 print('Padre #', os.getpid(), "\tMi configuración es: ", self._config.GPIOS, sep = '')
                 print('Padre #', os.getpid(), "\tPienso iniciar ", int(len(self._config.GPIOS) / 2), ' hijos', sep = '')
 
-            self._hijos = list()
-            for i in range(int(len(self._config.GPIOS) / 2)):
-                if DEBUG:
-                    print('Padre #', os.getpid(), "\tPreparando hijo ", i, sep = '')
+            if not(DEBUG_PADRE):
+                self._hijos = list()
+                for i in range(int(len(self._config.GPIOS) / 2)):
+                    if DEBUG:
+                        print('Padre #', os.getpid(), "\tPreparando hijo ", i, sep = '')
 
-                self._hijos.append(Thread(target = main_hijos, args = (i,)))
+                        self._hijos.append(Thread(target = main_hijos, args = (i,)))
 
-                if DEBUG:
-                    print('Padre #', os.getpid(), "\tArrancando hijo ", i, sep = '')
+                    if DEBUG:
+                        print('Padre #', os.getpid(), "\tArrancando hijo ", i, sep = '')
 
-                self._hijos[i].start()
+                    self._hijos[i].start()
 
             while True:
                 sc, dir = self._socket.accept()
