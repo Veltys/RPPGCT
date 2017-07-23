@@ -73,4 +73,6 @@ Colección de utilidades varias para el control GPIO en Python
 * A *Alberto Vela*, por [el minitutorial de sockets en la web *developeando.net*](http://developeando.net/sockets-python/)
 
 ## Por hacer (*TODO*)
+* Añadir control de versiones en la instalación
+* Hacer que **actualizador.sh** sea "inteligente" y actualice en función de la versión
 * ¡Mucho más!

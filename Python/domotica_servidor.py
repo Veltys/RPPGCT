@@ -30,11 +30,14 @@ except ImportError:
     sys.exit(errno.ENOENT)
 
 from copy import deepcopy                                                       # Copia "segura" de objetos
-from threading import Thread                                                    # Capacidades multihilo
+from threading import Lock, Thread                                              # Capacidades multihilo
 from time import sleep                                                          # Para hacer pausas
 import comun                                                                    # Funciones comunes a varios sistemas
 import socket                                                                   # Tratamiento de sockets
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
+
+
+semaforo = Lock()                                                               # Un semáforo evitará que el padre y los hijos den problemas al acceder a una variable que ambos puedan modificar
 
 
 class domotica_servidor(comun.app):
@@ -85,6 +88,23 @@ class domotica_servidor(comun.app):
 
                         sc.send(mensaje.encode('utf_8'))
 
+                    # conmutar, pulsar, encender, apagar
+                    elif (comando != 'conmutar' and comando[0:8] == 'conmutar' and comando[8] == ' ' and comando[9:] != '') \
+                      or (comando != 'pulsar'   and comando[0:6] == 'pulsar'   and comando[6] == ' ' and comando[7:] != '') \
+                      or (comando != 'encender' and comando[0:8] == 'encender' and comando[8] == ' ' and comando[9:] != '') \
+                      or (comando != 'apagar'   and comando[0:6] == 'apagar'   and comando[6] == ' ' and comando[7:] != ''):
+                        (funcion, params) = comando.split(' ', 1)
+
+                        try:
+                            eval('self.' + funcion + '(' + params + ')')
+
+                        except AttributeError:
+                            if DEBUG:
+                                print('Padre #', os.getpid(), "\tEl comando \"" + comando + '" es incorrecto o no está implementado', sep = '')
+
+                            mensaje = 'Err: incorrecto o no implementado'
+                            sc.send(mensaje.encode('utf_8'))
+
                     else:
                         mensaje = comando
                         sc.send(mensaje.encode('utf_8'))
@@ -115,6 +135,75 @@ class domotica_servidor(comun.app):
         super().cerrar()
 
 
+    def apagar(self, puerto, modo = False):
+        if modo == False:
+            puerto = self.buscar_puerto_GPIO(puerto)
+        
+        if puerto != 0:
+            with semaforo:                                                                                                          # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
+                self._confir.GPIOS.output(self._GPIOS[puerto][0], GPIO.LOW if self._config.GPIOS[puerto][2] else GPIO.HIGH)         # Se conmuta la salida del puerto GPIO
+
+            return True
+
+        else:
+            return False
+
+
+    def buscar_puerto_GPIO(self, puerto):
+        if isinstance(puerto, int) and puerto < 0 and puerto >= 27:                                                                 # 27 es el número de puertos GPIO que tiene una Raspberry Pi
+            for i in range(int(len(self._config.GPIOS))):                                                                           # Se buscará a lo largo de self._config.GPIOS...
+                if self._config.GPIOS[i][0] == puerto:                                                                              # ... si hay una coincidencia con el puerto pedido
+                    return i                                                                                                        # De haberla, se retornará el orden en el que se encuentra
+
+        return 0                                                                                                                    # Si se llega aquí, será que no hay coincidencias, por lo cual, se indicará también
+
+
+    def conmutar(self, puerto, modo = False):
+        if modo == False:
+            puerto = self.buscar_puerto_GPIO(puerto)
+        
+        if puerto != 0:
+            with semaforo:                                                                                                          # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
+                self._confir.GPIOS.output(self._GPIOS[puerto][0], not(GPIO.input(self._GPIOS[puerto][0])))                          # Se conmuta la salida del puerto GPIO
+
+            return True
+
+        else:
+            return False
+
+
+    def encender(self, puerto, modo = False):
+        if modo == False:
+            puerto = self.buscar_puerto_GPIO(puerto)
+        
+        if puerto != 0:
+            with semaforo:                                                                                                          # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
+                self._confir.GPIOS.output(self._GPIOS[puerto][0], GPIO.HIGH if self._config.GPIOS[puerto][2] else GPIO.LOW)         # Se conmuta la salida del puerto GPIO
+
+            return True
+
+        else:
+            return False
+
+
+    def pulsar(self, puerto, modo = False):
+        if modo == False:
+            puerto = self.buscar_puerto_GPIO(puerto)
+
+        if puerto != 0:
+            correcto = True
+            correcto = correcto and self.encender(puerto, True)
+        
+            sleep(2)
+
+            correcto = correcto and self.apagar(puerto, True)
+
+            return correcto
+
+        else:
+            return False
+
+
     def __del__(self):
         super().__del__()
 
@@ -126,7 +215,7 @@ class domotica_servidor_hijos(comun.app):
             - Carga la configuración
         '''
 
-        # super().__init__()                                                                        # La llamada al constructor de la clase padre está comentada a propósito
+        # super().__init__()                                                                                                        # La llamada al constructor de la clase padre está comentada a propósito
 
         self._bloqueo = False
         self._config = config
@@ -147,24 +236,25 @@ class domotica_servidor_hijos(comun.app):
     def bucle(self):
         try:
             while not(salir):
-                for i in range(0, int(len(self._GPIOS)), 2):                                            # Se recorre la configuración propia (no la general), tomandos un paso de 2, ya que los puertos se trabajan por pares
+                for i in range(0, int(len(self._GPIOS)), 2):                                                                        # Se recorre la configuración propia (no la general), tomandos un paso de 2, ya que los puertos se trabajan por pares
                     if DEBUG:
                         print('Hijo  #', self._id_hijo, "\tRecorriendo puertos GPIO. Voy por el puerto GPIO", self._GPIOS[i][0], sep = '')
 
-                    if GPIO.input(self._GPIOS[i][0]) and not(self._GPIOS[i][2]):                        # Se comprueba el puerto que ha sido activado y que no sea recurrente (dejar el botón pulsado)
+                    if GPIO.input(self._GPIOS[i][0]) and not(self._GPIOS[i][2]):                                                    # Se comprueba el puerto que ha sido activado y que no sea recurrente (dejar el botón pulsado)
                         if DEBUG:
                             print('Hijo  #', self._id_hijo, "\tOrden de conmutación recibida en el puerto GPIO", self._GPIOS[i][0], sep = '')
                             print('Hijo  #', self._id_hijo, "\tComutando el puerto GPIO", self._GPIOS[i + 1][0], sep = '')
 
-                        GPIO.output(self._GPIOS[i + 1][0], not(GPIO.input(self._GPIOS[i + 1][0])))      # Se conmuta la salida del puerto GPIO
+                        with semaforo:                                                                                              # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
+                            GPIO.output(self._GPIOS[i + 1][0], not(GPIO.input(self._GPIOS[i + 1][0])))                              # Se conmuta la salida del puerto GPIO
 
-                        self._GPIOS[i][2] = not(self._GPIOS[i][2])                                      # Se indica que el puerto que ha sido activado
+                        self._GPIOS[i][2] = not(self._GPIOS[i][2])                                                                  # Se indica que el puerto que ha sido activado
 
-                    elif not(GPIO.input(self._GPIOS[i][0])) and self._GPIOS[i][2]:                      # Se comprueba el puerto que ha sido desactivado y que antes había sido activado
+                    elif not(GPIO.input(self._GPIOS[i][0])) and self._GPIOS[i][2]:                                                  # Se comprueba el puerto que ha sido desactivado y que antes había sido activado
                         if DEBUG:
                             print('Hijo  #', self._id_hijo, "\tEl puerto GPIO", self._GPIOS[i][0], ' ha sido levantado', sep = '')
 
-                        self._GPIOS[i][2] = not(self._GPIOS[i][2])                                      # Se indica que el el puerto que ha sido desactivado
+                        self._GPIOS[i][2] = not(self._GPIOS[i][2])                                                                  # Se indica que el el puerto que ha sido desactivado
 
                     # else:
 
