@@ -112,7 +112,7 @@ class domotica_servidor(comun.app):
                         (funcion, params) = comando.split(' ', 1)
 
                         try:
-                            eval('self.' + funcion + '(' + params + ')')
+                            respuesta = eval('self.' + funcion + '(' + params + ')')
 
                         except AttributeError:
                             if DEBUG:
@@ -120,6 +120,15 @@ class domotica_servidor(comun.app):
 
                             mensaje = 'Err: incorrecto o no implementado'
                             sc.send(mensaje.encode('utf_8'))
+
+                        else:
+                            if respuesta:
+                                mensaje = 'Ok: ejecutado'
+                                sc.send(mensaje.encode('utf_8'))
+
+                            else:
+                                mensaje = 'Err: no ejecutado, puerto incorrecto o no encontrado'
+                                sc.send(mensaje.encode('utf_8'))
 
                     else:
                         mensaje = comando
