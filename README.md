@@ -165,11 +165,11 @@ Desengañémosnos, nadie en su sano juicio preguntaría estas cosas, pero al men
 
 :point_right: Mis conocimientos del lenguaje Python aún son escasos; los sistemas ahora mismo están bastante aislados entre sí y deberían trabajar más coordinados; el instalador es un script que, si bien cumple su función, no me gusta, me parece cutre. Cuando todos estos problemas se solventen, el código esté más maduro, probado y estable y yo lo crea oportuno, consideraré que este proyecto pasa de ser una *guarrerida* a algo decente. Mientras, bueno, habrá que aprovechar lo que hay.
 
-:point_right: ¿No has pensado en una interfaz web *to güapa* con *Bootstrap*, *jQuery*, una *API* y su correspondiente *junta de la trócola*? Seguro que así molaba el triple todo.
+:question: ¿No has pensado en una interfaz web *to güapa* con *Bootstrap*, *jQuery*, una *API* y su correspondiente *junta de la trócola*? Seguro que así molaba el triple todo.
 
 :point_right: He pensado en añadir *un algo* en Django, por aquello de que el código es Python, pero mis especialidades son C / C++ y PHP, así que no es algo a corto plazo. Si Python lo domino poco, Django aún menos. No quiero entrar en él sin tener más base de Python. Pienso que, mínimo, para enero - marzo de 2018 podré empezar en serio con ello. Quizá antes haga pruebas o implemente versiones preliminares, pero dudo que lo tenga en condiciones antes de la fecha que ya he dicho.
 
-:point_right: ¿Por qué Python y no C / C++ o PHP, si tan bien (dices) que se te dan? ¿O por qué no <inserte aquí su lenguaje favorito / de moda>? 
+:question: ¿Por qué Python y no C / C++ o PHP, si tan bien (dices) que se te dan? ¿O por qué no <inserte aquí su lenguaje favorito / de moda>? 
 
 :point_right: Porque aparte de un proyecto útil, quiero que sea un reto. Porque quiero aprender Python. Porque no me apetecía estar compilando cada vez que quisiera probar algo.
 
