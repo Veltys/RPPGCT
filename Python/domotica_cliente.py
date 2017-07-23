@@ -5,14 +5,10 @@
 # Title         : domotica_cliente.py
 # Description   : Parte cliente del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 15-07-2017
+# Date          : 23-07-2017
 # Version       : 0.1.0
 # Usage         : python3 domotica_cliente.py
 # Notes         : Parte cliente del sistema en el que se gestionarán pares de puertos GPIO
-#                 Las entradas impares en la variable de configuración asociada GPIOS corresponderán a los relés que se gestionarán
-#                 Las pares, a los pulsadores que irán asociados a dichos relés, para su conmutación
-#                 Pendiente (TODO): Por ahora solamente responde a un pulsador local, queda pendiente la implementación remota (sockets)
-#                 Se está estudiando, para futuras versiones, la integración con servicios IoT, especuialmente con el "AWS IoT Button" --> http://amzn.eu/dsgsHvv
 
 
 import errno                                                                    # Códigos de error
@@ -119,7 +115,7 @@ class domotica_cliente(comun.app):
 
     def cerrar(self):
         if self._estado >= 2:
-            self._socket.sendall(comando.encode('utf-8'))
+            self._socket.sendall('salir'.encode('utf-8'))
 
         super().cerrar()
 

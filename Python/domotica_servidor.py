@@ -5,7 +5,7 @@
 # Title         : domotica_servidor.py
 # Description   : Parte servidor del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 15-07-2017
+# Date          : 23-07-2017
 # Version       : 0.2.0
 # Usage         : python3 domotica_servidor.py
 # Notes         : Parte servidor del sistema en el que se gestionarán pares de puertos GPIO
@@ -48,6 +48,20 @@ class domotica_servidor(comun.app):
         self._socket.bind(('', self._config.puerto))
         self._socket.listen(1)
 
+    def apagar(self, puerto, modo = False):
+        if modo == False:
+            puerto = self.buscar_puerto_GPIO(puerto)
+        
+        if puerto != 0:
+            with semaforo:                                                                                                          # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
+                self._confir.GPIOS.output(self._GPIOS[puerto][0], GPIO.LOW if self._config.GPIOS[puerto][2] else GPIO.HIGH)         # Se conmuta la salida del puerto GPIO
+
+            return True
+
+        else:
+            return False
+
+    
     def bucle(self):
         try:
             if DEBUG:
@@ -124,6 +138,15 @@ class domotica_servidor(comun.app):
             return
 
 
+    def buscar_puerto_GPIO(self, puerto):
+        if isinstance(puerto, int) and puerto < 0 and puerto >= 27:                                                                 # 27 es el número de puertos GPIO que tiene una Raspberry Pi
+            for i in range(int(len(self._config.GPIOS))):                                                                           # Se buscará a lo largo de self._config.GPIOS...
+                if self._config.GPIOS[i][0] == puerto:                                                                              # ... si hay una coincidencia con el puerto pedido
+                    return i                                                                                                        # De haberla, se retornará el orden en el que se encuentra
+
+        return 0                                                                                                                    # Si se llega aquí, será que no hay coincidencias, por lo cual, se indicará también
+
+
     def cerrar(self):
         global salir
 
@@ -133,29 +156,6 @@ class domotica_servidor(comun.app):
             print('Padre #', os.getpid(), "\tDisparado el evento de cierre", sep = '')
 
         super().cerrar()
-
-
-    def apagar(self, puerto, modo = False):
-        if modo == False:
-            puerto = self.buscar_puerto_GPIO(puerto)
-        
-        if puerto != 0:
-            with semaforo:                                                                                                          # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
-                self._confir.GPIOS.output(self._GPIOS[puerto][0], GPIO.LOW if self._config.GPIOS[puerto][2] else GPIO.HIGH)         # Se conmuta la salida del puerto GPIO
-
-            return True
-
-        else:
-            return False
-
-
-    def buscar_puerto_GPIO(self, puerto):
-        if isinstance(puerto, int) and puerto < 0 and puerto >= 27:                                                                 # 27 es el número de puertos GPIO que tiene una Raspberry Pi
-            for i in range(int(len(self._config.GPIOS))):                                                                           # Se buscará a lo largo de self._config.GPIOS...
-                if self._config.GPIOS[i][0] == puerto:                                                                              # ... si hay una coincidencia con el puerto pedido
-                    return i                                                                                                        # De haberla, se retornará el orden en el que se encuentra
-
-        return 0                                                                                                                    # Si se llega aquí, será que no hay coincidencias, por lo cual, se indicará también
 
 
     def conmutar(self, puerto, modo = False):
