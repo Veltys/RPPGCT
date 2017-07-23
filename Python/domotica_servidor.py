@@ -53,7 +53,7 @@ class domotica_servidor(comun.app):
         if modo == False:
             puerto = self.buscar_puerto_GPIO(puerto)
         
-        if puerto != 0:
+        if puerto != -1:
             with semaforo:                                                                                                          # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
                 self._confir.GPIOS.output(self._GPIOS[puerto][0], GPIO.LOW if self._config.GPIOS[puerto][2] else GPIO.HIGH)         # Se conmuta la salida del puerto GPIO
 
@@ -150,12 +150,12 @@ class domotica_servidor(comun.app):
 
 
     def buscar_puerto_GPIO(self, puerto):
-        if isinstance(puerto, int) and puerto < 0 and puerto >= 27:                                                                 # 27 es el número de puertos GPIO que tiene una Raspberry Pi
+        if isinstance(puerto, int) and puerto > 0 and puerto <= 27:                                                                 # 27 es el número de puertos GPIO que tiene una Raspberry Pi
             for i in range(int(len(self._config.GPIOS))):                                                                           # Se buscará a lo largo de self._config.GPIOS...
                 if self._config.GPIOS[i][0] == puerto:                                                                              # ... si hay una coincidencia con el puerto pedido
                     return i                                                                                                        # De haberla, se retornará el orden en el que se encuentra
 
-        return 0                                                                                                                    # Si se llega aquí, será que no hay coincidencias, por lo cual, se indicará también
+        return -1                                                                                                                    # Si se llega aquí, será que no hay coincidencias, por lo cual, se indicará también
 
 
     def cerrar(self):
@@ -173,7 +173,7 @@ class domotica_servidor(comun.app):
         if modo == False:
             puerto = self.buscar_puerto_GPIO(puerto)
         
-        if puerto != 0:
+        if puerto != -1:
             with semaforo:                                                                                                          # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
                 self._confir.GPIOS.output(self._GPIOS[puerto][0], not(GPIO.input(self._GPIOS[puerto][0])))                          # Se conmuta la salida del puerto GPIO
 
@@ -187,7 +187,7 @@ class domotica_servidor(comun.app):
         if modo == False:
             puerto = self.buscar_puerto_GPIO(puerto)
         
-        if puerto != 0:
+        if puerto != -1:
             with semaforo:                                                                                                          # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
                 self._confir.GPIOS.output(self._GPIOS[puerto][0], GPIO.HIGH if self._config.GPIOS[puerto][2] else GPIO.LOW)         # Se conmuta la salida del puerto GPIO
 
@@ -201,7 +201,7 @@ class domotica_servidor(comun.app):
         if modo == False:
             puerto = self.buscar_puerto_GPIO(puerto)
 
-        if puerto != 0:
+        if puerto != -1:
             correcto = True
             correcto = correcto and self.encender(puerto, True)
         
