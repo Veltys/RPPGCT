@@ -5,8 +5,8 @@
 # Title         : temperaturas.py
 # Description   : Sistema indicador led de la temperatura del procesador en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
 # Author        : Veltys
-# Date          : 05-07-2017
-# Version       : 2.1.3
+# Date          : 10-07-2017
+# Version       : 2.1.4
 # Usage         : python3 temperaturas.py
 # Notes         : Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual simplemente apaga todos los leds hasta que esta misma señal sea recibida de nuevo
@@ -19,7 +19,7 @@ try:
   from config import temperaturas_config as config                              # Configuración
 
 except ImportError:
-  print('Error: Archivo de configuración no encontrado', file=sys.stderr)
+  print('Error: Archivo de configuración no encontrado', file = sys.stderr)
   sys.exit(errno.ENOENT)
 
 from time import sleep                                                          # Para hacer pausas
@@ -30,8 +30,8 @@ import os                                                                       
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 class temperaturas(comun.app):
-    def __init__(self, config):
-        super().__init__(config)
+    def __init__(self, config, nombre):
+        super().__init__(config, nombre)
 
     def bucle(self):
         try:
@@ -56,14 +56,15 @@ class temperaturas(comun.app):
 
         except KeyboardInterrupt:
             self.cerrar()
+            return
 
     def __del__(self):
         super().__del__()
 
 
 def main(argv = sys.argv):
-    app = temperaturas(config)
-    app.arranque(os.path.basename(argv[0]))
+    app = temperaturas(config, os.path.basename(argv[0]))
+    app.arranque()
 
 
 if __name__ == '__main__':

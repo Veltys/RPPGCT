@@ -5,11 +5,11 @@
 # Title         : reiniciar_router.py
 # Description   : Sistema que comprueba si hay acceso a Internet. Si no, manda una señal en un puerto GPIO determinado
 # Author        : Veltys
-# Date          : 10-07-2017
-# Version       : 2.1.4
+# Date          : 16-07-2017
+# Version       : 2.1.5
 # Usage         : python3 reiniciar_router.py
 # Notes         : La idea es conectar un relé a este GPIO y al mismo la alimentación del sistema de acceso a Internet
-#		          Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
+#                 Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual simplemente apaga todos los leds hasta que esta misma señal sea recibida de nuevo
 
 
@@ -20,7 +20,7 @@ try:
   from config import reiniciar_router_config as config                                      # Configuración
 
 except ImportError:
-  print('Error: Archivo de configuración no encontrado', file=sys.stderr)
+  print('Error: Archivo de configuración no encontrado', file = sys.stderr)
   sys.exit(errno.ENOENT)
 
 from internet import hay_internet                                                           # Módulo propio de comprobación de Internet
@@ -33,8 +33,8 @@ import signal                                                                   
 
 
 class reiniciar_router(comun.app):
-    def __init__(self, config):
-        super().__init__(config)
+    def __init__(self, config, nombre):
+        super().__init__(config, nombre)
 
     def bucle(self):
         try:
@@ -63,14 +63,15 @@ class reiniciar_router(comun.app):
 
         except KeyboardInterrupt:
             self.cerrar()
+            return
 
     def __del__(self):
         super().__del__()
 
 
 def main(argv = sys.argv):
-    app = reiniciar_router(config)
-    app.arranque(os.path.basename(argv[0]))
+    app = reiniciar_router(config, os.path.basename(argv[0]))
+    app.arranque()
 
 
 if __name__ == '__main__':
