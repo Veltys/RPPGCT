@@ -75,7 +75,7 @@ class domotica_servidor(comun.app):
                     if DEBUG:
                         print('Padre #', os.getpid(), "\tPreparando hijo ", i, sep = '')
 
-                        self._hijos.append(Thread(target = main_hijos, args = (i,)))
+                    self._hijos.append(Thread(target = main_hijos, args = (i,)))
 
                     if DEBUG:
                         print('Padre #', os.getpid(), "\tArrancando hijo ", i, sep = '')

@@ -89,6 +89,8 @@ Colección de utilidades varias para el control GPIO en Python
     - Renombrado **domotica.sh** a **domotica_servidor.sh**.
     - Renombrado **temperaturas.sh** a **temperatura.sh**.
     - Homogeneizado de **README.md**.
+- 0.4.2:
+    - Arreglado fallo al lanzar hijos en **domotica_servidor.py**.
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
