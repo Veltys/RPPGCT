@@ -2,7 +2,7 @@
 
 
 ### BEGIN INIT INFO
-# Provides:          temperaturas.py
+# Provides:          temperatura.py
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
@@ -10,11 +10,11 @@
 ### END INIT INFO
 
 
-# Title         : temperaturas
-# Description   : Script de init.d para el arranque automático del sistema "temperaturas.py".
+# Title         : temperatura
+# Description   : Script de init.d para el arranque automático del sistema "temperatura.py".
 # Author        : Veltys
-# Date          : 07-07-2017
-# Version       : 1.1.1
+# Date          : 23-07-2017
+# Version       : 1.1.2
 # Usage         : /etc/init.d/temperaturas {start|stop|restart|status}
 # Notes         :
 
@@ -24,7 +24,7 @@ if [ "$UID" -ne '0' ]; then
 
 	exit -1
 else
-	nombre=temperaturas
+	nombre=temperatura
 	directorio='/opt/RPPGCT'
 
 	case "$1" in
