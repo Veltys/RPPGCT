@@ -55,7 +55,7 @@ class domotica_servidor(comun.app):
         
         if puerto != -1:
             with semaforo:                                                                                                          # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
-                self._confir.GPIOS.output(self._GPIOS[puerto][0], GPIO.LOW if self._config.GPIOS[puerto][2] else GPIO.HIGH)         # Se conmuta la salida del puerto GPIO
+                GPIO.output(self._config.GPIOS[puerto][0], GPIO.LOW if self._config.GPIOS[puerto][2] else GPIO.HIGH)                # Se conmuta la salida del puerto GPIO
 
             return True
 
@@ -175,7 +175,7 @@ class domotica_servidor(comun.app):
         
         if puerto != -1:
             with semaforo:                                                                                                          # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
-                self._confir.GPIOS.output(self._GPIOS[puerto][0], not(GPIO.input(self._GPIOS[puerto][0])))                          # Se conmuta la salida del puerto GPIO
+                GPIO.output(self._config.GPIOS[puerto][0], not(GPIO.input(self._config.GPIOS[puerto][0])))                          # Se conmuta la salida del puerto GPIO
 
             return True
 
@@ -189,7 +189,7 @@ class domotica_servidor(comun.app):
         
         if puerto != -1:
             with semaforo:                                                                                                          # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
-                self._confir.GPIOS.output(self._GPIOS[puerto][0], GPIO.HIGH if self._config.GPIOS[puerto][2] else GPIO.LOW)         # Se conmuta la salida del puerto GPIO
+                GPIO.output(self._config.GPIOS[puerto][0], GPIO.HIGH if self._config.GPIOS[puerto][2] else GPIO.LOW)                # Se conmuta la salida del puerto GPIO
 
             return True
 
