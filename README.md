@@ -66,11 +66,15 @@ Colección de utilidades varias para el control GPIO en Python
 		 Actualizados **actualizador.sh**, **instalador.sh** y **desinstalador.sh** para adecuarse al cambio de nombre.
 		 
 
-## Agradecimientos y otros créditos
+## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
-* A *linuxitux*, por [su script *netisup.py*](https://www.linuxito.com/programacion/635-netisup-py-script-python-para-verificar-el-estado-de-la-red), el cual he utilizado (adaptado) en mi **internet.py**
-* A *alex*, por [la documentación en la web *raspi.tv*](http://raspi.tv/2013/rpi-gpio-basics-6-using-inputs-and-outputs-together-with-rpi-gpio-pull-ups-and-pull-downs), la cual me ha sido muy útil para mi **domotica_servidor.py**
-* A *Alberto Vela*, por [el minitutorial de sockets en la web *developeando.net*](http://developeando.net/sockets-python/)
+* A *linuxitux*, por [el script *netisup.py*](https://www.linuxito.com/programacion/635-netisup-py-script-python-para-verificar-el-estado-de-la-red), el cual he utilizado (adaptado) en mi **internet.py**
+* A *alex*, por [la documentación en la web *raspi.tv*](http://raspi.tv/2013/rpi-gpio-basics-6-using-inputs-and-outputs-together-with-rpi-gpio-pull-ups-and-pull-downs), la cual me ha orientado en el tratamiento de los puertos GPIO de entrada en **domotica_servidor.py**
+* A *Oscar Campos*, por [la entrada sobre hilos en la web *www.genbetadev.com*](https://www.genbetadev.com/python/multiprocesamiento-en-python-threads-a-fondo-introduccion), la cual me ha permitido llevar a cabo el multiprocesamiento en **domotica_servidor.py**
+* A *Amelia Zafra*, profesora de Redes en la [Universidad de Córdoba](http://www.uco.es/), por sus *prácticas de dicha asignatura en el curso 2015 - 2016*, las cuales me ayudaron bastante a organizar la lógica de **domotica_cliente.py** y **domotica_servidor.py** 
+* A *Alberto Vela*, por [el minitutorial de sockets en la web *developeando.net*](http://developeando.net/sockets-python/), el cual me ha permitido adaptar mis conocimientos en C / C++ en este campo en **domotica_cliente.py** y **domotica_servidor.py**
+* A *Barlan*, por [la entrada sobre sockets en Python 3.4 en el foro de *underc0de.org*](https://underc0de.org/foro/python/(mini-guia)-sockets-en-python-(3-4)/), la cual me ha permitido adaptar mis conocimientos en C / C++ en este campo en **domotica_cliente.py** y **domotica_servidor.py**
+* A *Pherkad*, por [la sección de "Control del acceso a los recursos. Bloqueos" en la web *python-para-impacientes.blogspot.com.es*](http://python-para-impacientes.blogspot.com.es/2016/12/threading-programacion-con-hilos-y-ii.html), la cual me ha evitado dolores de cabeza variados en **domotica_servidor.py**
 
 ## Por hacer (*TODO*)
 * Añadir control de versiones en la instalación
