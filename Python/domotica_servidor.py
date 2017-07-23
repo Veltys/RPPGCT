@@ -6,7 +6,7 @@
 # Description   : Parte servidor del sistema gestor de domótica
 # Author        : Veltys
 # Date          : 23-07-2017
-# Version       : 0.2.0
+# Version       : 1.0.0
 # Usage         : python3 domotica_servidor.py
 # Notes         : Parte servidor del sistema en el que se gestionarán pares de puertos GPIO
 #                 Las entradas impares en la variable de configuración asociada GPIOS corresponderán a los relés que se gestionarán
@@ -15,8 +15,8 @@
 #                 Se está estudiando, para futuras versiones, la integración con servicios IoT, especuialmente con el "AWS IoT Button" --> http://amzn.eu/dsgsHvv
 
 
-DEBUG = True
-DEBUG_PADRE = True
+DEBUG = False
+DEBUG_PADRE = False
 salir = False                                                                   # Ya que no es posible matar a un hilo, esta "bandera" global servirá para indicarle a los hilos que deben terminar 
 
 import errno                                                                    # Códigos de error
@@ -141,7 +141,7 @@ class domotica_servidor(comun.app):
                     if DEBUG:
                         print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
 
-                if comando[0:5] == 'salir':
+                if comando[0:5] == 'desconectar':
                     sc.close()
 
         except KeyboardInterrupt:

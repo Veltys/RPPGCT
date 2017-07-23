@@ -105,6 +105,8 @@ Colección de utilidades varias para el control GPIO en Python
 - [ ] ~~Añadir el configurador general.~~
 - [ ] ~~Añadir el control de GPIOs general: leds y relés.~~
 - [x] Implementar la domótica remota.
+- [ ] Cambiar el comando *conectar* para que sea un *conectar* y *listar* en **domotica_cliente.py** y **domotica_servidor.py**.
+- [ ] Implementar parámetros en **domotica_cliente.py**.
 - [ ] Integrar el control de relés en un archivo separado.
 - [ ] Añadir control de versiones en la instalación.
 - [ ] Hacer que **actualizador.sh** sea "inteligente" y actualice en función de la versión.

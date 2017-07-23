@@ -6,7 +6,7 @@
 # Description   : Parte cliente del sistema gestor de domótica
 # Author        : Veltys
 # Date          : 23-07-2017
-# Version       : 0.1.0
+# Version       : 1.0.0
 # Usage         : python3 domotica_cliente.py
 # Notes         : Parte cliente del sistema en el que se gestionarán pares de puertos GPIO
 
@@ -33,6 +33,19 @@ class domotica_cliente(comun.app):
 
         self._estado = 0
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+
+    def _confirmar(self):
+        print('La operación solicitada podría ser arriesgada')
+        confirmacion = input('¿Está seguro? (s/N) ')
+        confirmacion = confirmacion.lower()
+
+        if confirmacion == 's':
+            return True
+
+        else:
+            return False
+
 
     def bucle(self):
         try:
@@ -63,25 +76,25 @@ class domotica_cliente(comun.app):
 
                 # listar
                 elif comando == 'listar':
-                    if self._estado >= 1:
+                    if self._estado == 1:
                         self._socket.send(comando.encode('utf-8'))
                         self._lista_GPIOs = self._socket.recv(1024)
                         self._lista_GPIOs = self._lista_GPIOs.decode('utf-8')
 
                         self._lista_GPIOs = self._lista_GPIOs.split(' ')
 
-                        if self.mostrar_lista_GPIOs():
-                            self._estado = 2
-
                     else:
                         print('Error: Imposible solicitar una lista de puertos GPIO, no ' + self.estado(self._estado + 1), file = sys.stderr)
+
+                    if self.mostrar_lista_GPIOs():
+                        self._estado = 2
 
                 # conmutar, pulsar, encender o apagar
                 elif (comando != 'conmutar' and comando[0:8] == 'conmutar' and comando[8] == ' ' and comando[9:] != '') \
                   or (comando != 'pulsar'   and comando[0:6] == 'pulsar'   and comando[6] == ' ' and comando[7:] != '') \
                   or (comando != 'encender' and comando[0:8] == 'encender' and comando[8] == ' ' and comando[9:] != '') \
                   or (comando != 'apagar'   and comando[0:6] == 'apagar'   and comando[6] == ' ' and comando[7:] != ''):
-                    if self._estado >= 2:
+                    if (self._estado >= 2) or (self._estado >= 1 and self._confirmar()):
                         self._socket.send(comando.encode('utf-8'))
                         mensaje = self._socket.recv(1024)
                         mensaje = mensaje.decode('utf-8')
@@ -93,11 +106,24 @@ class domotica_cliente(comun.app):
                         else:
                             print('Aviso: El servidor informa de que el comando "' + comando + '" es ' + mensaje[5:], sep = '')
 
+                    elif self._estado == 1:
+                        print('Aviso: El comando "' + comando + '" no ha sido ejecutado porque no' + self.estado(self._estado + 1), sep = '')
+
                     else:
                         print('Error: Imposible interaccionar con el puerto GPIO solicitado, no ' + self.estado(self._estado + 1), file = sys.stderr)
 
+                # conmutar, pulsar, encender o apagar pero sin parámetros
                 elif comando == 'conectar' or comando == 'conmutar' or comando == 'pulsar' or comando == 'encender' or comando == 'apagar':
                     print('Error: El comando "' + comando + '" requiere uno o más parámetros. Por favor, inténtelo de nuevo.', file = sys.stderr)
+
+                # desconectar
+                elif comando == 'desconectar':
+                    if self._estado >= 1:
+                        self._socket.sendall(comando.encode('utf-8'))
+                        self._socket.close()
+
+                    else:
+                        print('Error: Imposible desconectar, no ' + self.estado(self._estado + 1), file = sys.stderr)
 
                 else:
                     print('Error: El comando "' + comando + '" no ha sido reconocido. Por favor, inténtelo de nuevo.', file = sys.stderr)
@@ -105,8 +131,8 @@ class domotica_cliente(comun.app):
                 comando = input('Introduzca un comando: ')
 
             # salir                                                             # La salida propiamente dicha será ejecutada en la siguiente vuelta del bucle
-            if comando == 'salir' and self._estado >= 2:
-                self._socket.sendall(comando.encode('utf-8'))
+            if comando == 'salir' and self._estado >= 1:
+                self._socket.sendall('desconectar'.encode('utf-8'))
 
         except KeyboardInterrupt:
             self.cerrar()
@@ -131,6 +157,9 @@ class domotica_cliente(comun.app):
 
         elif estado == 2:
             return 'hay una lista de puertos GPIO cargada'
+
+        else:
+            return 'el estado es desconocido'
 
 
     def mostrar_lista_GPIOs(self):

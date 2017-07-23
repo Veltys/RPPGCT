@@ -46,14 +46,10 @@ class domotica_cliente_config:
                                                                                 # https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?&page=85
 
 
-class domotica_servidor_config:
+class domotica_servidor_config(domotica_cliente_config):
     GPIOS           = [(17, False, False),
                        (27, True,  True ),
                       ]
-
-    PAUSA           = 1
-
-    puerto          = 4710
 
     senyales        = {'SIGTERM': 'sig_cerrar',
                        'SIGUSR1': 'sig_test',
