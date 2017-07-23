@@ -97,7 +97,7 @@ class domotica_servidor(comun.app):
                         mensaje = ''
 
                         for i in range(0, int(len(self._config.GPIOS)), 2):
-                            mensaje = mensaje + str(self._config.GPIOS[i][0]) + ' '
+                            mensaje = mensaje + str(self._config.GPIOS[i + 1][0]) + ' '
 
                         if DEBUG:
                             print('Padre #', os.getpid(), "\tVoy a mandarle el mensaje: ", mensaje, sep = '')
@@ -151,7 +151,7 @@ class domotica_servidor(comun.app):
 
     def buscar_puerto_GPIO(self, puerto):
         if isinstance(puerto, int) and puerto > 0 and puerto <= 27:                                                                 # 27 es el número de puertos GPIO que tiene una Raspberry Pi
-            for i in range(int(len(self._config.GPIOS))):                                                                           # Se buscará a lo largo de self._config.GPIOS...
+            for i in range(1, int(len(self._config.GPIOS)), 2):                                                                     # Se buscará a lo largo de self._config.GPIOS...
                 if self._config.GPIOS[i][0] == puerto:                                                                              # ... si hay una coincidencia con el puerto pedido
                     return i                                                                                                        # De haberla, se retornará el orden en el que se encuentra
 
