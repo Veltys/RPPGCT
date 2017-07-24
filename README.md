@@ -96,6 +96,8 @@ Colección de utilidades varias para el control GPIO en Python
     - Arreglado fallo en la comprobación de desconexión de **domotica_servidor.py**
 - 0.4.4:
     - Arreglado fallo en la sangría de algunas línas de código en **domotica_servidor.py**
+- 0.4.5:
+    - Arreglado fallo de versiones en los commits y en **README.md**.
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
