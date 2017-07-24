@@ -48,7 +48,7 @@ class domotica_cliente_config:
 
 class domotica_servidor_config(domotica_cliente_config):
     GPIOS           = [(17, False, False),
-                       (27, True,  True ),
+                       (27, True,  False),
                       ]
 
     senyales        = {'SIGTERM': 'sig_cerrar',

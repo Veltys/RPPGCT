@@ -5,8 +5,8 @@
 # Title         : domotica_servidor.py
 # Description   : Parte servidor del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 23-07-2017
-# Version       : 1.0.0
+# Date          : 24-07-2017
+# Version       : 1.0.2
 # Usage         : python3 domotica_servidor.py
 # Notes         : Parte servidor del sistema en el que se gestionarán pares de puertos GPIO
 #                 Las entradas impares en la variable de configuración asociada GPIOS corresponderán a los relés que se gestionarán
@@ -91,7 +91,7 @@ class domotica_servidor(comun.app):
                 if DEBUG:
                     print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
 
-                while comando[0:5] != 'salir':
+                while comando[0:5] != 'desconectar':
                     # listar
                     if comando == 'listar':
                         mensaje = ''
