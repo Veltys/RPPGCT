@@ -34,6 +34,17 @@ class domotica_cliente(object):
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
+    def _comprobar_lista_GPIOs(self):
+        try:
+            self._lista_GPIOs
+
+        except AttributeError:
+            return False
+
+        else:
+            return True
+
+
     def _confirmar(self):
         print('La operación solicitada podría ser arriesgada')
         confirmacion = input('¿Está seguro? (s/N) ')
@@ -44,6 +55,108 @@ class domotica_cliente(object):
 
         else:
             return False
+
+
+    def __conectar(self, comando):
+        if self._estado == 0:
+            print('Info: Conectando a ' + comando[9:])
+
+            try:
+                self._socket.connect((comando[9:], self._config.puerto))
+
+            except TimeoutError:
+                print('Error: Tiempo de espera agotado al conectar a ' + comando[9:], file = sys.stderr)
+
+            except ConnectionRefusedError:
+                print('Error: Imposible conectar a ' + comando[9:], file = sys.stderr)
+
+            else:
+                print('Ok: Conectado a ' + comando[9:])
+                self._estado = 1
+
+                self.__listar()
+
+        else:
+            print('Error: Imposible conectar a ' + comando[9:] + ', ya hay una conexión activa', file = sys.stderr)
+
+
+    def __enviar_y_recibir(self, comando):
+        self._socket.send(comando.encode('utf-8'))
+        mensaje = self._socket.recv(1024)
+        mensaje = mensaje.decode('utf-8')
+        mensaje = mensaje.lower()
+
+        return mensaje
+
+
+    def __estado(self, comando):
+        mensaje = self.__enviar_y_recibir(comando)
+
+        if mensaje[0:2] == 'ok':
+            print('Correcto: El servidor informa de que el comando "' + comando + '" ha sido ' + mensaje[4:], sep = '')
+
+        elif mensaje[0:4] == 'info' and (int(mensaje[5:]) == 0 or int(mensaje[5:]) == 1):
+            print('Correcto: El servidor informa de que el estado del puerto "GPIO' + comando[7:] + '" es ' + mensaje[5:], sep = '')
+
+        else:
+            print('Aviso: El servidor informa de que el comando "' + comando + '" es ' + mensaje[5:], sep = '')
+
+
+
+    def __listar(self):
+        if self._estado >= 1:
+            self._lista_GPIOs = self.__enviar_y_recibir('listar')
+            self._lista_GPIOs = self._lista_GPIOs[6:-1]
+            self._lista_GPIOs = self._lista_GPIOs.split(' ')
+
+            if self._comprobar_lista_GPIOs():
+                self._estado = 2
+
+                for i in range(len(self._lista_GPIOs)):
+                    aux = self._lista_GPIOs[i]
+                    self._lista_GPIOs[i] = list()
+                    self._lista_GPIOs[i].append(aux)
+                    self._lista_GPIOs[i].append(self.__estado('estado ' + aux))
+
+                self.__mostrar_GPIOs()
+
+        else:
+            print('Error: Imposible solicitar una lista de puertos GPIO, no ' + self.estado(self._estado + 1), file = sys.stderr)
+
+
+    def __mostrar_GPIOs(self):
+        if self._comprobar_lista_GPIOs():
+            print('Ok: Puertos GPIO que están activos:')
+
+            for puerto, estado in self._lista_GPIOs:
+                print("\t" + 'Puerto GPIO' + puerto + "\testado: " + estado, sep = '')
+
+            return True
+
+        else:
+            print('Error: No hay ninguna lista de puertos GPIO cargada', file = sys.stderr)
+
+            return False
+
+
+    def __varios(self, comando):
+        if (self._estado >= 2) or (self._estado >= 1 and self._confirmar()):
+            mensaje = self.__enviar_y_recibir(comando)
+
+            if mensaje[0:2] == 'ok':
+                print('Correcto: El servidor informa de que el comando "' + comando + '" ha sido ' + mensaje[4:], sep = '')
+
+            elif mensaje[0:4] == 'info' and (int(mensaje[5:]) == 0 or int(mensaje[5:]) == 1):
+                print('Correcto: El servidor informa de que el estado del puerto "GPIO' + comando[7:] + '" es ' + mensaje[5:], sep = '')
+
+            else:
+                print('Aviso: El servidor informa de que el comando "' + comando + '" es ' + mensaje[5:], sep = '')
+
+        elif self._estado == 1:
+            print('Aviso: El comando "' + comando + '" no ha sido ejecutado porque no' + self.estado(self._estado + 1), sep = '')
+
+        else:
+            print('Error: Imposible interaccionar con el puerto GPIO solicitado, no ' + self.estado(self._estado + 1), file = sys.stderr)
 
 
     def arranque(self):
@@ -59,79 +172,26 @@ class domotica_cliente(object):
             while comando != 'salir':
                 # conectar & listar
                 if comando != 'conectar' and comando[0:8] == 'conectar' and comando[8] == ' ' and comando[9:] != '':
-                    if self._estado == 0:
-                        print('Conectando a ' + comando[9:])
-
-                        try:
-                            self._socket.connect((comando[9:], self._config.puerto))
-
-                        except TimeoutError:
-                            print('Error: Tiempo de espera agotado al conectar a ' + comando[9:], file = sys.stderr)
-
-                        except ConnectionRefusedError:
-                            print('Error: Imposible conectar a ' + comando[9:], file = sys.stderr)
-
-                        else:
-                            print('Conectado a ' + comando[9:])
-                            self._estado = 1
-
-                            self._socket.send('listar'.encode('utf-8'))
-                            self._lista_GPIOs = self._socket.recv(1024)
-                            self._lista_GPIOs = self._lista_GPIOs.decode('utf-8')
-    
-                            self._lista_GPIOs = self._lista_GPIOs.split(' ')
-
-                            if self.mostrar_lista_GPIOs():
-                                self._estado = 2
-
-                    else:
-                        print('Error: Imposible conectar a ' + comando[9:] + ', ya hay una conexión activa', file = sys.stderr)
+                    self.__conectar(comando)
 
                 # listar
                 elif comando == 'listar':
-                    if self._estado >= 1:
-                        self._socket.send(comando.encode('utf-8'))
-                        self._lista_GPIOs = self._socket.recv(1024)
-                        self._lista_GPIOs = self._lista_GPIOs.decode('utf-8')
-                        self._lista_GPIOs = self._lista_GPIOs[5:]
+                    self.__listar()
 
-                        self._lista_GPIOs = self._lista_GPIOs.split(' ')
-
-                    else:
-                        print('Error: Imposible solicitar una lista de puertos GPIO, no ' + self.estado(self._estado + 1), file = sys.stderr)
-
-                    if self.mostrar_lista_GPIOs():
-                        self._estado = 2
-
-                # conmutar, pulsar, encender o apagar
+                # conmutar, pulsar, encender, apagar
                 elif (comando != 'conmutar' and comando[0:8] == 'conmutar' and comando[8] == ' ' and comando[9:] != '') \
                   or (comando != 'pulsar'   and comando[0:6] == 'pulsar'   and comando[6] == ' ' and comando[7:] != '') \
                   or (comando != 'encender' and comando[0:8] == 'encender' and comando[8] == ' ' and comando[9:] != '') \
                   or (comando != 'apagar'   and comando[0:6] == 'apagar'   and comando[6] == ' ' and comando[7:] != '') \
-                  or (comando != 'estado'   and comando[0:6] == 'estado'   and comando[6] == ' ' and comando[7:] != '') \
                   :
-                    if (self._estado >= 2) or (self._estado >= 1 and self._confirmar()):
-                        self._socket.send(comando.encode('utf-8'))
-                        mensaje = self._socket.recv(1024)
-                        mensaje = mensaje.decode('utf-8')
-                        mensaje = mensaje.lower()
+                    self.__varios(comando)
 
-                        if mensaje[0:2] == 'ok':
-                            print('Correcto: El servidor informa de que el comando "' + comando + '" ha sido ' + mensaje[4:], sep = '')
+                # estado
+                elif comando != 'estado' and comando[0:6] == 'estado' and comando[6] == ' ' and comando[7:] != '':
+                    self.__estado(comando)
 
-                        elif mensaje[0:4] == 'info' and (int(mensaje[5:]) == 0 or int(mensaje[5:]) == 1):
-                            print('Correcto: El servidor informa de que el estado del puerto "GPIO' + comando[7:] + '" es ' + mensaje[5:], sep = '')
 
-                        else:
-                            print('Aviso: El servidor informa de que el comando "' + comando + '" es ' + mensaje[5:], sep = '')
-
-                    elif self._estado == 1:
-                        print('Aviso: El comando "' + comando + '" no ha sido ejecutado porque no' + self.estado(self._estado + 1), sep = '')
-
-                    else:
-                        print('Error: Imposible interaccionar con el puerto GPIO solicitado, no ' + self.estado(self._estado + 1), file = sys.stderr)
-
-                # conmutar, pulsar, encender o apagar pero sin parámetros
+                # conmutar, pulsar, encender, apagar o estado pero sin parámetros
                 elif comando == 'conectar' \
                   or comando == 'conmutar' \
                   or comando == 'pulsar'   \
@@ -181,24 +241,6 @@ class domotica_cliente(object):
 
         else:
             return 'el estado es desconocido'
-
-
-    def mostrar_lista_GPIOs(self):
-        try:
-            self._lista_GPIOs
-
-        except AttributeError:
-            print('Error: No hay ninguna lista de puertos GPIO cargada', file = sys.stderr)
-
-            return False
-
-        else:
-            print('Puertos GPIO que están activos:')
-
-            for puerto in self._lista_GPIOs:
-                print("\t" + puerto, sep = '')
-
-            return True
 
 
     def __del__(self):

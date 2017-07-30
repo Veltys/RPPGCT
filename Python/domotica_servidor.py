@@ -129,7 +129,7 @@ class domotica_servidor(comun.app):
                                 sc.send(mensaje.encode('utf_8'))
 
                             elif comando[0:6] == 'estado' and respuesta != -1:
-                                mensaje = 'info: ' + respuesta
+                                mensaje = 'info: ' + str(respuesta)
                                 sc.send(mensaje.encode('utf_8'))
 
                             else:
