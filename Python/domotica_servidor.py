@@ -94,7 +94,7 @@ class domotica_servidor(comun.app):
                 while comando[0:11] != 'desconectar':
                     # listar
                     if comando == 'listar':
-                        mensaje = ''
+                        mensaje = 'info: '
 
                         for i in range(0, int(len(self._config.GPIOS)), 2):
                             mensaje = mensaje + str(self._config.GPIOS[i + 1][0]) + ' '
@@ -120,23 +120,24 @@ class domotica_servidor(comun.app):
                             if DEBUG:
                                 print('Padre #', os.getpid(), "\tEl comando \"" + comando + '" es incorrecto o no está implementado', sep = '')
 
-                            mensaje = 'Err: incorrecto o no implementado'
+                            mensaje = 'err: incorrecto o no implementado'
                             sc.send(mensaje.encode('utf_8'))
 
                         else:
                             if comando[0:6] != 'estado' and respuesta:
-                                mensaje = 'Ok: ejecutado'
+                                mensaje = 'ok: ejecutado'
                                 sc.send(mensaje.encode('utf_8'))
 
                             elif comando[0:6] == 'estado' and respuesta != -1:
-                                sc.send(str(respuesta).encode('utf_8'))
+                                mensaje = 'info: ' + respuesta
+                                sc.send(mensaje.encode('utf_8'))
 
                             else:
-                                mensaje = 'Err: no ejecutado, puerto incorrecto o no encontrado'
+                                mensaje = 'err: no ejecutado, puerto incorrecto o no encontrado'
                                 sc.send(mensaje.encode('utf_8'))
 
                     else:
-                        mensaje = 'Err: no ejecutado, comando incorrecto'
+                        mensaje = 'err: no ejecutado, comando incorrecto'
                         sc.send(mensaje.encode('utf_8'))
 
                     comando = sc.recv(1024)

@@ -93,6 +93,7 @@ class domotica_cliente(object):
                         self._socket.send(comando.encode('utf-8'))
                         self._lista_GPIOs = self._socket.recv(1024)
                         self._lista_GPIOs = self._lista_GPIOs.decode('utf-8')
+                        self._lista_GPIOs = self._lista_GPIOs[5:]
 
                         self._lista_GPIOs = self._lista_GPIOs.split(' ')
 
@@ -118,8 +119,11 @@ class domotica_cliente(object):
                         if mensaje[0:2] == 'ok':
                             print('Correcto: El servidor informa de que el comando "' + comando + '" ha sido ' + mensaje[4:], sep = '')
 
+                        elif mensaje[0:4] == 'info' and (int(mensaje[5:]) == 0 or int(mensaje[5:]) == 1):
+                            print('Correcto: El servidor informa de que el estado del puerto "GPIO' + comando[7:] + '" es ' + mensaje[5:], sep = '')
+
                         else:
-                            print('Aviso: El servidor informa de que el comando "' + comando + '" es ' + mensaje, sep = '')
+                            print('Aviso: El servidor informa de que el comando "' + comando + '" es ' + mensaje[5:], sep = '')
 
                     elif self._estado == 1:
                         print('Aviso: El comando "' + comando + '" no ha sido ejecutado porque no' + self.estado(self._estado + 1), sep = '')
