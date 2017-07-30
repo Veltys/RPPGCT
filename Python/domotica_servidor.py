@@ -54,7 +54,7 @@ class domotica_servidor(comun.app):
             puerto = self.buscar_puerto_GPIO(puerto)
         
         if puerto != -1:
-            with semaforo:                                                                                                          # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
+            with semaforo:                                                                                                          # Para realizar el apagado es necesaria un semáforo o podría haber problemas
                 GPIO.output(self._config.GPIOS[puerto][0], GPIO.LOW if self._config.GPIOS[puerto][2] else GPIO.HIGH)                # Se conmuta la salida del puerto GPIO
 
             return True
@@ -124,9 +124,12 @@ class domotica_servidor(comun.app):
                             sc.send(mensaje.encode('utf_8'))
 
                         else:
-                            if respuesta:
+                            if comando[0:6] != 'estado' and respuesta:
                                 mensaje = 'Ok: ejecutado'
                                 sc.send(mensaje.encode('utf_8'))
+
+                            elif comando[0:6] == 'estado' and respuesta != -1:
+                                sc.send(respuesta.encode('utf_8'))
 
                             else:
                                 mensaje = 'Err: no ejecutado, puerto incorrecto o no encontrado'
@@ -190,7 +193,7 @@ class domotica_servidor(comun.app):
             puerto = self.buscar_puerto_GPIO(puerto)
         
         if puerto != -1:
-            with semaforo:                                                                                                          # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
+            with semaforo:                                                                                                          # Para realizar el encendido es necesaria un semáforo o podría haber problemas
                 GPIO.output(self._config.GPIOS[puerto][0], GPIO.HIGH if self._config.GPIOS[puerto][2] else GPIO.LOW)                # Se conmuta la salida del puerto GPIO
 
             return True
@@ -198,6 +201,17 @@ class domotica_servidor(comun.app):
         else:
             return False
 
+
+    def estado(self, puerto, modo = False):
+        if modo == False:
+            puerto = self.buscar_puerto_GPIO(puerto)
+        
+        if puerto != -1:
+            return self._config.GPIOS[puerto][0]
+
+        else:
+            return -1
+        
 
     def pulsar(self, puerto, modo = False):
         if modo == False:
@@ -245,7 +259,6 @@ class domotica_servidor_hijos(comun.app):
             print('Hijo  #', self._id_hijo, "\tDeberé escuchar en el puerto GPIO", self._GPIOS[0][0] , ' y conmutar el puerto GPIO', self._GPIOS[1][0], sep = '')
 
 
-
     def bucle(self):
         global salir
 
@@ -286,7 +299,7 @@ class domotica_servidor_hijos(comun.app):
         if DEBUG:
             print('Hijo  #', self._id_hijo, "\tDisparado el evento de cierre", sep = '')
 
-        # super().cerrar()
+        super().cerrar()
 
 
     def __del__(self):
