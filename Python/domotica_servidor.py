@@ -91,7 +91,7 @@ class domotica_servidor(comun.app):
                 if DEBUG:
                     print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
 
-                while comando[0:5] != 'desconectar':
+                while comando[0:11] != 'desconectar':
                     # listar
                     if comando == 'listar':
                         mensaje = ''

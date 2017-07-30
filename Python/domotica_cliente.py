@@ -139,12 +139,7 @@ class domotica_cliente(object):
 
                 # desconectar
                 elif comando == 'desconectar':
-                    if self._estado >= 1:
-                        self._socket.sendall(comando.encode('utf-8'))
-                        self._socket.close()
-
-                    else:
-                        print('Error: Imposible desconectar, no ' + self.estado(self._estado + 1), file = sys.stderr)
+                    self.cerrar()
 
                 else:
                     print('Error: El comando "' + comando + '" no ha sido reconocido. Por favor, inténtelo de nuevo.', file = sys.stderr)
@@ -152,8 +147,8 @@ class domotica_cliente(object):
                 comando = input('Introduzca un comando: ')
 
             # salir                                                             # La salida propiamente dicha será ejecutada en la siguiente vuelta del bucle
-            if comando == 'salir' and self._estado >= 1:
-                self._socket.sendall('desconectar'.encode('utf-8'))
+            if comando == 'salir':
+                self.cerrar()
 
         except KeyboardInterrupt:
             self.cerrar()
@@ -161,8 +156,11 @@ class domotica_cliente(object):
 
 
     def cerrar(self):
-        if self._estado >= 2:
-            self._socket.sendall('salir'.encode('utf-8'))
+        if self._estado >= 1:
+            self._socket.sendall('desconectar'.encode('utf-8'))
+            self._socket.close()
+            self._estado = 0
+
 
     def estado(self, estado = False):
         if estado == False:
