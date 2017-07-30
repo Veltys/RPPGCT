@@ -9,7 +9,7 @@
 # Version       : 1.3.0
 # Usage         : import config | from config import <clase>
 # Notes         : Se han estructurado en clases las distintas configuraciones
-#                 GPIOS contiene pares de datos en formato lista:
+#                 GPIOS contiene ternas de datos en formato lista:
 #                 el primer elemento será el número (BCM) de puerto GPIO a manipular,
 #                 el segundo, el modo (True para salida, False para entrada)
 #                 y el tercero, la activación si es de salida (True si es activo a alto nivel o False si es a bajo nivel) o el estado si es de entrada (True si está bajado y False subido) 
@@ -17,10 +17,6 @@
 #                 senyales (señales) contiene el tipo de señal y la función a la que ésta se asociará
 #                 
 #                 A título ilustrativo, a se ofrece una configuración por defecto (la mía, para ser exactos)
-
-
-from copy import copy                                                           # Copia de objetos
-from copy import deepcopy                                                       # Copia "segura" de objetos
 
 
 class cpu_config:
@@ -49,6 +45,8 @@ class domotica_cliente_config:
 class domotica_servidor_config(domotica_cliente_config):
     GPIOS           = [(17, False, False),
                        (27, True,  False),
+                       (23, False, False),
+                       (24, True,  False),
                       ]
 
     senyales        = {'SIGTERM': 'sig_cerrar',

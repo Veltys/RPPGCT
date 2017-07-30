@@ -5,8 +5,8 @@
 # Title         : domotica_cliente.py
 # Description   : Parte cliente del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 23-07-2017
-# Version       : 1.0.0
+# Date          : 29-07-2017
+# Version       : 1.0.1
 # Usage         : python3 domotica_cliente.py
 # Notes         : Parte cliente del sistema en el que se gestionarán pares de puertos GPIO
 
@@ -22,15 +22,14 @@ except ImportError:
   sys.exit(errno.ENOENT)
 
 from time import sleep                                                          # Para hacer pausas
-import comun                                                                    # Funciones comunes a varios sistemas
+# import comun                                                                    # Funciones comunes a varios sistemas
 import os                                                                       # Funcionalidades varias del sistema operativo
 import socket                                                                   # Tratamiento de sockets
 
 
-class domotica_cliente(comun.app):
-    def __init__(self, config, nombre = False):
-        super().__init__(config, nombre)
-
+class domotica_cliente(object):
+    def __init__(self, config):
+        self._config = config
         self._estado = 0
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -47,13 +46,18 @@ class domotica_cliente(comun.app):
             return False
 
 
+    def arranque(self):
+        # En este caso, no es necesario realizar operaciones de arranquue
+
+        return 0
+
     def bucle(self):
         try:
             comando = input('Introduzca un comando: ')
             comando = comando.lower()
 
             while comando != 'salir':
-                # conectar
+                # conectar & listar
                 if comando != 'conectar' and comando[0:8] == 'conectar' and comando[8] == ' ' and comando[9:] != '':
                     if self._estado == 0:
                         print('Conectando a ' + comando[9:])
@@ -71,12 +75,21 @@ class domotica_cliente(comun.app):
                             print('Conectado a ' + comando[9:])
                             self._estado = 1
 
+                            self._socket.send('listar'.encode('utf-8'))
+                            self._lista_GPIOs = self._socket.recv(1024)
+                            self._lista_GPIOs = self._lista_GPIOs.decode('utf-8')
+    
+                            self._lista_GPIOs = self._lista_GPIOs.split(' ')
+
+                            if self.mostrar_lista_GPIOs():
+                                self._estado = 2
+
                     else:
                         print('Error: Imposible conectar a ' + comando[9:] + ', ya hay una conexión activa', file = sys.stderr)
 
                 # listar
                 elif comando == 'listar':
-                    if self._estado == 1:
+                    if self._estado >= 1:
                         self._socket.send(comando.encode('utf-8'))
                         self._lista_GPIOs = self._socket.recv(1024)
                         self._lista_GPIOs = self._lista_GPIOs.decode('utf-8')
@@ -93,7 +106,9 @@ class domotica_cliente(comun.app):
                 elif (comando != 'conmutar' and comando[0:8] == 'conmutar' and comando[8] == ' ' and comando[9:] != '') \
                   or (comando != 'pulsar'   and comando[0:6] == 'pulsar'   and comando[6] == ' ' and comando[7:] != '') \
                   or (comando != 'encender' and comando[0:8] == 'encender' and comando[8] == ' ' and comando[9:] != '') \
-                  or (comando != 'apagar'   and comando[0:6] == 'apagar'   and comando[6] == ' ' and comando[7:] != ''):
+                  or (comando != 'apagar'   and comando[0:6] == 'apagar'   and comando[6] == ' ' and comando[7:] != '') \
+                  or (comando != 'estado'   and comando[0:6] == 'estado'   and comando[6] == ' ' and comando[7:] != '') \
+                  :
                     if (self._estado >= 2) or (self._estado >= 1 and self._confirmar()):
                         self._socket.send(comando.encode('utf-8'))
                         mensaje = self._socket.recv(1024)
@@ -101,7 +116,7 @@ class domotica_cliente(comun.app):
                         mensaje = mensaje.lower()
 
                         if mensaje[0:2] == 'ok':
-                            print('Correcto: El servidor informa de que el comando "' + comando + '" es ' + mensaje[4:], sep = '')
+                            print('Correcto: El servidor informa de que el comando "' + comando + '" ha sido ' + mensaje[4:], sep = '')
 
                         else:
                             print('Aviso: El servidor informa de que el comando "' + comando + '" es ' + mensaje[5:], sep = '')
@@ -113,7 +128,13 @@ class domotica_cliente(comun.app):
                         print('Error: Imposible interaccionar con el puerto GPIO solicitado, no ' + self.estado(self._estado + 1), file = sys.stderr)
 
                 # conmutar, pulsar, encender o apagar pero sin parámetros
-                elif comando == 'conectar' or comando == 'conmutar' or comando == 'pulsar' or comando == 'encender' or comando == 'apagar':
+                elif comando == 'conectar' \
+                  or comando == 'conmutar' \
+                  or comando == 'pulsar'   \
+                  or comando == 'encender' \
+                  or comando == 'apagar'   \
+                  or comando == 'estado'   \
+                  :
                     print('Error: El comando "' + comando + '" requiere uno o más parámetros. Por favor, inténtelo de nuevo.', file = sys.stderr)
 
                 # desconectar
@@ -142,8 +163,6 @@ class domotica_cliente(comun.app):
     def cerrar(self):
         if self._estado >= 2:
             self._socket.sendall('salir'.encode('utf-8'))
-
-        super().cerrar()
 
     def estado(self, estado = False):
         if estado == False:
@@ -181,12 +200,18 @@ class domotica_cliente(comun.app):
 
 
     def __del__(self):
-        super().__del__()
+        pass
 
 
 def main(argv = sys.argv):
-     app = domotica_cliente(config)
-     app.arranque()
+    app = domotica_cliente(config)
+    err = app.arranque()
+
+    if err == 0:
+        app.bucle()
+
+    else:
+        sys.exit(err)
 
 
 if __name__ == '__main__':

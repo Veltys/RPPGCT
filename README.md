@@ -98,6 +98,10 @@ Colección de utilidades varias para el control GPIO en Python
     - Arreglado fallo en la sangría de algunas línas de código en **domotica_servidor.py**
 - 0.4.5:
     - Arreglado fallo de versiones en los commits y en **README.md**.
+- 0.4.6:
+    - Modificado el procedimiento de arranque en **comun.py**, **cpu.py**, **domotica_cliente.py**, **domotica_servidor.py**, **reiniciar_router.py** y **temperaturas.py**.
+    - Reajustado el código de **indice_gpio.py** para hacerlo más legible.
+    - Implementado comando *estado* en **domotica_cliente.py** y **domotica_servidor.py**.
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
@@ -118,8 +122,8 @@ Colección de utilidades varias para el control GPIO en Python
 - [ ] ~~Añadir el configurador general.~~
 - [ ] ~~Añadir el control de GPIOs general: leds y relés.~~
 - [x] Implementar la domótica remota.
-- [ ] Cambiar el comando *conectar* para que sea un *conectar* y *listar* en **domotica_cliente.py** y **domotica_servidor.py**.
-- [ ] Implementar comando *estado* para ver en qué estado se encuentra un puerto GPIO en **domotica_cliente.py** y **domotica_servidor.py**.
+- [x] Cambiar el comando *conectar* para que sea un *conectar* y *listar* en **domotica_cliente.py** ~~y **domotica_servidor.py**~~.
+- [x] Implementar comando *estado* para ver en qué estado se encuentra un puerto GPIO en **domotica_cliente.py** y **domotica_servidor.py**.
 - [ ] Implementar parámetros en **domotica_cliente.py**.
 - [ ] Integrar el control de relés en un archivo separado.
 - [ ] Añadir control de versiones en la instalación.

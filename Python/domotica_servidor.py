@@ -5,8 +5,8 @@
 # Title         : domotica_servidor.py
 # Description   : Parte servidor del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 24-07-2017
-# Version       : 1.0.2
+# Date          : 30-07-2017
+# Version       : 1.0.4
 # Usage         : python3 domotica_servidor.py
 # Notes         : Parte servidor del sistema en el que se gestionarán pares de puertos GPIO
 #                 Las entradas impares en la variable de configuración asociada GPIOS corresponderán a los relés que se gestionarán
@@ -108,7 +108,9 @@ class domotica_servidor(comun.app):
                     elif (comando != 'conmutar' and comando[0:8] == 'conmutar' and comando[8] == ' ' and comando[9:] != '') \
                       or (comando != 'pulsar'   and comando[0:6] == 'pulsar'   and comando[6] == ' ' and comando[7:] != '') \
                       or (comando != 'encender' and comando[0:8] == 'encender' and comando[8] == ' ' and comando[9:] != '') \
-                      or (comando != 'apagar'   and comando[0:6] == 'apagar'   and comando[6] == ' ' and comando[7:] != ''):
+                      or (comando != 'apagar'   and comando[0:6] == 'apagar'   and comando[6] == ' ' and comando[7:] != '') \
+                      or (comando != 'estado'   and comando[0:6] == 'estado'   and comando[6] == ' ' and comando[7:] != '') \
+                      :
                         (funcion, params) = comando.split(' ', 1)
 
                         try:
@@ -131,7 +133,7 @@ class domotica_servidor(comun.app):
                                 sc.send(mensaje.encode('utf_8'))
 
                     else:
-                        mensaje = comando
+                        mensaje = 'Err: no ejecutado, comando incorrecto'
                         sc.send(mensaje.encode('utf_8'))
 
                     comando = sc.recv(1024)
@@ -245,6 +247,8 @@ class domotica_servidor_hijos(comun.app):
 
 
     def bucle(self):
+        global salir
+
         try:
             while not(salir):
                 for i in range(0, int(len(self._GPIOS)), 2):                                                                        # Se recorre la configuración propia (no la general), tomandos un paso de 2, ya que los puertos se trabajan por pares
@@ -297,7 +301,13 @@ def main(argv = sys.argv):
 
 def main_hijos(argv):
     app = domotica_servidor_hijos(argv, config)
-    app.arranque()
+    err = app.arranque()
+
+    if err == 0:
+        app.bucle()
+
+    else:
+        sys.exit(err)
 
 
 if __name__ == '__main__':
