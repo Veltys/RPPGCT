@@ -207,7 +207,7 @@ class domotica_servidor(comun.app):
             puerto = self.buscar_puerto_GPIO(puerto)
         
         if puerto != -1:
-            return self._config.GPIOS[puerto][0]
+            return GPIO.input(self._config.GPIOS[puerto][0])
 
         else:
             return -1
