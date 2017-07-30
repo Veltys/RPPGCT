@@ -119,7 +119,7 @@ class domotica_cliente(object):
                             print('Correcto: El servidor informa de que el comando "' + comando + '" ha sido ' + mensaje[4:], sep = '')
 
                         else:
-                            print('Aviso: El servidor informa de que el comando "' + comando + '" es ' + mensaje[5:], sep = '')
+                            print('Aviso: El servidor informa de que el comando "' + comando + '" es ' + mensaje, sep = '')
 
                     elif self._estado == 1:
                         print('Aviso: El comando "' + comando + '" no ha sido ejecutado porque no' + self.estado(self._estado + 1), sep = '')

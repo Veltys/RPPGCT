@@ -129,7 +129,7 @@ class domotica_servidor(comun.app):
                                 sc.send(mensaje.encode('utf_8'))
 
                             elif comando[0:6] == 'estado' and respuesta != -1:
-                                sc.send(respuesta.encode('utf_8'))
+                                sc.send(str(respuesta).encode('utf_8'))
 
                             else:
                                 mensaje = 'Err: no ejecutado, puerto incorrecto o no encontrado'
