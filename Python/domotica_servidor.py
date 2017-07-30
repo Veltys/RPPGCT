@@ -296,7 +296,13 @@ class domotica_servidor_hijos(comun.app):
 
 def main(argv = sys.argv):
     app = domotica_servidor(config, os.path.basename(sys.argv[0]))
-    app.arranque()
+    err = app.arranque()
+
+    if err == 0:
+        app.bucle()
+
+    else:
+        sys.exit(err)
 
 
 def main_hijos(argv):
