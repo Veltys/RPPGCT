@@ -5,7 +5,7 @@
 # Title         : domotica_cliente.py
 # Description   : Parte cliente del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 31-07-2017
+# Date          : 09-08-2017
 # Version       : 1.0.1
 # Usage         : python3 domotica_cliente.py
 # Notes         : Parte cliente del sistema en el que se gestionarán pares de puertos GPIO
@@ -74,8 +74,6 @@ class domotica_cliente(object):
                 print('Ok: Conectado a ' + comando[9:])
                 self._estado = 1
 
-                self.__listar()
-
         else:
             print('Error: Imposible conectar a ' + comando[9:] + ', ya hay una conexión activa', file = sys.stderr)
 
@@ -92,15 +90,11 @@ class domotica_cliente(object):
     def __estado(self, comando):
         mensaje = self.__enviar_y_recibir(comando)
 
-        if mensaje[0:2] == 'ok':
-            print('Correcto: El servidor informa de que el comando "' + comando + '" ha sido ' + mensaje[4:], sep = '')
-
-        elif mensaje[0:4] == 'info' and (int(mensaje[5:]) == 0 or int(mensaje[5:]) == 1):
-            print('Correcto: El servidor informa de que el estado del puerto "GPIO' + comando[7:] + '" es ' + mensaje[5:], sep = '')
+        if mensaje[0:4] == 'info' and (int(mensaje[5:]) == 0 or int(mensaje[5:]) == 1):
+            return mensaje[5:]
 
         else:
-            print('Aviso: El servidor informa de que el comando "' + comando + '" es ' + mensaje[5:], sep = '')
-
+            return -1
 
 
     def __listar(self):
@@ -118,18 +112,30 @@ class domotica_cliente(object):
                     self._lista_GPIOs[i].append(aux)
                     self._lista_GPIOs[i].append(self.__estado('estado ' + aux))
 
-                self.__mostrar_GPIOs()
-
         else:
             print('Error: Imposible solicitar una lista de puertos GPIO, no ' + self.estado(self._estado + 1), file = sys.stderr)
 
 
-    def __mostrar_GPIOs(self):
-        if self._comprobar_lista_GPIOs():
-            print('Ok: Puertos GPIO que están activos:')
+    def __mostrar_lista(self):
+        if self._estado >= 2:
+            print('Ok: Puertos GPIO que están disponibles:')
 
             for puerto, estado in self._lista_GPIOs:
-                print("\t" + 'Puerto GPIO' + puerto + "\testado: " + estado, sep = '')
+                print("\t" + 'Puerto GPIO' + puerto + ' --> Estado: ' + ('activo' if estado == 1 else 'inactivo'), sep = '')
+
+            return True
+
+        else:
+            print('Error: No hay ninguna lista de puertos GPIO cargada', file = sys.stderr)
+
+            return False
+
+
+    def __mostrar_estado(self, puerto, estado):
+        if self._estado >= 2:
+            print('Ok: Estado del puerto GPIO' + puerto + ':')
+
+            print("\t" + 'Puerto GPIO' + puerto + " -->\tEstado: " + ('activo' if estado == 1 else 'inactivo'), sep = '')
 
             return True
 
@@ -160,12 +166,12 @@ class domotica_cliente(object):
 
 
     def arranque(self):
-        # En este caso, no es necesario realizar operaciones de arranquue
+        return 0                                                                # En este caso, no es necesario realizar operaciones de arranque
 
-        return 0
 
     def bucle(self):
         try:
+            print()                                                             # Llamar a print() sin argumentos introduce una nueva línea
             comando = input('Introduzca un comando: ')
             comando = comando.lower()
 
@@ -173,10 +179,14 @@ class domotica_cliente(object):
                 # conectar & listar
                 if comando != 'conectar' and comando[0:8] == 'conectar' and comando[8] == ' ' and comando[9:] != '':
                     self.__conectar(comando)
+                    self.__listar()
+                    self.__mostrar_lista()
+
 
                 # listar
                 elif comando == 'listar':
                     self.__listar()
+                    self.__mostrar_lista()
 
                 # conmutar, pulsar, encender, apagar
                 elif (comando != 'conmutar' and comando[0:8] == 'conmutar' and comando[8] == ' ' and comando[9:] != '') \
@@ -188,7 +198,7 @@ class domotica_cliente(object):
 
                 # estado
                 elif comando != 'estado' and comando[0:6] == 'estado' and comando[6] == ' ' and comando[7:] != '':
-                    self.__estado(comando)
+                    self.__mostrar_estado(self.__estado(comando[7:]))
 
 
                 # conmutar, pulsar, encender, apagar o estado pero sin parámetros

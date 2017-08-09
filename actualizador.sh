@@ -3,8 +3,8 @@
 # Title         : actualizador.sh
 # Description   : Actualiza los scripts sin alterar la configuración de inicio automático
 # Author        : Veltys
-# Date          : 23-07-2017
-# Version       : 1.2.2
+# Date          : 09-08-2017
+# Version       : 1.2.3
 # Usage         : sudo bash actualizador.sh
 # Notes         : Es necesario ser superusuario para su correcto funcionamiento
 

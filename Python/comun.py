@@ -5,8 +5,8 @@
 # Title         : comun.py
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
-# Date          : 30-07-2017
-# Version       : 0.2.3
+# Date          : 09-08-2017
+# Version       : 0.2.4
 # Usage         : import comun | from comun import <clase>
 # Notes         : 
 
@@ -80,7 +80,6 @@ class app(object):
                 - Si no, establece un bloqueo para evitar otras ejecuciones
                 - Si sí, sale
             - Configura los puertos GPIO
-            - Llama a la función self.bucle()
         '''
 
         if self._bloqueo == False or self._bloqueo.comprobar():
