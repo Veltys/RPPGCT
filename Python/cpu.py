@@ -5,8 +5,8 @@
 # Title         : cpu.py
 # Description   : Sistema indicador led de la carga de CPU en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma"
 # Author        : Veltys
-# Date          : 16-07-2017
-# Version       : 2.1.5
+# Date          : 30-07-2017
+# Version       : 2.1.6
 # Usage         : python3 cpu.py
 # Notes         : Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual simplemente apaga todos los leds hasta que esta misma señal sea recibida de nuevo
@@ -78,7 +78,13 @@ class cpu(comun.app):
 
 def main(argv = sys.argv):
     app = cpu(config, os.path.basename(argv[0]))
-    app.arranque()
+    err = app.arranque()
+
+    if err == 0:
+        app.bucle()
+
+    else:
+        sys.exit(err)
 
 
 if __name__ == '__main__':

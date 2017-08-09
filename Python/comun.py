@@ -5,8 +5,8 @@
 # Title         : comun.py
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
-# Date          : 18-07-2017
-# Version       : 0.2.2
+# Date          : 09-08-2017
+# Version       : 0.2.4
 # Usage         : import comun | from comun import <clase>
 # Notes         : 
 
@@ -80,7 +80,6 @@ class app(object):
                 - Si no, establece un bloqueo para evitar otras ejecuciones
                 - Si sí, sale
             - Configura los puertos GPIO
-            - Llama a la función self.bucle()
         '''
 
         if self._bloqueo == False or self._bloqueo.comprobar():
@@ -104,15 +103,15 @@ class app(object):
                         if not(self._config.GPIOS[i][1]):                       # En el caso de tener un pin GPIO de entrada, se necesitará transformar en lista la tupla, ya que es posible que
                             self._config.GPIOS[i] = list(self._config.GPIOS[i]) # haga falta modificar su contenido
 
-                self.bucle()
+                return 0
     
             else:
                 print('Error: No se puede bloquear ' + self._bloqueo.nombre(), file = sys.stderr)
-                sys.exit(errno.EACCES)
+                return errno.EACCES
     
         else:
             print('Error: Ya se ha iniciado una instancia de ' + self._bloqueo.nombre(), file = sys.stderr)
-            sys.exit(errno.EEXIST)
+            return errno.EEXIST
 
 
     def asignar_senyales(self):

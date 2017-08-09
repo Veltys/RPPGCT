@@ -5,8 +5,8 @@
 # Title         : domotica_servidor.py
 # Description   : Parte servidor del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 24-07-2017
-# Version       : 1.0.2
+# Date          : 09-08-2017
+# Version       : 1.0.4
 # Usage         : python3 domotica_servidor.py
 # Notes         : Parte servidor del sistema en el que se gestionarán pares de puertos GPIO
 #                 Las entradas impares en la variable de configuración asociada GPIOS corresponderán a los relés que se gestionarán
@@ -30,7 +30,6 @@ except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
 
-from copy import deepcopy                                                       # Copia "segura" de objetos
 from threading import Lock, Thread                                              # Capacidades multihilo
 from time import sleep                                                          # Para hacer pausas
 import comun                                                                    # Funciones comunes a varios sistemas
@@ -49,12 +48,13 @@ class domotica_servidor(comun.app):
         self._socket.bind(('', self._config.puerto))
         self._socket.listen(1)
 
+
     def apagar(self, puerto, modo = False):
         if modo == False:
             puerto = self.buscar_puerto_GPIO(puerto)
         
         if puerto != -1:
-            with semaforo:                                                                                                          # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
+            with semaforo:                                                                                                          # Para realizar el apagado es necesaria un semáforo o podría haber problemas
                 GPIO.output(self._config.GPIOS[puerto][0], GPIO.LOW if self._config.GPIOS[puerto][2] else GPIO.HIGH)                # Se conmuta la salida del puerto GPIO
 
             return True
@@ -62,7 +62,7 @@ class domotica_servidor(comun.app):
         else:
             return False
 
-    
+
     def bucle(self):
         try:
             if DEBUG:
@@ -91,10 +91,10 @@ class domotica_servidor(comun.app):
                 if DEBUG:
                     print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
 
-                while comando[0:5] != 'desconectar':
+                while comando[0:11] != 'desconectar':
                     # listar
                     if comando == 'listar':
-                        mensaje = ''
+                        mensaje = 'info: '
 
                         for i in range(0, int(len(self._config.GPIOS)), 2):
                             mensaje = mensaje + str(self._config.GPIOS[i + 1][0]) + ' '
@@ -108,7 +108,9 @@ class domotica_servidor(comun.app):
                     elif (comando != 'conmutar' and comando[0:8] == 'conmutar' and comando[8] == ' ' and comando[9:] != '') \
                       or (comando != 'pulsar'   and comando[0:6] == 'pulsar'   and comando[6] == ' ' and comando[7:] != '') \
                       or (comando != 'encender' and comando[0:8] == 'encender' and comando[8] == ' ' and comando[9:] != '') \
-                      or (comando != 'apagar'   and comando[0:6] == 'apagar'   and comando[6] == ' ' and comando[7:] != ''):
+                      or (comando != 'apagar'   and comando[0:6] == 'apagar'   and comando[6] == ' ' and comando[7:] != '') \
+                      or (comando != 'estado'   and comando[0:6] == 'estado'   and comando[6] == ' ' and comando[7:] != '') \
+                      :
                         (funcion, params) = comando.split(' ', 1)
 
                         try:
@@ -118,28 +120,38 @@ class domotica_servidor(comun.app):
                             if DEBUG:
                                 print('Padre #', os.getpid(), "\tEl comando \"" + comando + '" es incorrecto o no está implementado', sep = '')
 
-                            mensaje = 'Err: incorrecto o no implementado'
+                            mensaje = 'err: incorrecto o no implementado'
                             sc.send(mensaje.encode('utf_8'))
 
                         else:
-                            if respuesta:
-                                mensaje = 'Ok: ejecutado'
+                            if comando[0:6] != 'estado' and respuesta:
+                                mensaje = 'ok: ejecutado'
+                                sc.send(mensaje.encode('utf_8'))
+
+                            elif comando[0:6] == 'estado' and respuesta != -1:
+                                mensaje = 'info: ' + str(respuesta)
                                 sc.send(mensaje.encode('utf_8'))
 
                             else:
-                                mensaje = 'Err: no ejecutado, puerto incorrecto o no encontrado'
+                                mensaje = 'err: no ejecutado, puerto incorrecto o no encontrado'
                                 sc.send(mensaje.encode('utf_8'))
 
                     else:
-                        mensaje = comando
+                        mensaje = 'err: no ejecutado, comando incorrecto'
                         sc.send(mensaje.encode('utf_8'))
 
-                    comando = sc.recv(1024)
-                    comando = comando.decode('utf_8')
-                    comando = comando.lower()
+                    try:
+                        comando = sc.recv(1024)
 
-                    if DEBUG:
-                        print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
+                    except ConnectionResetError:
+                        comando = 'desconectar'
+
+                    else:
+                        comando = comando.decode('utf_8')
+                        comando = comando.lower()
+
+                        if DEBUG:
+                            print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
 
                 if comando[0:5] == 'desconectar':
                     sc.close()
@@ -166,6 +178,9 @@ class domotica_servidor(comun.app):
         if DEBUG:
             print('Padre #', os.getpid(), "\tDisparado el evento de cierre", sep = '')
 
+        for hijo in self._hijos:
+            hijo.join()
+
         super().cerrar()
 
 
@@ -188,7 +203,7 @@ class domotica_servidor(comun.app):
             puerto = self.buscar_puerto_GPIO(puerto)
         
         if puerto != -1:
-            with semaforo:                                                                                                          # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
+            with semaforo:                                                                                                          # Para realizar el encendido es necesaria un semáforo o podría haber problemas
                 GPIO.output(self._config.GPIOS[puerto][0], GPIO.HIGH if self._config.GPIOS[puerto][2] else GPIO.LOW)                # Se conmuta la salida del puerto GPIO
 
             return True
@@ -196,6 +211,17 @@ class domotica_servidor(comun.app):
         else:
             return False
 
+
+    def estado(self, puerto, modo = False):
+        if modo == False:
+            puerto = self.buscar_puerto_GPIO(puerto)
+        
+        if puerto != -1:
+            return GPIO.input(self._config.GPIOS[puerto][0])
+
+        else:
+            return -1
+        
 
     def pulsar(self, puerto, modo = False):
         if modo == False:
@@ -243,8 +269,14 @@ class domotica_servidor_hijos(comun.app):
             print('Hijo  #', self._id_hijo, "\tDeberé escuchar en el puerto GPIO", self._GPIOS[0][0] , ' y conmutar el puerto GPIO', self._GPIOS[1][0], sep = '')
 
 
+    def arranque(self):
+        # super().arranque()                                                                                                        # La llamada al método de la clase padre está comentada a propósito
+
+        return 0                                                                                                                    # En este caso, no es necesario realizar operaciones de arranque, ya que el hilo padre las ha realizado todas
 
     def bucle(self):
+        global salir
+
         try:
             while not(salir):
                 for i in range(0, int(len(self._GPIOS)), 2):                                                                        # Se recorre la configuración propia (no la general), tomandos un paso de 2, ya que los puertos se trabajan por pares
@@ -282,7 +314,7 @@ class domotica_servidor_hijos(comun.app):
         if DEBUG:
             print('Hijo  #', self._id_hijo, "\tDisparado el evento de cierre", sep = '')
 
-        # super().cerrar()
+        super().cerrar()
 
 
     def __del__(self):
@@ -292,12 +324,24 @@ class domotica_servidor_hijos(comun.app):
 
 def main(argv = sys.argv):
     app = domotica_servidor(config, os.path.basename(sys.argv[0]))
-    app.arranque()
+    err = app.arranque()
+
+    if err == 0:
+        app.bucle()
+
+    else:
+        sys.exit(err)
 
 
 def main_hijos(argv):
     app = domotica_servidor_hijos(argv, config)
-    app.arranque()
+    err = app.arranque()
+
+    if err == 0:
+        app.bucle()
+
+    else:
+        sys.exit(err)
 
 
 if __name__ == '__main__':

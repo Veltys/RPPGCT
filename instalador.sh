@@ -3,8 +3,8 @@
 # Title         : instalador.sh
 # Description   : Instala los scripts y los configura para iniciarse automáticamente
 # Author        : Veltys
-# Date          : 23-07-2017
-# Version       : 1.2.1
+# Date          : 09-08-2017
+# Version       : 1.2.2
 # Usage         : sudo bash instalador.sh
 # Notes         : Es necesario ser superusuario para su correcto funcionamiento
 
@@ -13,11 +13,18 @@ if [ "$UID" -ne '0' ]; then
 	echo 'Este script debe ser lanzado con permisos de root. ¿Quizá anteponiéndole la orden sudo?'
 else
 	directorio='/opt/RPPGCT'
-scripts[0]='cpu'
+
+	scripts[0]='cpu'
 	scripts[1]='domotica_cliente'
 	scripts[2]='domotica_servidor'
 	scripts[3]='reiniciar_router'
 	scripts[4]='temperatura'
+
+	arrancables[0]='cpu'
+	arrancables[1]='domotica_servidor'
+	arrancables[2]='reiniciar_router'
+	arrancables[3]='temperatura'
+
 	dependencias[0]='config.py.sample'
 	dependencias[1]='comun.py'
 	dependencias[2]='pid.py'
@@ -46,7 +53,10 @@ scripts[0]='cpu'
 
 	for script in "${scripts[@]}"; do
 		install ./Python/${script}.py ${directorio}/
-		install ./init/${script}.sh /etc/init.d/${script}
-		update-rc.d ${script} defaults
+	done
+
+	for arrancable in "${arrancables[@]}"; do
+		install ./init/${arrancable}.sh /etc/init.d/${arrancable}
+		update-rc.d ${arrancable} defaults
 	done
 fi

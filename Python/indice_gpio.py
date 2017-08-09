@@ -5,28 +5,28 @@
 # Title         : indice_gpio.py
 # Description   : Sistema indizador de puertos GPIO
 # Author        : Veltys
-# Date          : 04-07-2017
-# Version       : 1.0.1
+# Date          : 30-07-2017
+# Version       : 1.0.2
 # Usage         : python3 indice_gpio.py
 # Notes         : Sistema que lee las distintas configuraciones y muestra cuáles puertos están ocupados y cuáles no
 
 
 try:
-  import config                                                                 # Configuración
+    import config                                                                 # Configuración
 
 except ImportError:
-  print('Error: Archivo de configuración no encontrado', file = sys.stderr)
-  sys.exit(errno.ENOENT)
+    print('Error: Archivo de configuración no encontrado', file = sys.stderr)
+    sys.exit(errno.ENOENT)
 
 import errno                                                                    # Códigos de error
-import inspect
-import os
+import inspec                                                                   # Metaprogramación
+import os                                                                       # Funcionalidades varias del sistema operativo
 import sys                                                                      # Funcionalidades varias del sistema
 
 
 def main(argv = sys.argv):
     clases = inspect.getmembers(sys.modules['config'], inspect.isclass)
-    
+
     gpios_bcm_normales = [4, 13, 16, 17, 22, 23, 24, 25, 27]
     gpios_bcm_normales_libres = gpios_bcm_normales[:]
     gpios_bcm_extendidos = [5, 6, 12, 19, 20, 21, 26]
@@ -40,8 +40,10 @@ def main(argv = sys.argv):
             for gpio in clase.GPIOS:
                 if gpio[0] in gpios_bcm_normales_libres:
                     gpios_bcm_normales_libres.remove(gpio[0])
+
                 elif gpio[0] in gpios_bcm_extendidos_libres:
                     gpios_bcm_extendidos_libres.remove(gpio[0])
+
                 elif gpio[0] in gpios_bcm_especiales_libres:
                     gpios_bcm_especiales_libres.remove(gpio[0])
 
@@ -61,6 +63,7 @@ def main(argv = sys.argv):
           'Especiales: ', sorted(gpios_bcm_especiales_libres), os.linesep,
           sep = '',
          )
+
 
 if __name__ == '__main__':
     main(sys.argv)
