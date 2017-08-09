@@ -102,6 +102,7 @@ Colección de utilidades varias para el control GPIO en Python
     - Modificado el procedimiento de arranque en **comun.py**, **cpu.py**, **domotica_cliente.py**, **domotica_servidor.py**, **reiniciar_router.py** y **temperaturas.py**.
     - Reajustado el código de **indice_gpio.py** para hacerlo más legible.
     - Implementado comando *estado* en **domotica_cliente.py** y **domotica_servidor.py**.
+    - Actualizado un fallo en **actualizador.sh**, **desinstalador.sh** e **instalador.sh**. 
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
