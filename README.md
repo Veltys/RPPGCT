@@ -103,7 +103,9 @@ Colección de utilidades varias para el control GPIO en Python
     - Reajustado el código de **indice_gpio.py** para hacerlo más legible.
     - Implementado comando *estado* en **domotica_cliente.py** y **domotica_servidor.py**.
     - Actualizado un fallo en **actualizador.sh**, **desinstalador.sh** e **instalador.sh**.
-    - Arreglo en la documentación de **comun.py**
+    - Eliminado import innecesario en **domotica_servidor.py**.
+    - Arreglo en la documentación de **comun.py**.
+    - Añadidos algunos servidores más en la clase *internet_config* de **config.py.sample**.
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
@@ -126,7 +128,8 @@ Colección de utilidades varias para el control GPIO en Python
 - [x] Implementar la domótica remota.
 - [x] Cambiar el comando *conectar* para que sea un *conectar* y *listar* en **domotica_cliente.py** ~~y **domotica_servidor.py**~~.
 - [x] Implementar comando *estado* para ver en qué estado se encuentra un puerto GPIO en **domotica_cliente.py** y **domotica_servidor.py**.
-- [ ] Implementar parámetros en **domotica_cliente.py**.
+- [x] Implementar comandos por parámetros en **domotica_cliente.py**.
+- [ ] Implementar comandos por archivo en **domotica_cliente.py**.
 - [ ] Integrar el control de relés en un archivo separado.
 - [ ] Añadir control de versiones en la instalación.
 - [ ] Hacer que **actualizador.sh** sea "inteligente" y actualice en función de la versión.

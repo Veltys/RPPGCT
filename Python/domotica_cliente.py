@@ -7,7 +7,7 @@
 # Author        : Veltys
 # Date          : 09-08-2017
 # Version       : 1.0.1
-# Usage         : python3 domotica_cliente.py
+# Usage         : python3 domotica_cliente.py [commands]
 # Notes         : Parte cliente del sistema en el que se gestionarán pares de puertos GPIO
 
 
@@ -28,7 +28,8 @@ import socket                                                                   
 
 
 class domotica_cliente(object):
-    def __init__(self, config):
+    def __init__(self, config, argumentos):
+        self._argumentos = argumentos
         self._config = config
         self._estado = 0
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -45,16 +46,16 @@ class domotica_cliente(object):
             return True
 
 
-    def _confirmar(self):
-        print('La operación solicitada podría ser arriesgada')
-        confirmacion = input('¿Está seguro? (s/N) ')
-        confirmacion = confirmacion.lower()
-
-        if confirmacion == 's':
-            return True
+    def __comando(self):
+        if len(self._argumentos) == 1:
+            comando = input('Introduzca un comando: ')
+            comando = comando.lower()
 
         else:
-            return False
+            comando = self._argumentos[1]
+            self._argumentos.pop(1)
+
+        return comando
 
 
     def __conectar(self, comando):
@@ -74,8 +75,12 @@ class domotica_cliente(object):
                 print('Ok: Conectado a ' + comando[9:])
                 self._estado = 1
 
+            return True
+
         else:
             print('Error: Imposible conectar a ' + comando[9:] + ', ya hay una conexión activa', file = sys.stderr)
+
+            return False
 
 
     def __enviar_y_recibir(self, comando):
@@ -88,10 +93,14 @@ class domotica_cliente(object):
 
 
     def __estado(self, comando):
-        mensaje = self.__enviar_y_recibir(comando)
+        if self._estado >= 2:
+            mensaje = self.__enviar_y_recibir(comando)
 
-        if mensaje[0:4] == 'info' and (int(mensaje[5:]) == 0 or int(mensaje[5:]) == 1):
-            return mensaje[5:]
+            if mensaje[0:4] == 'info' and (int(mensaje[6:]) == 0 or int(mensaje[6:]) == 1):
+                return mensaje[6:]
+
+            else:
+                return -1
 
         else:
             return -1
@@ -112,8 +121,12 @@ class domotica_cliente(object):
                     self._lista_GPIOs[i].append(aux)
                     self._lista_GPIOs[i].append(self.__estado('estado ' + aux))
 
+            return True
+
         else:
             print('Error: Imposible solicitar una lista de puertos GPIO, no ' + self.estado(self._estado + 1), file = sys.stderr)
+
+            return False
 
 
     def __mostrar_lista(self):
@@ -133,11 +146,15 @@ class domotica_cliente(object):
 
     def __mostrar_estado(self, puerto, estado):
         if self._estado >= 2:
-            print('Ok: Estado del puerto GPIO' + puerto + ':')
+            if int(estado) == 0 or int(estado) == 1:
+                print('Ok: Puerto GPIO' + puerto + ' --> Estado: ' + ('activo' if estado == 1 else 'inactivo'), sep = '')
 
-            print("\t" + 'Puerto GPIO' + puerto + " -->\tEstado: " + ('activo' if estado == 1 else 'inactivo'), sep = '')
+                return True
 
-            return True
+            else:
+                print('Error: El número de puerto GPIO no es válido', file = sys.stderr)
+
+                return False
 
         else:
             print('Error: No hay ninguna lista de puertos GPIO cargada', file = sys.stderr)
@@ -146,7 +163,7 @@ class domotica_cliente(object):
 
 
     def __varios(self, comando):
-        if (self._estado >= 2) or (self._estado >= 1 and self._confirmar()):
+        if self._estado >= 2:
             mensaje = self.__enviar_y_recibir(comando)
 
             if mensaje[0:2] == 'ok':
@@ -171,22 +188,20 @@ class domotica_cliente(object):
 
     def bucle(self):
         try:
-            print()                                                             # Llamar a print() sin argumentos introduce una nueva línea
-            comando = input('Introduzca un comando: ')
-            comando = comando.lower()
+            comando = self.__comando()
 
             while comando != 'salir':
-                # conectar & listar
+                # conectar & listar & estado
                 if comando != 'conectar' and comando[0:8] == 'conectar' and comando[8] == ' ' and comando[9:] != '':
-                    self.__conectar(comando)
-                    self.__listar()
-                    self.__mostrar_lista()
+                    if self.__conectar(comando):
+                        if self.__listar():
+                            self.__mostrar_lista()
 
 
                 # listar
                 elif comando == 'listar':
-                    self.__listar()
-                    self.__mostrar_lista()
+                    if self.__listar():
+                        self.__mostrar_lista()
 
                 # conmutar, pulsar, encender, apagar
                 elif (comando != 'conmutar' and comando[0:8] == 'conmutar' and comando[8] == ' ' and comando[9:] != '') \
@@ -198,7 +213,7 @@ class domotica_cliente(object):
 
                 # estado
                 elif comando != 'estado' and comando[0:6] == 'estado' and comando[6] == ' ' and comando[7:] != '':
-                    self.__mostrar_estado(self.__estado(comando[7:]))
+                    self.__mostrar_estado(comando[7:], self.__estado(comando))
 
 
                 # conmutar, pulsar, encender, apagar o estado pero sin parámetros
@@ -218,7 +233,8 @@ class domotica_cliente(object):
                 else:
                     print('Error: El comando "' + comando + '" no ha sido reconocido. Por favor, inténtelo de nuevo.', file = sys.stderr)
 
-                comando = input('Introduzca un comando: ')
+                print()                                                         # Llamar a print() sin argumentos introduce una nueva línea
+                comando = self.__comando()
 
             # salir                                                             # La salida propiamente dicha será ejecutada en la siguiente vuelta del bucle
             if comando == 'salir':
@@ -258,7 +274,7 @@ class domotica_cliente(object):
 
 
 def main(argv = sys.argv):
-    app = domotica_cliente(config)
+    app = domotica_cliente(config, sys.argv)
     err = app.arranque()
 
     if err == 0:

@@ -56,8 +56,13 @@ class domotica_servidor_config(domotica_cliente_config):
 
 class internet_config:
     HOSTS           = ['google.es',
+                       '2001:4860:4860::8888',
+                       '2001:4860:4860::8844',
                        '8.8.8.8',
                        '8.8.4.4',
+                       'opendns.com',
+                       '2620:0:ccc::2',
+                       '2620:0:ccd::2',
                        '208.67.222.222',
                        '208.67.220.220',
                       ]
