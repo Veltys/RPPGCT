@@ -19,7 +19,7 @@ else
 	scripts[2]='domotica_servidor'
 	scripts[3]='reiniciar_router'
 	scripts[4]='temperatura'
-	
+
 	arrancables[0]='cpu'
 	arrancables[1]='domotica_servidor'
 	arrancables[2]='reiniciar_router'
