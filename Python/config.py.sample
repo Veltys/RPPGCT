@@ -5,7 +5,7 @@
 # Title         : config.py
 # Description   : Módulo configurador para ser importado en el resto de módulos o sistemas que lo necesiten
 # Author        : Veltys
-# Date          : 16-07-2017
+# Date          : 10-08-2017
 # Version       : 1.3.0
 # Usage         : import config | from config import <clase>
 # Notes         : Se han estructurado en clases las distintas configuraciones

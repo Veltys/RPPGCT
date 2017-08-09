@@ -5,8 +5,8 @@
 # Title         : domotica_cliente.py
 # Description   : Parte cliente del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 09-08-2017
-# Version       : 1.0.1
+# Date          : 10-08-2017
+# Version       : 1.1.0
 # Usage         : python3 domotica_cliente.py [commands]
 # Notes         : Parte cliente del sistema en el que se gestionarán pares de puertos GPIO
 
@@ -22,7 +22,6 @@ except ImportError:
   sys.exit(errno.ENOENT)
 
 from time import sleep                                                          # Para hacer pausas
-# import comun                                                                    # Funciones comunes a varios sistemas
 import os                                                                       # Funcionalidades varias del sistema operativo
 import socket                                                                   # Tratamiento de sockets
 
