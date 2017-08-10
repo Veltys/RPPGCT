@@ -96,7 +96,7 @@ class app(object):
 
                     for i in range(len(self._config.GPIOS)):                    # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
                         if self._config.GPIOS[i][1]:
-                            GPIO.setup(self._config.GPIOS[i][0], GPIO.OUT, initial = GPIO.HIGH if self._config.GPIOS[i][2] else GPIO.LOW)
+                            GPIO.setup(self._config.GPIOS[i][0], GPIO.OUT, initial = GPIO.LOW if self._config.GPIOS[i][2] else GPIO.HIGH)
 
                         else:
                             GPIO.setup(self._config.GPIOS[i][0], GPIO.IN, pull_up_down = GPIO.PUD_DOWN) 
