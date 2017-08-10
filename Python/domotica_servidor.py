@@ -5,8 +5,8 @@
 # Title         : domotica_servidor.py
 # Description   : Parte servidor del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 09-08-2017
-# Version       : 1.0.4
+# Date          : 10-08-2017
+# Version       : 1.1.0
 # Usage         : python3 domotica_servidor.py
 # Notes         : Parte servidor del sistema en el que se gestionarán pares de puertos GPIO
 #                 Las entradas impares en la variable de configuración asociada GPIOS corresponderán a los relés que se gestionarán
@@ -15,7 +15,7 @@
 #                 Se está estudiando, para futuras versiones, la integración con servicios IoT, especuialmente con el "AWS IoT Button" --> http://amzn.eu/dsgsHvv
 
 
-DEBUG = False
+DEBUG = True
 DEBUG_PADRE = False
 salir = False                                                                   # Ya que no es posible matar a un hilo, esta "bandera" global servirá para indicarle a los hilos que deben terminar 
 
@@ -55,7 +55,7 @@ class domotica_servidor(comun.app):
         
         if puerto != -1:
             with semaforo:                                                                                                          # Para realizar el apagado es necesaria un semáforo o podría haber problemas
-                GPIO.output(self._config.GPIOS[puerto][0], GPIO.LOW if self._config.GPIOS[puerto][2] else GPIO.HIGH)                # Se conmuta la salida del puerto GPIO
+                GPIO.output(self._config.GPIOS[puerto][0], GPIO.LOW if self._config.GPIOS[puerto][2] else GPIO.HIGH)                # Se desactiva la salida del puerto GPIO
 
             return True
 
@@ -204,7 +204,7 @@ class domotica_servidor(comun.app):
         
         if puerto != -1:
             with semaforo:                                                                                                          # Para realizar el encendido es necesaria un semáforo o podría haber problemas
-                GPIO.output(self._config.GPIOS[puerto][0], GPIO.HIGH if self._config.GPIOS[puerto][2] else GPIO.LOW)                # Se conmuta la salida del puerto GPIO
+                GPIO.output(self._config.GPIOS[puerto][0], GPIO.HIGH if self._config.GPIOS[puerto][2] else GPIO.LOW)                # Se activa la salida del puerto GPIO
 
             return True
 
@@ -274,6 +274,38 @@ class domotica_servidor_hijos(comun.app):
 
         return 0                                                                                                                    # En este caso, no es necesario realizar operaciones de arranque, ya que el hilo padre las ha realizado todas
 
+
+    def bucle(self):
+        global salir
+
+        try:
+            while not(salir):
+                if DEBUG:
+                    print('Hijo  #', self._id_hijo, "\tEsperando al puerto GPIO", self._GPIOS[0][0], sep = '')
+
+                if not(GPIO.input(self._GPIOS[i][0])):                                                                              # Si el puerto está bajado...
+                    ok = GPIO.wait_for_edge(self._GPIOS[0][0], GPIO.RISING, timeout = self._config.PAUSA * 1000)                    # ... esperaremos una subida
+
+                    if ok is not None:
+                        with semaforo:                                                                                              # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
+                            GPIO.output(self._GPIOS[i + 1][0], not(GPIO.input(self._GPIOS[i + 1][0])))                              # Se conmuta la salida del puerto GPIO
+
+                        # self._GPIOS[i][2] = not(self._GPIOS[i][2])                                                                  # Se indica que el puerto que ha sido activado
+
+                '''                                                                                                                 # Como en este caso no se va a realizar ninguna operación cuando se levante el puerto, esta parte será comentada
+                else:                                                                                                               # Si no...
+                    ok = GPIO.wait_for_edge(self._GPIOS[0][0], GPIO.FALLING, timeout = self._config.PAUSA * 1000)                   # ... esperaremos una bajada
+                '''
+
+            self.cerrar()
+
+
+        except KeyboardInterrupt:
+            self.cerrar()
+            return
+
+
+    '''
     def bucle(self):
         global salir
 
@@ -308,6 +340,7 @@ class domotica_servidor_hijos(comun.app):
         except KeyboardInterrupt:
             self.cerrar()
             return
+    '''
 
 
     def cerrar(self):

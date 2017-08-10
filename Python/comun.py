@@ -5,8 +5,8 @@
 # Title         : comun.py
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
-# Date          : 09-08-2017
-# Version       : 0.2.4
+# Date          : 10-08-2017
+# Version       : 0.2.5
 # Usage         : import comun | from comun import <clase>
 # Notes         : 
 
@@ -96,12 +96,11 @@ class app(object):
 
                     for i in range(len(self._config.GPIOS)):                    # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
                         if self._config.GPIOS[i][1]:
-                            GPIO.setup(self._config.GPIOS[i][0], GPIO.OUT)
-                        else:
-                            GPIO.setup(self._config.GPIOS[i][0], GPIO.IN, pull_up_down=GPIO.PUD_DOWN) 
+                            GPIO.setup(self._config.GPIOS[i][0], GPIO.OUT, initial = GPIO.HIGH if self._config.GPIOS[i][2] else GPIO.LOW)
 
-                        if not(self._config.GPIOS[i][1]):                       # En el caso de tener un pin GPIO de entrada, se necesitará transformar en lista la tupla, ya que es posible que
-                            self._config.GPIOS[i] = list(self._config.GPIOS[i]) # haga falta modificar su contenido
+                        else:
+                            GPIO.setup(self._config.GPIOS[i][0], GPIO.IN, pull_up_down = GPIO.PUD_DOWN) 
+                            self._config.GPIOS[i] = list(self._config.GPIOS[i]) # En el caso de tener un pin GPIO de entrada, se necesitará transformar en lista la tupla, ya que es posible que haga falta modificar su contenido
 
                 return 0
     

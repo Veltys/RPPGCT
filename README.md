@@ -106,11 +106,18 @@ Colección de utilidades varias para el control GPIO en Python
     - Eliminado import innecesario en **domotica_servidor.py**.
     - Arreglo en la documentación de **comun.py**.
     - Añadidos algunos servidores más en la clase *internet_config* de **config.py.sample**.
+- 0.4.7:
+    - Arreglo fallo en la inicialización de los puertos GPIO de salida (sólo en el caso de ser puertos activos a bajo nivel, como podría ser el caso de un relé) en **comun.py**.
+    - Añadido nuevo agradecimientos y reordenación de dicha sección en **README.md**.
+    - Arreglo de fallos menores en la documentación de **domotica_servidor.py**. ¡Maldito copia-pega!
+    - Cambio en el modo de procesamiento de los hijos en **domotica_servidor.py**. Ahora debería ser más eficiente.
+    - Movida la configuración de *PAUSA* de la clase *domotica_cliente_config* a la clase *domotica_servidor_config*, ya que sólo hace falta en el servidor y no en ambos en **config.py.sample**.
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
-* A *linuxitux*, por [el script *netisup.py*](https://www.linuxito.com/programacion/635-netisup-py-script-python-para-verificar-el-estado-de-la-red), el cual he utilizado (adaptado) en mi **internet.py**.
+* A *croston*, por [la documentación sobre el módulo Python *raspberry-gpio-python* en formato *wiki*](https://sourceforge.net/p/raspberry-gpio-python/wiki/Home/), sin el cual este proyecto no habría sido posible
 * A *alex*, por [la documentación en la web *raspi.tv*](http://raspi.tv/2013/rpi-gpio-basics-6-using-inputs-and-outputs-together-with-rpi-gpio-pull-ups-and-pull-downs), la cual me ha orientado en el tratamiento de los puertos GPIO de entrada en **domotica_servidor.py**.
+* A *linuxitux*, por [el script *netisup.py*](https://www.linuxito.com/programacion/635-netisup-py-script-python-para-verificar-el-estado-de-la-red), el cual he utilizado (adaptado) en mi **internet.py**.
 * A *Oscar Campos*, por [la entrada sobre hilos en la web *www.genbetadev.com*](https://www.genbetadev.com/python/multiprocesamiento-en-python-threads-a-fondo-introduccion), la cual me ha permitido llevar a cabo el multiprocesamiento en **domotica_servidor.py**.
 * A *Amelia Zafra*, profesora de Redes en la [Universidad de Córdoba](http://www.uco.es/), por sus *prácticas de dicha asignatura en el curso 2015 - 2016*, las cuales me ayudaron bastante a organizar la lógica de **domotica_cliente.py** y **domotica_servidor.py**. 
 * A *Alberto Vela*, por [el minitutorial de sockets en la web *developeando.net*](http://developeando.net/sockets-python/), el cual me ha permitido adaptar mis conocimientos en C / C++ en este campo en **domotica_cliente.py** y **domotica_servidor.py**.

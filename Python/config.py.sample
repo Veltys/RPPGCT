@@ -36,8 +36,6 @@ class cpu_config:
 
 
 class domotica_cliente_config:
-    PAUSA           = 0.1
-
     puerto          = 4710                                                      # El puerto 4710 ha sido escogido arbitrariamente por estar libre, según la IANA:
                                                                                 # https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?&page=85
 
@@ -48,6 +46,8 @@ class domotica_servidor_config(domotica_cliente_config):
                        (23, False, False),
                        (24, True,  False),
                       ]
+
+    PAUSA           = 1
 
     senyales        = {'SIGTERM': 'sig_cerrar',
                        'SIGUSR1': 'sig_test',
