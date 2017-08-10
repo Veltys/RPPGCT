@@ -283,12 +283,12 @@ class domotica_servidor_hijos(comun.app):
                 if DEBUG:
                     print('Hijo  #', self._id_hijo, "\tEsperando al puerto GPIO", self._GPIOS[0][0], sep = '')
 
-                if not(GPIO.input(self._GPIOS[i][0])):                                                                              # Si el puerto está bajado...
+                if not(GPIO.input(self._GPIOS[0][0])):                                                                              # Si el puerto está bajado...
                     ok = GPIO.wait_for_edge(self._GPIOS[0][0], GPIO.RISING, timeout = self._config.PAUSA * 1000)                    # ... esperaremos una subida
 
                     if ok is not None:
                         with semaforo:                                                                                              # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
-                            GPIO.output(self._GPIOS[i + 1][0], not(GPIO.input(self._GPIOS[i + 1][0])))                              # Se conmuta la salida del puerto GPIO
+                            GPIO.output(self._GPIOS[1][0], not(GPIO.input(self._GPIOS[1][0])))                                      # Se conmuta la salida del puerto GPIO
 
                         # self._GPIOS[i][2] = not(self._GPIOS[i][2])                                                                  # Se indica que el puerto que ha sido activado
 
