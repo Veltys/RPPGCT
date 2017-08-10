@@ -108,7 +108,7 @@ Colección de utilidades varias para el control GPIO en Python
     - Añadidos algunos servidores más en la clase *internet_config* de **config.py.sample**.
 - 0.4.7:
     - Arreglado fallo en la inicialización de los puertos GPIO de salida (sólo en el caso de ser puertos activos a bajo nivel, como podría ser el caso de un relé) en **comun.py**.
-    - Añadido nuevo agradecimientos y reordenación de dicha sección en **README.md**.
+    - Añadido nuevos agradecimientos y reordenación de dicha sección en **README.md**.
     - Arreglo de fallos menores en la documentación de **domotica_servidor.py**. ¡Maldito copia-pega!
     - Cambio en el modo de procesamiento de los hijos en **domotica_servidor.py**. Ahora debería ser más eficiente.
     - Movida la configuración de *PAUSA* de la clase *domotica_cliente_config* a la clase *domotica_servidor_config*, ya que sólo hace falta en el servidor y no en ambos en **config.py.sample**.
@@ -117,10 +117,12 @@ Colección de utilidades varias para el control GPIO en Python
     - Clarificado parte del texto del *Historial de versiones* en **README.md**.
     - Clarificado parte del texto de **actualizador.sh** e **instalador.sh**.
     - Reajustado el nombre de algunas variables en **domotica_cliente.py**.
-    - Renombrado **config.py.sample** a **config_sample.py**
+    - Renombrado **config.py.sample** a **config_sample.py**.
+    - Reajustada la "constante" *PAUSA* de la clase *domotica_servidor_config* en **config_sample.py**.
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
+* A la [documentación del depurador remoto de PyDev](http://www.pydev.org/manual_adv_remote_debugger.html), porque la mayor parte del código se ejecuta en una Raspberry Pi y depurarlo en remoto en el PC es un lujo.
 * A *croston*, por [la documentación sobre el módulo Python *raspberry-gpio-python* en formato *wiki*](https://sourceforge.net/p/raspberry-gpio-python/wiki/Home/), sin el cual este proyecto no habría sido posible
 * A *alex*, por [la documentación en la web *raspi.tv*](http://raspi.tv/2013/rpi-gpio-basics-6-using-inputs-and-outputs-together-with-rpi-gpio-pull-ups-and-pull-downs), la cual me ha orientado en el tratamiento de los puertos GPIO de entrada en **domotica_servidor.py**.
 * A *linuxitux*, por [el script *netisup.py*](https://www.linuxito.com/programacion/635-netisup-py-script-python-para-verificar-el-estado-de-la-red), el cual he utilizado (adaptado) en mi **internet.py**.
