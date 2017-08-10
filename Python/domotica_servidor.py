@@ -282,11 +282,11 @@ class domotica_servidor_hijos(comun.app):
         global salir
 
         try:
+            GPIO.add_event_detect(self._GPIOS[0][0], GPIO.RISING)                                                                   # Se añade el evento de bajada
+
             while not(salir):
                 if DEBUG:
                     print('Hijo  #', self._id_hijo, "\tEsperando al puerto GPIO", self._GPIOS[0][0], sep = '')
-
-                GPIO.add_event_detect(self._GPIOS[0][0], GPIO.RISING)                                                               # Se añade el evento de bajada
 
                 if GPIO.event_detected(self._GPIOS[0][0]):                                                                          # Si se detecta el evento
                     with semaforo:                                                                                                  # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
@@ -294,9 +294,7 @@ class domotica_servidor_hijos(comun.app):
 
                 sleep(self._config.PAUSA)
 
-
             self.cerrar()
-
 
         except KeyboardInterrupt:
             self.cerrar()
