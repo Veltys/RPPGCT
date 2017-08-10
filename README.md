@@ -39,7 +39,7 @@ Colección de utilidades varias para el control GPIO en Python
     - Añadido el script actualizador.
 - 0.2.0:
     - Configuración exportada a un único archivo.
-    - Añadido un sistema de comprobación para alertar de una mala configuración.
+    - Añadido un sistema de comprobación al importar para alertar de una mala (o inexistente) configuración en **boton.py**, **cpu.py**, **internet.py**, **pid.py**, **reiniciar_router.py** y **temperaturas.py**.
     - Actualizados **actualizador.sh**, **desinstalador.sh** e **instalador.sh**.
     - Eliminado import innecesario en **internet.py**.
     - Editado **.gitignore** para que no suba el archivo **config.py**.
@@ -107,11 +107,16 @@ Colección de utilidades varias para el control GPIO en Python
     - Arreglo en la documentación de **comun.py**.
     - Añadidos algunos servidores más en la clase *internet_config* de **config.py.sample**.
 - 0.4.7:
-    - Arreglo fallo en la inicialización de los puertos GPIO de salida (sólo en el caso de ser puertos activos a bajo nivel, como podría ser el caso de un relé) en **comun.py**.
+    - Arreglado fallo en la inicialización de los puertos GPIO de salida (sólo en el caso de ser puertos activos a bajo nivel, como podría ser el caso de un relé) en **comun.py**.
     - Añadido nuevo agradecimientos y reordenación de dicha sección en **README.md**.
     - Arreglo de fallos menores en la documentación de **domotica_servidor.py**. ¡Maldito copia-pega!
     - Cambio en el modo de procesamiento de los hijos en **domotica_servidor.py**. Ahora debería ser más eficiente.
     - Movida la configuración de *PAUSA* de la clase *domotica_cliente_config* a la clase *domotica_servidor_config*, ya que sólo hace falta en el servidor y no en ambos en **config.py.sample**.
+    - Arreglado fallo en un *import* de **indice_gpio.py**.
+    - Añadido un sistema de comprobación al importar para alertar de la no instalación del paquete *psutil* en **cpu.py**.
+    - Clarificado parte del texto del *Historial de versiones* en **README.md**.
+    - Clarificado parte del texto de **actualizador.sh** e **instalador.sh**.
+    - Reajustado el nombre de algunas variables en **domotica_cliente.py**.
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.

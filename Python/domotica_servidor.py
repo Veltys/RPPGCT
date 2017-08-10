@@ -37,6 +37,9 @@ import socket                                                                   
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 
+if DEBUG:
+    import pydevd
+
 semaforo = Lock()                                                               # Un semáforo evitará que el padre y los hijos den problemas al acceder a una variable que ambos puedan modificar
 
 
@@ -283,19 +286,14 @@ class domotica_servidor_hijos(comun.app):
                 if DEBUG:
                     print('Hijo  #', self._id_hijo, "\tEsperando al puerto GPIO", self._GPIOS[0][0], sep = '')
 
-                if not(GPIO.input(self._GPIOS[0][0])):                                                                              # Si el puerto está bajado...
-                    ok = GPIO.wait_for_edge(self._GPIOS[0][0], GPIO.RISING, timeout = self._config.PAUSA * 1000)                    # ... esperaremos una subida
+                GPIO.add_event_detect(self._GPIOS[0][0], GPIO.RISING)                                                               # Se añade el evento de bajada
 
-                    if ok is not None:
-                        with semaforo:                                                                                              # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
-                            GPIO.output(self._GPIOS[1][0], not(GPIO.input(self._GPIOS[1][0])))                                      # Se conmuta la salida del puerto GPIO
+                if GPIO.event_detected(self._GPIOS[0][0]):                                                                          # Si se detecta el evento
+                    with semaforo:                                                                                                  # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
+                        GPIO.output(self._GPIOS[1][0], not(GPIO.input(self._GPIOS[1][0])))                                          # Se conmuta la salida del puerto GPIO
 
-                        # self._GPIOS[i][2] = not(self._GPIOS[i][2])                                                                  # Se indica que el puerto que ha sido activado
+                sleep(self._config.pausa)
 
-                '''                                                                                                                 # Como en este caso no se va a realizar ninguna operación cuando se levante el puerto, esta parte será comentada
-                else:                                                                                                               # Si no...
-                    ok = GPIO.wait_for_edge(self._GPIOS[0][0], GPIO.FALLING, timeout = self._config.PAUSA * 1000)                   # ... esperaremos una bajada
-                '''
 
             self.cerrar()
 
@@ -356,6 +354,8 @@ class domotica_servidor_hijos(comun.app):
 
 
 def main(argv = sys.argv):
+    pydevd.settrace('192.168.0.4')
+
     app = domotica_servidor(config, os.path.basename(sys.argv[0]))
     err = app.arranque()
 
