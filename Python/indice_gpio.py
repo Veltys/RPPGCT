@@ -5,8 +5,8 @@
 # Title         : indice_gpio.py
 # Description   : Sistema indizador de puertos GPIO
 # Author        : Veltys
-# Date          : 30-07-2017
-# Version       : 1.0.2
+# Date          : 10-08-2017
+# Version       : 1.0.3
 # Usage         : python3 indice_gpio.py
 # Notes         : Sistema que lee las distintas configuraciones y muestra cuáles puertos están ocupados y cuáles no
 
@@ -19,7 +19,7 @@ except ImportError:
     sys.exit(errno.ENOENT)
 
 import errno                                                                    # Códigos de error
-import inspec                                                                   # Metaprogramación
+import inspect                                                                  # Metaprogramación
 import os                                                                       # Funcionalidades varias del sistema operativo
 import sys                                                                      # Funcionalidades varias del sistema
 

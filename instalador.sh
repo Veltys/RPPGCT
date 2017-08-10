@@ -3,8 +3,8 @@
 # Title         : instalador.sh
 # Description   : Instala los scripts y los configura para iniciarse automáticamente
 # Author        : Veltys
-# Date          : 09-08-2017
-# Version       : 1.2.2
+# Date          : 10-08-2017
+# Version       : 1.2.3
 # Usage         : sudo bash instalador.sh
 # Notes         : Es necesario ser superusuario para su correcto funcionamiento
 
@@ -25,7 +25,7 @@ else
 	arrancables[2]='reiniciar_router'
 	arrancables[3]='temperatura'
 
-	dependencias[0]='config.py.sample'
+	dependencias[0]='config_sample.py'
 	dependencias[1]='comun.py'
 	dependencias[2]='pid.py'
 	dependencias[3]='internet.py'
@@ -33,7 +33,7 @@ else
 
 	mkdir $directorio
 
-	echo "Recuerde editar ${directorio}/config.py.sample y guardarlo como config.py con los valores adecuados"
+	echo "Recuerde editar ${directorio}/${dependencias[0]} y guardarlo como config.py con los valores adecuados"
 
 	echo 'Es necesario instalar el paquete psutil'
 	read -p "¿Desea instalarlo de forma automática? (S/n): " eleccion
