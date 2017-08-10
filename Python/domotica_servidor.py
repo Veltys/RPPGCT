@@ -292,7 +292,7 @@ class domotica_servidor_hijos(comun.app):
                     with semaforo:                                                                                                  # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
                         GPIO.output(self._GPIOS[1][0], not(GPIO.input(self._GPIOS[1][0])))                                          # Se conmuta la salida del puerto GPIO
 
-                sleep(self._config.pausa)
+                sleep(self._config.PAUSA)
 
 
             self.cerrar()
