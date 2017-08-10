@@ -17,6 +17,7 @@
 
 DEBUG = True
 DEBUG_PADRE = False
+DEBUG_REMOTO = False
 salir = False                                                                   # Ya que no es posible matar a un hilo, esta "bandera" global servirá para indicarle a los hilos que deben terminar 
 
 import errno                                                                    # Códigos de error
@@ -37,10 +38,10 @@ import socket                                                                   
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 
-if DEBUG:
+if DEBUG_REMOTO:
     import pydevd
 
-semaforo = Lock()                                                               # Un semáforo evitará que el padre y los hijos den problemas al acceder a una variable que ambos puedan modificar
+semaforo = Lock()                                                                                                                   # Un semáforo evitará que el padre y los hijos den problemas al acceder a una variable que ambos puedan modificar
 
 
 class domotica_servidor(comun.app):
@@ -181,8 +182,9 @@ class domotica_servidor(comun.app):
         if DEBUG:
             print('Padre #', os.getpid(), "\tDisparado el evento de cierre", sep = '')
 
-        for hijo in self._hijos:
-            hijo.join()
+        if not(DEBUG_PADRE):
+            for hijo in self._hijos:
+                hijo.join()
 
         super().cerrar()
 
@@ -282,15 +284,27 @@ class domotica_servidor_hijos(comun.app):
         global salir
 
         try:
-            GPIO.add_event_detect(self._GPIOS[0][0], GPIO.RISING)                                                                   # Se añade el evento de bajada
+            GPIO.add_event_detect(self._GPIOS[0][0], GPIO.BOTH)                                                                     # Se añade el evento; se ha empleado GPIO.BOTH porque GPIO.RISING y GPIO.FALLING no parecen funcionar del todo bien
 
             while not(salir):
                 if DEBUG:
                     print('Hijo  #', self._id_hijo, "\tEsperando al puerto GPIO", self._GPIOS[0][0], sep = '')
 
-                if GPIO.event_detected(self._GPIOS[0][0]):                                                                          # Si se detecta el evento
-                    with semaforo:                                                                                                  # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
-                        GPIO.output(self._GPIOS[1][0], not(GPIO.input(self._GPIOS[1][0])))                                          # Se conmuta la salida del puerto GPIO
+                if GPIO.event_detected(self._GPIOS[0][0]):                                                                          # Se comprueba el puerto que ha sido activado
+                    if not(self._GPIOS[0][2]):                                                                                      # Si es una subida
+                        if DEBUG:
+                            print('Hijo  #', self._id_hijo, "\tSe ha disparado el evento de subida esperado en el puerto GPIO", self._GPIOS[0][0], sep = '')
+    
+                        with semaforo:                                                                                              # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
+                            GPIO.output(self._GPIOS[1][0], not(GPIO.input(self._GPIOS[1][0])))                                      # Se conmuta la salida del puerto GPIO
+    
+                        self._GPIOS[0][2] = not(self._GPIOS[0][2])                                                                  # Así se diferencia de las bajadas
+
+                    elif self._GPIOS[0][2]:                                                                                         # Si es una bajada
+                        if DEBUG:
+                            print('Hijo  #', self._id_hijo, "\tSe ha disparado el evento de bajada esperado en el puerto GPIO", self._GPIOS[0][0], sep = '')
+    
+                        self._GPIOS[0][2] = not(self._GPIOS[0][2])                                                                  # Se prepara la próxima activación para una subida
 
                 sleep(self._config.PAUSA)
 
@@ -352,7 +366,8 @@ class domotica_servidor_hijos(comun.app):
 
 
 def main(argv = sys.argv):
-    pydevd.settrace('192.168.0.4')
+    if DEBUG_REMOTO:
+        pydevd.settrace('192.168.0.4')
 
     app = domotica_servidor(config, os.path.basename(sys.argv[0]))
     err = app.arranque()
