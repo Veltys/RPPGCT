@@ -117,6 +117,7 @@ Colección de utilidades varias para el control GPIO en Python
     - Clarificado parte del texto del *Historial de versiones* en **README.md**.
     - Clarificado parte del texto de **actualizador.sh** e **instalador.sh**.
     - Reajustado el nombre de algunas variables en **domotica_cliente.py**.
+    - Renombrado **config.py.sample** a **config_sample.py**
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
