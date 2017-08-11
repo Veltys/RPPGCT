@@ -96,7 +96,7 @@ class temperaturas(comun.app):
 
 def main(argv = sys.argv):
     if DEBUG_REMOTO:
-        pydevd.settrace(config.IP_DEBUG_REMOTO)
+        pydevd.settrace(config.IP_DEP_REMOTA)
 
     app = temperaturas(config, os.path.basename(argv[0]))
     err = app.arranque()
