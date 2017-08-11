@@ -366,7 +366,7 @@ class domotica_servidor_hijos(comun.app):
 
 def main(argv = sys.argv):
     if DEBUG_REMOTO:
-        pydevd.settrace(config.IP_DEBUG_REMOTO)
+        pydevd.settrace(config.IP_DEP_REMOTA)
 
     app = domotica_servidor(config, os.path.basename(sys.argv[0]))
     err = app.arranque()
