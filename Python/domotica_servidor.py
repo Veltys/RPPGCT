@@ -15,7 +15,7 @@
 #                 Se está estudiando, para futuras versiones, la integración con servicios IoT, especuialmente con el "AWS IoT Button" --> http://amzn.eu/dsgsHvv
 
 
-DEBUG = True
+DEBUG = False
 DEBUG_PADRE = False
 DEBUG_REMOTO = False
 salir = False                                                                   # Ya que no es posible matar a un hilo, esta "bandera" global servirá para indicarle a los hilos que deben terminar 
@@ -36,7 +36,6 @@ from time import sleep                                                          
 import comun                                                                    # Funciones comunes a varios sistemas
 import socket                                                                   # Tratamiento de sockets
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
-
 
 if DEBUG_REMOTO:
     import pydevd
@@ -367,7 +366,7 @@ class domotica_servidor_hijos(comun.app):
 
 def main(argv = sys.argv):
     if DEBUG_REMOTO:
-        pydevd.settrace('192.168.0.4')
+        pydevd.settrace(config.IP_DEBUG_REMOTO)
 
     app = domotica_servidor(config, os.path.basename(sys.argv[0]))
     err = app.arranque()

@@ -5,8 +5,8 @@
 # Title         : config.py
 # Description   : Módulo configurador para ser importado en el resto de módulos o sistemas que lo necesiten
 # Author        : Veltys
-# Date          : 10-08-2017
-# Version       : 1.3.0
+# Date          : 11-08-2017
+# Version       : 1.4.0
 # Usage         : import config | from config import <clase>
 # Notes         : Se han estructurado en clases las distintas configuraciones
 #                 GPIOS contiene ternas de datos en formato lista:
@@ -19,7 +19,11 @@
 #                 A título ilustrativo, a se ofrece una configuración por defecto (la mía, para ser exactos)
 
 
-class cpu_config:
+class config_global:
+    IP_DEP_REMOTA   = '0.0.0.0'
+
+
+class cpu_config(config_global):
     GPIOS           = [(26, True,  True ),
                        (19, True,  True ),
                        (13, True,  True ),
@@ -35,7 +39,7 @@ class cpu_config:
                       }
 
 
-class domotica_cliente_config:
+class domotica_cliente_config(config_global):
     puerto          = 4710                                                      # El puerto 4710 ha sido escogido arbitrariamente por estar libre, según la IANA:
                                                                                 # https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?&page=85
 
@@ -54,7 +58,7 @@ class domotica_servidor_config(domotica_cliente_config):
                       }
 
 
-class internet_config:
+class internet_config(config_global):
     HOSTS           = ['google.es',
                        '2001:4860:4860::8888',
                        '2001:4860:4860::8844',
@@ -68,7 +72,7 @@ class internet_config:
                       ]
 
 
-class reiniciar_router_config:
+class reiniciar_router_config(config_global):
     GPIOS           = [( 4, True,  False),
                       ]
 
@@ -79,7 +83,15 @@ class reiniciar_router_config:
                       }
 
 
-class temperaturas_config:
+class temperaturas_config(config_global):
+    COLORES         = [(0.0, 0.0, 1.0, 0.0),
+                       (1.0, 0.0, 1.0, 0.0),
+                       (1.0, 0.0, 0.0, 0.0),
+                       (0.0, 0.0, 0.0, 1.0),
+                      ]
+
+    FRECUENCIA      = 100
+
     GPIOS           = [(21, True,  True ),
                        (20, True,  True ),
                        (16, True,  True ),
