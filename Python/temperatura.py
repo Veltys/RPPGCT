@@ -68,21 +68,6 @@ class temperaturas(comun.app):
                     else:                                                       # Temperatura por encima del valor máximo
                         for i in range(4):
                             leds[i].ChangeDutyCycle(self._config.COLORES[3][i] * 100)
-                        
-
-                    '''
-                    for gpio, modo, activacion in self._config.GPIOS:
-                        GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
-
-                    if temperatura < self._config.TEMPERATURAS[0]:
-                        GPIO.output(self._config.GPIOS[0][0], GPIO.HIGH if self._config.GPIOS[0][2] else GPIO.LOW)
-                    elif temperatura < self._config.TEMPERATURAS[1]:
-                        GPIO.output(self._config.GPIOS[1][0], GPIO.HIGH if self._config.GPIOS[1][2] else GPIO.LOW)
-                    elif temperatura < self._config.TEMPERATURAS[2]:
-                        GPIO.output(self._config.GPIOS[2][0], GPIO.HIGH if self._config.GPIOS[2][2] else GPIO.LOW)
-                    else:
-                        GPIO.output(self._config.GPIOS[3][0], GPIO.HIGH if self._config.GPIOS[3][2] else GPIO.LOW)
-                    '''
 
                 sleep(self._config.PAUSA)
 
