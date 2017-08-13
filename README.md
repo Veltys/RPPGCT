@@ -106,7 +106,7 @@ Colección de utilidades varias para el control GPIO en Python
     - Eliminado import innecesario en **domotica_servidor.py**.
     - Arreglo en la documentación de **comun.py**.
     - Añadidos algunos servidores más en la clase *internet_config* de **config.py.sample**.
-- 0.4.7:
+- 0.5.0:
     - Arreglado fallo en la inicialización de los puertos GPIO de salida (sólo en el caso de ser puertos activos a bajo nivel, como podría ser el caso de un relé) en **comun.py**.
     - Añadido nuevos agradecimientos y reordenación de dicha sección en **README.md**.
     - Arreglo de fallos menores en la documentación de **domotica_servidor.py**. ¡Maldito copia-pega!
