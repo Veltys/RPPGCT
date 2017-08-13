@@ -34,9 +34,9 @@ class domotica_cliente(object):
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
-    def _comprobar_lista_GPIOs(self):
+    def _comprobar_lista_GPIOS(self):
         try:
-            self._lista_GPIOs
+            self._lista_GPIOS
 
         except AttributeError:
             return False
@@ -107,18 +107,18 @@ class domotica_cliente(object):
 
     def __listar(self):
         if self._estado >= 1:
-            self._lista_GPIOs = self.__enviar_y_recibir('listar')
-            self._lista_GPIOs = self._lista_GPIOs[6:-1]
-            self._lista_GPIOs = self._lista_GPIOs.split(' ')
+            self._lista_GPIOS = self.__enviar_y_recibir('listar')
+            self._lista_GPIOS = self._lista_GPIOS[6:-1]
+            self._lista_GPIOS = self._lista_GPIOS.split(' ')
 
-            if self._comprobar_lista_GPIOs():
+            if self._comprobar_lista_GPIOS():
                 self._estado = 2
 
-                for i in range(len(self._lista_GPIOs)):
-                    aux = self._lista_GPIOs[i]
-                    self._lista_GPIOs[i] = list()
-                    self._lista_GPIOs[i].append(aux)
-                    self._lista_GPIOs[i].append(self.__estado('estado ' + aux))
+                for i in range(len(self._lista_GPIOS)):
+                    aux = self._lista_GPIOS[i]
+                    self._lista_GPIOS[i] = list()
+                    self._lista_GPIOS[i].append(aux)
+                    self._lista_GPIOS[i].append(self.__estado('estado ' + aux))
 
             return True
 
@@ -132,7 +132,7 @@ class domotica_cliente(object):
         if self._estado >= 2:
             print('Ok: Puertos GPIO que están disponibles:')
 
-            for puerto, estado in self._lista_GPIOs:
+            for puerto, estado in self._lista_GPIOS:
                 print("\t" + 'Puerto GPIO' + puerto + ' --> Estado: ' + ('activo' if estado == 1 else 'inactivo'), sep = '')
 
             return True
