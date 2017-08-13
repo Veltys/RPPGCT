@@ -122,6 +122,8 @@ Colección de utilidades varias para el control GPIO en Python
     - Añadida la configuración necesaria para la depuración remota en **config.sample.py**.
     - Configurado **domotica_servidor.py** para que lea la configuración de depuración remota.
     - Actualizado el modo de encender los leds de **temperaturas.py**. Ahora puede soportar cualquier color.
+    - Actualizada la configuración correspondiente en **config.py.sample**.
+    - Mejorada la documentación de **config_sample.py**.
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
