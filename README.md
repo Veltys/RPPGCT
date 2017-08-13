@@ -124,6 +124,9 @@ Colección de utilidades varias para el control GPIO en Python
     - Actualizado el modo de encender los leds de **temperaturas.py**. Ahora puede soportar cualquier color.
     - Actualizada la configuración correspondiente en **config.py.sample**.
     - Mejorada la documentación de **config_sample.py**.
+- 0.5.1:
+    - Arreglado fallo en las variables de depuración en **temperatura.py**.
+    - Convertido (de nuevo y espero que no vuelva a fallar) el retorno de línea de modo Windows a Linux en **cpu.py**.
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
