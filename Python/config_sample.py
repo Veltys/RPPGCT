@@ -47,7 +47,7 @@ class domotica_servidor_config(domotica_cliente_config):
                        (24, True,  False),
                       ]
 
-    PAUSA           = 0.25
+    PAUSA           = 0.20
 
     senyales        = {'SIGTERM': 'sig_cerrar',
                        'SIGUSR1': 'sig_test',
