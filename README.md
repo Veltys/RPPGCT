@@ -127,6 +127,8 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.5.1:
     - Arreglado fallo en las variables de depuración en **temperatura.py**.
     - Convertido (de nuevo y espero que no vuelva a fallar) el retorno de línea de modo Windows a Linux en **cpu.py**.
+- 0.5.2:
+    - Modificado el tiempo de pausa de la clase *domotica_servidor_config* en **config_sample.py** para reducir la tasa de fallo. Sigue sin ser perfecto, pero a la espera de que arreglen [este error](https://sourceforge.net/p/raspberry-gpio-python/tickets/103/), es lo mejor que puedo hacer.
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
