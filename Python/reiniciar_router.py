@@ -17,7 +17,7 @@ import errno                                                                    
 import sys                                                                                  # Funcionalidades varias del sistema
 
 try:
-    from config import reiniciar_router_config as config                                    # Configuración
+    from config import reiniciar_router_config as config                                      # Configuración
 
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
@@ -26,10 +26,8 @@ except ImportError:
 from internet import hay_internet                                                           # Módulo propio de comprobación de Internet
 from time import sleep                                                                      # Gestión de pausas
 import comun                                                                                # Funciones comunes a varios sistemas
-# import errno                                                                                # Códigos de error
 import os                                                                                   # Funcionalidades varias del sistema operativo
 import RPi.GPIO as GPIO                                                                     # Acceso a los pines GPIO
-# import signal                                                                               # Manejo de señales
 
 
 class reiniciar_router(comun.app):
