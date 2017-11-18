@@ -5,8 +5,8 @@
 # Title         : domotica_cliente.py
 # Description   : Parte cliente del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 10-08-2017
-# Version       : 1.1.0
+# Date          : 18-11-2017
+# Version       : 1.1.1
 # Usage         : python3 domotica_cliente.py [commands]
 # Notes         : Parte cliente del sistema en el que se gestionarán pares de puertos GPIO
 
@@ -15,14 +15,12 @@ import errno                                                                    
 import sys                                                                      # Funcionalidades varias del sistema
 
 try:
-  from config import domotica_cliente_config as config                          # Configuración
+    from config import domotica_cliente_config as config                        # Configuración
 
 except ImportError:
-  print('Error: Archivo de configuración no encontrado', file = sys.stderr)
-  sys.exit(errno.ENOENT)
+    print('Error: Archivo de configuración no encontrado', file = sys.stderr)
+    sys.exit(errno.ENOENT)
 
-from time import sleep                                                          # Para hacer pausas
-import os                                                                       # Funcionalidades varias del sistema operativo
 import socket                                                                   # Tratamiento de sockets
 
 
@@ -128,6 +126,18 @@ class domotica_cliente(object):
             return False
 
 
+    def __mostrar_ayuda(self):
+        print('Comandos disponibles:')
+        print("\tconectar <host>:\t\tConecta con un servidor")
+        print("\tlistar:\t\t\t\tMuestra la lista de puertos GPIO disponibles")
+        print("\testado <puerto>:\t\tMuestra el estado del puerto GPIO especificado")
+        print("\tconmutar <puerto>:\t\tInvierte el estado del puerto GPIO especificado")
+        print("\tencender <puerto>:\t\t\"Enciende\" el puerto GPIO especificado")
+        print("\tapagar <puerto>:\t\t\"Apaga\" el puerto GPIO especificado")
+        print("\tpulsar <puerto>:\t\t\"Pulsa\" (\"enciende\" y \"apaga\") el puerto GPIO especificado")
+        print("\tsalir:\t\t\t\tCierra la conexión (si hay alguna abierta) y termina la ejecución")
+
+
     def __mostrar_lista(self):
         if self._estado >= 2:
             print('Ok: Puertos GPIO que están disponibles:')
@@ -190,25 +200,29 @@ class domotica_cliente(object):
             comando = self.__comando()
 
             while comando != 'salir':
+                # ayuda
+                if comando == 'ayuda':
+                    self.__mostrar_ayuda()
+
                 # conectar & listar & estado
-                if comando != 'conectar' and comando[0:8] == 'conectar' and comando[8] == ' ' and comando[9:] != '':
+                elif comando != 'conectar' and comando[0:8] == 'conectar' and comando[8] == ' ' and comando[9:] != '':
                     if self.__conectar(comando):
                         if self.__listar():
                             self.__mostrar_lista()
 
-
-                # listar
-                elif comando == 'listar':
-                    if self.__listar():
-                        self.__mostrar_lista()
 
                 # conmutar, pulsar, encender, apagar
                 elif (comando != 'conmutar' and comando[0:8] == 'conmutar' and comando[8] == ' ' and comando[9:] != '') \
                   or (comando != 'pulsar'   and comando[0:6] == 'pulsar'   and comando[6] == ' ' and comando[7:] != '') \
                   or (comando != 'encender' and comando[0:8] == 'encender' and comando[8] == ' ' and comando[9:] != '') \
                   or (comando != 'apagar'   and comando[0:6] == 'apagar'   and comando[6] == ' ' and comando[7:] != '') \
-                  :
+                :
                     self.__varios(comando)
+
+                # listar
+                elif comando == 'listar':
+                    if self.__listar():
+                        self.__mostrar_lista()
 
                 # estado
                 elif comando != 'estado' and comando[0:6] == 'estado' and comando[6] == ' ' and comando[7:] != '':

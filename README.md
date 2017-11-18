@@ -41,7 +41,7 @@ Colección de utilidades varias para el control GPIO en Python
     - Configuración exportada a un único archivo.
     - Añadido un sistema de comprobación al importar para alertar de una mala (o inexistente) configuración en **boton.py**, **cpu.py**, **internet.py**, **pid.py**, **reiniciar_router.py** y **temperaturas.py**.
     - Actualizados **actualizador.sh**, **desinstalador.sh** e **instalador.sh**.
-    - Eliminado import innecesario en **internet.py**.
+    - Eliminado *import* innecesario en **internet.py**.
     - Editado **.gitignore** para que no suba el archivo **config.py**.
 - 0.2.1:
     - Arreglo de bug en los scripts de init.
@@ -103,7 +103,7 @@ Colección de utilidades varias para el control GPIO en Python
     - Reajustado el código de **indice_gpio.py** para hacerlo más legible.
     - Implementado comando *estado* en **domotica_cliente.py** y **domotica_servidor.py**.
     - Actualizado un fallo en **actualizador.sh**, **desinstalador.sh** e **instalador.sh**.
-    - Eliminado import innecesario en **domotica_servidor.py**.
+    - Eliminado *import* innecesario en **domotica_servidor.py**.
     - Arreglo en la documentación de **comun.py**.
     - Añadidos algunos servidores más en la clase *internet_config* de **config.py.sample**.
 - 0.5.0:
@@ -131,6 +131,11 @@ Colección de utilidades varias para el control GPIO en Python
     - Modificado el tiempo de pausa de la clase *domotica_servidor_config* en **config_sample.py** para reducir la tasa de fallo. Sigue sin ser perfecto, pero a la espera de que arreglen [este error](https://sourceforge.net/p/raspberry-gpio-python/tickets/103/), es lo mejor que puedo hacer.
 - 0.5.3:
     - Arreglado fallo en **desinstalador.sh**.
+- 0.5.4:
+    - Arreglo estético en **config_sample.py**.
+    - Eliminados *imports* no necesarios en **domotica_cliente.py**
+    - Arreglada sangría de *imports* en **domotica_cliente.py**, **indice_gpio.py**, **internet.py**, **reiniciar_router.py** y **temperatura.py**.
+    - Implementado el comando de ayuda en **domotica_cliente.py**.
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
