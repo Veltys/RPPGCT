@@ -11,6 +11,9 @@
 # Notes         : Sistema que lee las distintas configuraciones y muestra cuáles puertos están ocupados y cuáles no
 
 
+import errno                                                                    # Códigos de error
+import sys                                                                      # Funcionalidades varias del sistema
+
 try:
     import config                                                                 # Configuración
 
@@ -18,10 +21,8 @@ except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
 
-import errno                                                                    # Códigos de error
 import inspect                                                                  # Metaprogramación
 import os                                                                       # Funcionalidades varias del sistema operativo
-import sys                                                                      # Funcionalidades varias del sistema
 
 
 def main(argv = sys.argv):
