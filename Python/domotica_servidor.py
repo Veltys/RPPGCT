@@ -258,8 +258,9 @@ class domotica_servidor_hijos(comun.app):
 
         # super().__init__()                                                                                                        # La llamada al constructor de la clase padre está comentada a propósito
 
-        self._bloqueo = False
         self._config = config
+        self._bloqueo = False
+        self._estado = 0
         self._modo_apagado = False
 
         self._id_hijo = id_hijo
