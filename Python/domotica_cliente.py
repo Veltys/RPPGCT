@@ -62,7 +62,7 @@ class domotica_cliente(comun.app):
 
     def __estado(self, comando):
         if self._estado >= 2:
-            mensaje = self.__enviar_y_recibir(comando)
+            mensaje = self._enviar_y_recibir(comando)
 
             if mensaje[0:4] == 'info' and (int(mensaje[6:]) == 0 or int(mensaje[6:]) == 1):
                 return mensaje[6:]
@@ -76,7 +76,7 @@ class domotica_cliente(comun.app):
 
     def __listar(self):
         if self._estado >= 1:
-            self._lista_GPIOS = self.__enviar_y_recibir('listar')
+            self._lista_GPIOS = self._enviar_y_recibir('listar')
             self._lista_GPIOS = self._lista_GPIOS[6:-1]
             self._lista_GPIOS = self._lista_GPIOS.split(' ')
 
@@ -144,7 +144,7 @@ class domotica_cliente(comun.app):
 
     def __varios(self, comando):
         if self._estado >= 2:
-            mensaje = self.__enviar_y_recibir(comando)
+            mensaje = self._enviar_y_recibir(comando)
 
             if mensaje[0:2] == 'ok':
                 print('Correcto: El servidor informa de que el comando "' + comando + '" ha sido ' + mensaje[4:], sep = '')
@@ -173,7 +173,7 @@ class domotica_cliente(comun.app):
 
                 # conectar & listar & estado
                 elif comando != 'conectar' and comando[0:8] == 'conectar' and comando[8] == ' ' and comando[9:] != '':
-                    if self.__conectar(comando):
+                    if self._conectar(comando, True):
                         if self.__listar():
                             self.__mostrar_lista()
 

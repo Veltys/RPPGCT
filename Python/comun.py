@@ -44,29 +44,7 @@ class app(object):
         self.asignar_senyales()
 
 
-    def _sig_apagado(self, signum, frame):
-        ''' Funcion "wrapper" para el procesamiento de la señal de apagado
-        '''
-
-        self.apagado()
-
-
-    def _sig_cerrar(self, signum, frame):
-        ''' Funcion "wrapper" para el procesamiento de la señal de cierre
-        '''
-
-        self.cerrar()
-        os._exit(0)
-
-
-    def _sig_test(self, signum, frame):
-        ''' Funcion "wrapper" para el procesamiento de la señal de pruebas
-        '''
-
-        self.test()
-
-
-    def __conectar(self, comando, salida = True):
+    def _conectar(self, comando, salida = True):
         if self._estado == 0:
             if salida:
                 print('Info: Conectando a ' + comando[9:])
@@ -94,13 +72,35 @@ class app(object):
             return False
 
 
-    def __enviar_y_recibir(self, comando):
+    def _enviar_y_recibir(self, comando):
         self._socket.send(comando.encode('utf-8'))
         mensaje = self._socket.recv(1024)
         mensaje = mensaje.decode('utf-8')
         mensaje = mensaje.lower()
 
         return mensaje
+
+
+    def _sig_apagado(self, signum, frame):
+        ''' Funcion "wrapper" para el procesamiento de la señal de apagado
+        '''
+
+        self.apagado()
+
+
+    def _sig_cerrar(self, signum, frame):
+        ''' Funcion "wrapper" para el procesamiento de la señal de cierre
+        '''
+
+        self.cerrar()
+        os._exit(0)
+
+
+    def _sig_test(self, signum, frame):
+        ''' Funcion "wrapper" para el procesamiento de la señal de pruebas
+        '''
+
+        self.test()
 
 
     def apagado(self):
