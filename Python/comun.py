@@ -11,6 +11,9 @@
 # Notes         : 
 
 
+DEBUG = True
+
+
 from abc import ABCMeta, abstractmethod                                         # Clases abstractas
 from pid import bloqueo                                                         # Módulo propio para bloquear la ejecución de más de una instancia
 from time import sleep                                                          # Para hacer pausas
