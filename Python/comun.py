@@ -194,7 +194,7 @@ class app(object):
         if not(self._bloqueo == False):
             self._bloqueo.desbloquear()
 
-        desconectar()
+        self.desconectar()
 
 
     def desconectar(self):
