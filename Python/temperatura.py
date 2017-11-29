@@ -31,10 +31,11 @@ from shlex import split                                                         
 from subprocess import check_output                                             # Llamadas a programas externos, recuperando su respuesta
 import comun                                                                    # Funciones comunes a varios sistemas
 import os                                                                       # Funcionalidades varias del sistema operativo
-import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 if DEBUG_REMOTO:
-    import pydevd
+    import pydevd                                                               # Depuración remota
+
+import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 class temperaturas(comun.app):
     def __init__(self, config, nombre):

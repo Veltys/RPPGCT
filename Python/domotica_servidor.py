@@ -34,13 +34,14 @@ except ImportError:
 from threading import Lock, Thread                                              # Capacidades multihilo
 from time import sleep                                                          # Para hacer pausas
 import comun                                                                    # Funciones comunes a varios sistemas
+
+if DEBUG_REMOTO:
+    import pydevd                                                               # Depuración remota
+
 import socket                                                                   # Tratamiento de sockets
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
-if DEBUG_REMOTO:
-    import pydevd
-
-semaforo = Lock()                                                                                                                   # Un semáforo evitará que el padre y los hijos den problemas al acceder a una variable que ambos puedan modificar
+semaforo = Lock()                                                               # Un semáforo evitará que el padre y los hijos den problemas al acceder a una variable que ambos puedan modificar
 
 
 class domotica_servidor(comun.app):

@@ -31,7 +31,12 @@ from internet import hay_internet                                               
 from time import sleep                                                                      # Gestión de pausas
 import comun                                                                                # Funciones comunes a varios sistemas
 import os                                                                                   # Funcionalidades varias del sistema operativo
+
+if DEBUG_REMOTO:
+    import pydevd                                                                           # Depuración remota
+
 import socket                                                                               # Tratamiento de sockets
+
 
 
 class reiniciar_router(comun.app):
