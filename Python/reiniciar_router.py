@@ -31,7 +31,7 @@ from internet import hay_internet                                               
 from time import sleep                                                                      # Gestión de pausas
 import comun                                                                                # Funciones comunes a varios sistemas
 import os                                                                                   # Funcionalidades varias del sistema operativo
-import RPi.GPIO as GPIO                                                                     # Acceso a los pines GPIO
+import socket                                                                               # Tratamiento de sockets
 
 
 class reiniciar_router(comun.app):
