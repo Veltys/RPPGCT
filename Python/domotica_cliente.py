@@ -11,24 +11,29 @@
 # Notes         : Parte cliente del sistema en el que se gestionarán pares de puertos GPIO
 
 
-import errno                                                                    # Códigos de error
-import sys                                                                      # Funcionalidades varias del sistema
+DEBUG = False
+DEBUG_REMOTO = False
+
+
+import errno                                                                                # Códigos de error
+import sys                                                                                  # Funcionalidades varias del sistema
 
 try:
-    from config import domotica_cliente_config as config                        # Configuración
+    from config import domotica_cliente_config as config                                    # Configuración
 
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
 
-import socket                                                                   # Tratamiento de sockets
+import comun                                                                                # Funciones comunes a varios sistemas
+import socket                                                                               # Tratamiento de sockets
 
 
-class domotica_cliente(object):
-    def __init__(self, config, argumentos):
+class domotica_cliente(comun.app):
+    def __init__(self, config, false, argumentos):
+        super().__init__(config, nombre, false)
+
         self._argumentos = argumentos
-        self._config = config
-        self._estado = 0
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
@@ -53,40 +58,6 @@ class domotica_cliente(object):
             self._argumentos.pop(1)
 
         return comando
-
-
-    def __conectar(self, comando):
-        if self._estado == 0:
-            print('Info: Conectando a ' + comando[9:])
-
-            try:
-                self._socket.connect((comando[9:], self._config.puerto))
-
-            except TimeoutError:
-                print('Error: Tiempo de espera agotado al conectar a ' + comando[9:], file = sys.stderr)
-
-            except ConnectionRefusedError:
-                print('Error: Imposible conectar a ' + comando[9:], file = sys.stderr)
-
-            else:
-                print('Ok: Conectado a ' + comando[9:])
-                self._estado = 1
-
-            return True
-
-        else:
-            print('Error: Imposible conectar a ' + comando[9:] + ', ya hay una conexión activa', file = sys.stderr)
-
-            return False
-
-
-    def __enviar_y_recibir(self, comando):
-        self._socket.send(comando.encode('utf-8'))
-        mensaje = self._socket.recv(1024)
-        mensaje = mensaje.decode('utf-8')
-        mensaje = mensaje.lower()
-
-        return mensaje
 
 
     def __estado(self, comando):
@@ -191,10 +162,6 @@ class domotica_cliente(object):
             print('Error: Imposible interaccionar con el puerto GPIO solicitado, no ' + self.estado(self._estado + 1), file = sys.stderr)
 
 
-    def arranque(self):
-        return 0                                                                # En este caso, no es necesario realizar operaciones de arranque
-
-
     def bucle(self):
         try:
             comando = self.__comando()
@@ -256,30 +223,6 @@ class domotica_cliente(object):
         except KeyboardInterrupt:
             self.cerrar()
             return
-
-
-    def cerrar(self):
-        if self._estado >= 1:
-            self._socket.sendall('desconectar'.encode('utf-8'))
-            self._socket.close()
-            self._estado = 0
-
-
-    def estado(self, estado = False):
-        if estado == False:
-            estado = self._estado
-
-        if estado == 0:
-            return 'no hay una conexión activa'
-
-        elif estado == 1:
-            return 'hay una conexión activa'
-
-        elif estado == 2:
-            return 'hay una lista de puertos GPIO cargada'
-
-        else:
-            return 'el estado es desconocido'
 
 
     def __del__(self):

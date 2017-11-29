@@ -36,6 +36,7 @@ class app(object):
 
         self._config = config
         self._bloqueo = bloqueo(nombre) if not(nombre == False) else False      # No siempre va a ser necesario realizar un bloqueo
+        self._estado = 0
         self._modo_apagado = False
         self.asignar_senyales()
 
@@ -60,6 +61,43 @@ class app(object):
         '''
 
         self.test()
+
+
+    def __conectar(self, comando, salida = True):
+        if self._estado == 0:
+            if salida:
+                print('Info: Conectando a ' + comando[9:])
+
+            try:
+                self._socket.connect((comando[9:], self._config.puerto))
+
+            except TimeoutError:
+                print('Error: Tiempo de espera agotado al conectar a ' + comando[9:], file = sys.stderr)
+
+            except ConnectionRefusedError:
+                print('Error: Imposible conectar a ' + comando[9:], file = sys.stderr)
+
+            else:
+                if salida:
+                    print('Ok: Conectado a ' + comando[9:])
+
+                self._estado = 1
+
+            return True
+
+        else:
+            print('Error: Imposible conectar a ' + comando[9:] + ', ya hay una conexión activa', file = sys.stderr)
+
+            return False
+
+
+    def __enviar_y_recibir(self, comando):
+        self._socket.send(comando.encode('utf-8'))
+        mensaje = self._socket.recv(1024)
+        mensaje = mensaje.decode('utf-8')
+        mensaje = mensaje.lower()
+
+        return mensaje
 
 
     def apagado(self):
@@ -156,6 +194,32 @@ class app(object):
         if not(self._bloqueo == False):
             self._bloqueo.desbloquear()
 
+        desconectar()
+
+
+    def desconectar(self):
+        if self._estado >= 1:
+            self._socket.sendall('desconectar'.encode('utf-8'))
+            self._socket.close()
+            self._estado = 0
+
+
+    def estado(self, estado = False):
+        if estado == False:
+            if self._estado == 0:
+                return 'no hay una conexión activa'
+
+            elif self._estado == 1:
+                return 'hay una conexión activa'
+
+            elif self._estado == 2:
+                return 'hay una lista de puertos GPIO cargada'
+
+            else:
+                return 'el estado es desconocido'
+
+        else:
+            self._estado = estado
 
     def test(self):
         ''' Ejecuta el modo de pruebas.

@@ -136,6 +136,14 @@ Colección de utilidades varias para el control GPIO en Python
     - Eliminados *imports* no necesarios en **domotica_cliente.py**
     - Arreglada sangría de *imports* en **domotica_cliente.py**, **indice_gpio.py**, **internet.py**, **reiniciar_router.py** y **temperatura.py**.
     - Implementado el comando de ayuda en **domotica_cliente.py**.
+- 0.6.0:
+	- Modificado **reiniciar_router.py** para que no actúe de manera independiente, sino a través de **domotica_servidor.py**.
+	- Taspasadas clases que ahora son comunes a varios scripts de **domotica_cliente.py** a **comun.py**.
+	- Modificado **domotica_cliente.py** para que la clase principal herede de la clase principal de **comun.py**.
+	- Arreglado fallo en la función *estado* en **comun.py**.
+	- Reajustadas configuraciones en arreglo a los cambios anteriores en **config_sample.py**.
+	- Añadido el campo *"descripción"* en las "constantes" *GPIO* en **config_sample.py**.
+	- Añadidos mecanismos para depuración remota en **domotica_cliente.py** y **reiniciar_router.py**. 
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.

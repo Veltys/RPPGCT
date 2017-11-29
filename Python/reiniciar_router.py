@@ -13,6 +13,10 @@
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual simplemente apaga todos los leds hasta que esta misma señal sea recibida de nuevo
 
 
+DEBUG = False
+DEBUG_REMOTO = False
+
+
 import errno                                                                                # Códigos de error
 import sys                                                                                  # Funcionalidades varias del sistema
 
@@ -36,26 +40,31 @@ class reiniciar_router(comun.app):
 
     def bucle(self):
         try:
-            for gpio, modo, activacion in self._config.GPIOS:
-                GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
+            if self.__conectar('conectar ' + self._config.servidor):
+                self.__enviar_y_recibir('apagar ' + GPIO[0])
+
+                desconectar()
 
             sleep(self._config.PAUSA * 4)                                                   # Es necesario una pausa adicional, ya que al arrancar es posible que este script se ejecute antes de que haya red y no queremos que se reinicie el router "porque sí"
 
             while True:
                 if hay_internet():                                                          # Si hay Internet, simplemente se esperará para hacer la próxima comprobación
-                    for gpio, modo, activacion in self._config.GPIOS:
-                        GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
+                    if self.__conectar('conectar ' + self._config.servidor):
+                        self.__enviar_y_recibir('apagar ' + GPIO[0])
+
+                        desconectar()
 
                     sleep(self._config.PAUSA * 60)
 
                 else:                                                                       # En caso contrario, se mandará la orden de apagado durante el tiempo mínimo establecido y después se restablecerá
-                    for gpio, modo, activacion in self._config.GPIOS:
-                        GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)
+                    if self.__conectar('conectar ' + self._config.servidor):
+                        self.__enviar_y_recibir('encender ' + GPIO[0])
 
-                    sleep(self._config.PAUSA)
+                        sleep(self._config.PAUSA)
 
-                    for gpio, modo, activacion in self._config.GPIOS:
-                        GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
+                        self.__enviar_y_recibir('apagar ' + GPIO[0])
+
+                        desconectar()
 
                     sleep(self._config.PAUSA * 12)                                          # Al acabar, se esperará a que se haya levantado la conexión y se volverá a comprobar
 
