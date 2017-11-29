@@ -11,7 +11,7 @@
 # Notes         : 
 
 
-DEBUG = True
+DEBUG = False
 
 
 from abc import ABCMeta, abstractmethod                                         # Clases abstractas
@@ -141,7 +141,7 @@ class app(object):
 
                         if self._config.GPIOS[i][1]:
                             if DEBUG:
-                                print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", self._config.GPIOS[i][0], 'como salida', sep = '')
+                                print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", self._config.GPIOS[i][0], ' como salida', sep = '')
 
                             GPIO.setup(self._config.GPIOS[i][0], GPIO.OUT, initial = GPIO.LOW if self._config.GPIOS[i][2] else GPIO.HIGH)
 

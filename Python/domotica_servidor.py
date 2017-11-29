@@ -15,9 +15,9 @@
 #                 Se está estudiando, para futuras versiones, la integración con servicios IoT, especuialmente con el "AWS IoT Button" --> http://amzn.eu/dsgsHvv
 
 
-DEBUG = True
+DEBUG = False
 DEBUG_PADRE = False
-DEBUG_REMOTO = True
+DEBUG_REMOTO = False
 salir = False                                                                   # Ya que no es posible matar a un hilo, esta "bandera" global servirá para indicarle a los hilos que deben terminar 
 
 import errno                                                                    # Códigos de error
