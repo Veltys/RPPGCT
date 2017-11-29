@@ -30,8 +30,8 @@ import socket                                                                   
 
 
 class domotica_cliente(comun.app):
-    def __init__(self, config, false, argumentos):
-        super().__init__(config, nombre, false)
+    def __init__(self, config, argumentos):
+        super().__init__(config, nombre, False)
 
         self._argumentos = argumentos
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
