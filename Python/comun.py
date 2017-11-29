@@ -72,6 +72,13 @@ class app(object):
             return False
 
 
+    def _desconectar(self):
+        if self._estado >= 1:
+            self._socket.sendall('desconectar'.encode('utf-8'))
+            self._socket.close()
+            self._estado = 0
+
+
     def _enviar_y_recibir(self, comando):
         self._socket.send(comando.encode('utf-8'))
         mensaje = self._socket.recv(1024)
@@ -207,14 +214,7 @@ class app(object):
         if not(self._bloqueo == False):
             self._bloqueo.desbloquear()
 
-        self.desconectar()
-
-
-    def desconectar(self):
-        if self._estado >= 1:
-            self._socket.sendall('desconectar'.encode('utf-8'))
-            self._socket.close()
-            self._estado = 0
+        self._desconectar()
 
 
     def estado(self, estado = False):
@@ -233,6 +233,7 @@ class app(object):
 
         else:
             self._estado = estado
+
 
     def test(self):
         ''' Ejecuta el modo de pruebas.

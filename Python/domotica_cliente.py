@@ -208,7 +208,9 @@ class domotica_cliente(comun.app):
 
                 # desconectar
                 elif comando == 'desconectar':
-                    self.cerrar()
+                    self._desconectar()
+
+                    print('Correcto: Todas las conexiones abiertas han sido cerradas')
 
                 else:
                     print('Error: El comando "' + comando + '" no ha sido reconocido. Por favor, inténtelo de nuevo.', file = sys.stderr)
