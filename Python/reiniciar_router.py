@@ -38,6 +38,9 @@ class reiniciar_router(comun.app):
     def __init__(self, config, nombre):
         super().__init__(config, nombre)
 
+        self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+
     def bucle(self):
         try:
             if self._conectar('conectar ' + self._config.servidor, False):
