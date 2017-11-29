@@ -45,6 +45,14 @@ class app(object):
 
 
     def _conectar(self, comando, salida = True):
+        ''' Realiza una conexión contra un servidor dado en el parámetro "comando"
+            - Comprueba el estado de la conexión
+                - Si es == 0 (no hay una conexión activa), intenta conectar
+                    - Si no puede conectar por algún motivo, informa del error (si procede) y retorna "False"
+                    - Si sí, conecta, informa (si procede) y retorna "True"
+                - Si no, informa del error (si procede) y retorna "False"
+        '''
+
         if self._estado == 0:
             if salida:
                 print('Info: Conectando a ' + comando[9:])
@@ -55,8 +63,15 @@ class app(object):
             except TimeoutError:
                 print('Error: Tiempo de espera agotado al conectar a ' + comando[9:], file = sys.stderr)
 
+                return False
+
             except ConnectionRefusedError:
                 print('Error: Imposible conectar a ' + comando[9:], file = sys.stderr)
+
+                return False
+
+            except AttributeError:
+                return False
 
             else:
                 if salida:
@@ -64,7 +79,7 @@ class app(object):
 
                 self._estado = 1
 
-            return True
+                return True
 
         else:
             print('Error: Imposible conectar a ' + comando[9:] + ', ya hay una conexión activa', file = sys.stderr)
@@ -73,6 +88,12 @@ class app(object):
 
 
     def _desconectar(self):
+        ''' Desconecta, si se está conectado, una conexión existente contra un servidor
+            - Comprueba el estado de la conexión
+            - Si el estado es >= 1 (hay una conexión activa), la desconecta
+            - Si no, no hace nada
+        '''
+
         if self._estado >= 1:
             self._socket.sendall('desconectar'.encode('utf-8'))
             self._socket.close()
@@ -80,12 +101,24 @@ class app(object):
 
 
     def _enviar_y_recibir(self, comando):
-        self._socket.send(comando.encode('utf-8'))
-        mensaje = self._socket.recv(1024)
-        mensaje = mensaje.decode('utf-8')
-        mensaje = mensaje.lower()
+        ''' Envía un comando dado en el parámetro "comando" y recibe la respuesta correspondiente
+            - Comprueba si existe el socket e intenta utilizarlo
+                - Si no, retorna "False"
+                - Si sí, recibe el mensaje y lo retorna
+        '''
 
-        return mensaje
+        try:
+            self._socket.send(comando.encode('utf-8'))
+
+        except AttributeError:
+            return False
+
+        else:
+            mensaje = self._socket.recv(1024)
+            mensaje = mensaje.decode('utf-8')
+            mensaje = mensaje.lower()
+
+            return mensaje
 
 
     def _sig_apagado(self, signum, frame):
@@ -188,6 +221,7 @@ class app(object):
             for senyal, funcion in self._config.senyales.items():
                 signal.signal(eval('signal.' + senyal), eval('self._' + funcion))
 
+
     @abstractmethod
     def bucle(self):
         ''' Función abstracta que será especificada en el sistema que la incluya.
@@ -218,6 +252,13 @@ class app(object):
 
 
     def estado(self, estado = False):
+        ''' Función "sobrecargada" gracias al parámetro "estado"
+            - Para "estado" == "False"
+                - Actúa como pseudo-observador de la variable "_estado" de la clase
+            - Para "estado" != "False"
+                - Actúa como modificador de la variable "_estado" de la clase
+        '''
+
         if estado == False:
             if self._estado == 0:
                 return 'no hay una conexión activa'
