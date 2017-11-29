@@ -13,8 +13,8 @@
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual simplemente apaga todos los leds hasta que esta misma señal sea recibida de nuevo
 
 
-DEBUG = False
-DEBUG_REMOTO = False
+DEBUG = True
+DEBUG_REMOTO = True
 
 
 import errno                                                                                # Códigos de error
