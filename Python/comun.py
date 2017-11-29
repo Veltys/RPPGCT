@@ -137,17 +137,17 @@ class app(object):
 
                     for i in range(len(self._config.GPIOS)):                    # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
                         if DEBUG:
-                            print('Proceso  #', os.getpid(), "\tPreparando el puerto GPIO", self._GPIOS[i][0], sep = '')
+                            print('Proceso  #', os.getpid(), "\tPreparando el puerto GPIO", self._config.GPIOS[i][0], sep = '')
 
                         if self._config.GPIOS[i][1]:
                             if DEBUG:
-                                print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", self._GPIOS[i][0], 'como salida', sep = '')
+                                print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", self._config.GPIOS[i][0], 'como salida', sep = '')
 
                             GPIO.setup(self._config.GPIOS[i][0], GPIO.OUT, initial = GPIO.LOW if self._config.GPIOS[i][2] else GPIO.HIGH)
 
                         else:
                             if DEBUG:
-                                print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", self._GPIOS[i][0], 'como entrada', sep = '')
+                                print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", self._config.GPIOS[i][0], 'como entrada', sep = '')
 
                             GPIO.setup(self._config.GPIOS[i][0], GPIO.IN, pull_up_down = GPIO.PUD_DOWN) 
                             self._config.GPIOS[i] = list(self._config.GPIOS[i]) # En el caso de tener un pin GPIO de entrada, se necesitará transformar en lista la tupla, ya que es posible que haga falta modificar su contenido
