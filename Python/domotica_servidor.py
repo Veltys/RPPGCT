@@ -5,8 +5,8 @@
 # Title         : domotica_servidor.py
 # Description   : Parte servidor del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 13-08-2017
-# Version       : 1.1.0
+# Date          : 30-11-2017
+# Version       : 1.1.1
 # Usage         : python3 domotica_servidor.py
 # Notes         : Parte servidor del sistema en el que se gestionarán pares de puertos GPIO
 #                 Las entradas impares en la variable de configuración asociada GPIOS corresponderán a los relés que se gestionarán
@@ -257,7 +257,7 @@ class domotica_servidor_hijos(comun.app):
             - Carga la configuración
         '''
 
-        # super().__init__()                                                                                                        # La llamada al constructor de la clase padre está comentada a propósito
+        # super().__init__()                                                    # La llamada al constructor de la clase padre está comentada a propósito
 
         self._config = config
         self._bloqueo = False
