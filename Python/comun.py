@@ -22,6 +22,7 @@ import os                                                                       
 import signal                                                                   # Manejo de señales
 import sys                                                                      # Funcionalidades varias del sistema
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
+import socket                                                                   # Tratamiento de sockets
 
 
 class app(object):
@@ -97,6 +98,8 @@ class app(object):
         if self._estado >= 1:
             self._socket.sendall('desconectar'.encode('utf-8'))
             self._socket.close()
+            self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
             self._estado = 0
 
 
