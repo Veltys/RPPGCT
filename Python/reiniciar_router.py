@@ -51,7 +51,7 @@ class reiniciar_router(comun.app):
             if self._conectar('conectar ' + self._config.servidor, False):
                 self._enviar_y_recibir('apagar ' + str(self._config.GPIO[0]))
 
-                desconectar()
+                self._desconectar()
 
             sleep(self._config.PAUSA * 4)                                                   # Es necesario una pausa adicional, ya que al arrancar es posible que este script se ejecute antes de que haya red y no queremos que se reinicie el router "porque sí"
 
