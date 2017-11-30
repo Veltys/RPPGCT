@@ -3,8 +3,8 @@
 # Title         : actualizador.sh
 # Description   : Actualiza los scripts sin alterar la configuración de inicio automático
 # Author        : Veltys
-# Date          : 10-08-2017
-# Version       : 1.2.4
+# Date          : 30-11-2017
+# Version       : 1.2.5
 # Usage         : sudo bash actualizador.sh
 # Notes         : Es necesario ser superusuario para su correcto funcionamiento
 
@@ -42,7 +42,7 @@ else
 
 	for arrancable in "${arrancables[@]}"; do
 		/etc/init.d/${arrancable} stop
-		rm /var/lock/${arrancable}.lock
+		rm /var/lock/${arrancable}.lock > /dev/null
 		rm /etc/init.d/${arrancable}
 
 		install ./init/${arrancable}.sh /etc/init.d/${arrancable}

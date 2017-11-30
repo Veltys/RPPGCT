@@ -3,8 +3,8 @@
 # Title         : desinstalador.sh
 # Description   : Desinstala los scripts y elimina la configuración para iniciarse automáticamente
 # Author        : Veltys
-# Date          : 09-08-2017
-# Version       : 1.2.2
+# Date          : 30-11-2017
+# Version       : 1.2.3
 # Usage         : sudo bash desinstalador.sh
 # Notes         : Es necesario ser superusuario para su correcto funcionamiento
 
@@ -22,7 +22,7 @@ else
 	for arrancable in "${arrancables[@]}"; do
 		/etc/init.d/${arrancable} stop
 		update-rc.d -f ${arrancable} remove
-		rm /var/lock/${arrancable}.lock
+		rm /var/lock/${arrancable}.lock > /dev/null
 		rm /etc/init.d/${arrancable}
 	done
 
