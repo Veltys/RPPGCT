@@ -80,11 +80,15 @@ class reiniciar_router(comun.app):
             self.cerrar()
             return
 
+
     def __del__(self):
         super().__del__()
 
 
 def main(argv = sys.argv):
+    if DEBUG_REMOTO:
+        pydevd.settrace(config.IP_DEP_REMOTA)
+
     app = reiniciar_router(config, os.path.basename(argv[0]))
     err = app.arranque()
 
