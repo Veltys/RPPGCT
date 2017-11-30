@@ -60,7 +60,7 @@ class reiniciar_router(comun.app):
                     if self._conectar('conectar ' + self._config.servidor, False):
                         self._enviar_y_recibir('apagar ' + str(self._config.GPIO[0]))
 
-                        desconectar()
+                        self._desconectar()
 
                     sleep(self._config.PAUSA * 60)
 
@@ -72,7 +72,7 @@ class reiniciar_router(comun.app):
 
                         self._enviar_y_recibir('apagar ' + str(self._config.GPIO[0]))
 
-                        desconectar()
+                        self._desconectar()
 
                     sleep(self._config.PAUSA * 12)                                          # Al acabar, se esperará a que se haya levantado la conexión y se volverá a comprobar
 
