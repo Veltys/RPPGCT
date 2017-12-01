@@ -42,7 +42,7 @@ else
 
 	for arrancable in "${arrancables[@]}"; do
 		/etc/init.d/${arrancable} stop
-		rm /var/lock/${arrancable}.lock > /dev/null
+		rm /var/lock/${arrancable}.lock &> /dev/null
 		rm /etc/init.d/${arrancable}
 
 		install ./init/${arrancable}.sh /etc/init.d/${arrancable}

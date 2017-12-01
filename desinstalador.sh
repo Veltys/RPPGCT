@@ -22,7 +22,7 @@ else
 	for arrancable in "${arrancables[@]}"; do
 		/etc/init.d/${arrancable} stop
 		update-rc.d -f ${arrancable} remove
-		rm /var/lock/${arrancable}.lock > /dev/null
+		rm /var/lock/${arrancable}.lock &> /dev/null
 		rm /etc/init.d/${arrancable}
 	done
 
