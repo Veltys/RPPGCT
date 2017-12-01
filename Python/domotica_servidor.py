@@ -16,7 +16,7 @@
 
 DEBUG = False
 DEBUG_PADRE = False
-DEBUG_REMOTO = False
+DEBUG_REMOTO = True
 
 
 salir = False                                                                   # Ya que no es posible matar a un hilo, esta "bandera" global servirá para indicarle a los hilos que deben terminar
