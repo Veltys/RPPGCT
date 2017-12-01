@@ -201,12 +201,13 @@ class domotica_cliente(comun.app):
                     self.__mostrar_estado(comando[7:], self.__estado(comando))
 
                 # conmutar, pulsar, encender, apagar o estado pero sin parámetros
-                elif comando == 'conectar' \
-                  or comando == 'conmutar' \
-                  or comando == 'pulsar'   \
-                  or comando == 'encender' \
-                  or comando == 'apagar'   \
-                  or comando == 'estado'   \
+                elif comando == 'apagar'    \
+                  or comando == 'conectar'  \
+                  or comando == 'conmutar'  \
+                  or comando == 'describir' \
+                  or comando == 'encender'  \
+                  or comando == 'estado'    \
+                  or comando == 'pulsar'    \
                   :
                     print('Error: El comando "' + comando + '" requiere uno o más parámetros. Por favor, inténtelo de nuevo.', file = sys.stderr)
 
