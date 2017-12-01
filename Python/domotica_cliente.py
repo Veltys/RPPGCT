@@ -88,6 +88,7 @@ class domotica_cliente(comun.app):
                     self._lista_GPIOS[i] = list()
                     self._lista_GPIOS[i].append(aux)
                     self._lista_GPIOS[i].append(self.__estado('estado ' + aux))
+                    self._lista_GPIOS[i].append(self.__varios('describir' + aux))
 
             return True
 
@@ -116,8 +117,8 @@ class domotica_cliente(comun.app):
         if self._estado >= 2:
             print('Ok: Puertos GPIO que están disponibles:')
 
-            for puerto, estado in self._lista_GPIOS:
-                print("\t" + 'Puerto GPIO' + puerto + ' --> Estado: ' + ('activo' if estado == 1 else 'inactivo'), sep = '')
+            for puerto, estado, descipcion in self._lista_GPIOS:
+                print("\t", 'Puerto GPIO', puerto, "\tEstado: ", ('activo' if estado == 1 else 'inactivo'), "\tDescripción: \"", descipcion, '"', sep = '')
 
             return True
 
