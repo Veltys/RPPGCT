@@ -43,6 +43,7 @@ if DEBUG_REMOTO:
 import socket                                                                   # Tratamiento de sockets
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
+
 semaforo = Lock()                                                               # Un semáforo evitará que el padre y los hijos den problemas al acceder a una variable que ambos puedan modificar
 
 
@@ -97,7 +98,7 @@ class domotica_servidor(comun.app):
                 if DEBUG:
                     print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
 
-                while comando[0:11] != 'desconectar':
+                while comando[0:11] != 'desconectar' or comando != '':
                     # listar
                     if comando == 'listar':
                         mensaje = 'info: '
@@ -164,7 +165,8 @@ class domotica_servidor(comun.app):
                         if DEBUG:
                             print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
 
-                if comando[0:5] == 'desconectar':
+
+                if comando[0:5] == 'desconectar' or comando == '':
                     sc.close()
 
         except KeyboardInterrupt:
