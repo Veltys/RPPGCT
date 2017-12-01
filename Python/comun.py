@@ -5,7 +5,7 @@
 # Title         : comun.py
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
-# Date          : 30-11-2017
+# Date          : 01-12-2017
 # Version       : 0.3.0
 # Usage         : import comun | from comun import <clase>
 # Notes         : 
