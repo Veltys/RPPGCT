@@ -26,6 +26,10 @@ except ImportError:
     sys.exit(errno.ENOENT)
 
 import comun                                                                                # Funciones comunes a varios sistemas
+
+if DEBUG_REMOTO:
+    import pydevd                                                                           # Depuración remota
+
 import socket                                                                               # Tratamiento de sockets
 
 
@@ -238,6 +242,9 @@ class domotica_cliente(comun.app):
 
 
 def main(argv = sys.argv):
+    if DEBUG_REMOTO:
+        pydevd.settrace(config.IP_DEP_REMOTA)
+
     app = domotica_cliente(config, sys.argv)
     err = app.arranque()
 
