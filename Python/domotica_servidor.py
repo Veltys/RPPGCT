@@ -252,10 +252,10 @@ class domotica_servidor(comun.app):
         if test < 0:                                                                                                                # Si nuestra versión es superior...
             self._VERSION_PROTOCOLO = float(version)                                                                                # ... nos adaptamos...
 
-            return 'Ok: ' + version                                                                                                 # ... y damos el OK
+            return 'Ok: ' + str(version)                                                                                            # ... y damos el OK
 
         elif test == 0:                                                                                                             # Si nuestra versión es la misma
-            return 'Ok: ' + version                                                                                                 # ... damos el OK
+            return 'Ok: ' + str(version)                                                                                            # ... damos el OK
 
         else:                                                                                                                       # Si nuestra versión es inferior...
             return 'Info: ' + str(self._VERSION_PROTOCOLO)                                                                          # ... pedimos que se adapte el cliente
