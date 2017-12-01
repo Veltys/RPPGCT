@@ -35,7 +35,7 @@ else
 	done
 
 	for dep_ejecutable in "${dep_ejecutables[@]}"; do
-		install ./Python/${dep_ejecutable} ${dep_ejecutable}/
+		install ./Python/${dep_ejecutable} ${directorio}/
 	done
 
 	for script in "${scripts[@]}"; do

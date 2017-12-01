@@ -39,6 +39,6 @@ else
 
 	for dep_ejecutable in "${dep_ejecutables[@]}"; do
 		rm ${directorio}/${dep_ejecutable}
-		install -m 0644 ./Python/${dep_ejecutable} ${dep_ejecutable}/
+		install -m 0644 ./Python/${dep_ejecutable} ${directorio}/
 	done
 fi
