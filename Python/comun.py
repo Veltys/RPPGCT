@@ -42,6 +42,8 @@ class app(object):
         self._bloqueo = bloqueo(nombre) if not(nombre == False) else False      # No siempre va a ser necesario realizar un bloqueo
         self._estado = 0
         self._modo_apagado = False
+        self._VERSION_PROTOCOLO = 1.1
+
         self.asignar_senyales()
 
 
@@ -50,7 +52,7 @@ class app(object):
             - Comprueba el estado de la conexión
                 - Si es == 0 (no hay una conexión activa), intenta conectar
                     - Si no puede conectar por algún motivo, informa del error (si procede) y retorna "False"
-                    - Si sí, conecta, informa (si procede) y retorna "True"
+                    - Si sí, conecta, informa (si procede) y retorna la versión del proteocolo empleada
                 - Si no, informa del error (si procede) y retorna "False"
         '''
 
@@ -80,7 +82,18 @@ class app(object):
 
                 self._estado = 1
 
-                return True
+                mensaje = self._enviar_y_recibir('hola ' + str(self._VERSION_PROTOCOLO))
+
+                if(mensaje[:2] == 'ok'):                                        # Si el servidor nos da un ok, significa que la versión del protocolo que tenemos es la adecuada
+                    return VERSION_PROTOCOLO
+
+                elif(mensaje[:4] == 'info'):                                    # Si el servidor nos da un info, significa que usaremos una versión anterior
+                    return mensaje[5:]
+
+                else:                                                           # Si nos da un err u otra cosa, el protocolo es incompatible y desconectaremos
+                    self._desconectar()
+
+                    return False
 
         else:
             print('Error: Imposible conectar a ' + comando[9:] + ', ya hay una conexión activa', file = sys.stderr)

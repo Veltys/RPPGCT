@@ -14,11 +14,13 @@
 #                 Pendiente (TODO): Por ahora solamente responde a un pulsador local, queda pendiente la implementación remota (sockets)
 #                 Se está estudiando, para futuras versiones, la integración con servicios IoT, especuialmente con el "AWS IoT Button" --> http://amzn.eu/dsgsHvv
 
-
 DEBUG = False
 DEBUG_PADRE = False
 DEBUG_REMOTO = False
-salir = False                                                                   # Ya que no es posible matar a un hilo, esta "bandera" global servirá para indicarle a los hilos que deben terminar 
+
+
+salir = False                                                                   # Ya que no es posible matar a un hilo, esta "bandera" global servirá para indicarle a los hilos que deben terminar
+
 
 import errno                                                                    # Códigos de error
 import sys                                                                      # Funcionalidades varias del sistema
@@ -49,8 +51,8 @@ class domotica_servidor(comun.app):
         super().__init__(config, nombre)
 
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._socket.bind(('', self._config.puerto))
-        self._socket.listen(1)
+        self._socket.bind(('127.0.0.1', self._config.puerto))
+        self._socket.listen(1)                                                                                                      # No se preveen muchas conexiones, así que, por ahora, se soportará solamente un cliente
 
 
     def apagar(self, puerto, modo = False):
@@ -109,12 +111,14 @@ class domotica_servidor(comun.app):
                         sc.send(mensaje.encode('utf_8'))
 
                     # conmutar, pulsar, encender, apagar
-                    elif (comando != 'conmutar' and comando[0:8] == 'conmutar' and comando[8] == ' ' and comando[9:] != '') \
-                      or (comando != 'pulsar'   and comando[0:6] == 'pulsar'   and comando[6] == ' ' and comando[7:] != '') \
-                      or (comando != 'encender' and comando[0:8] == 'encender' and comando[8] == ' ' and comando[9:] != '') \
-                      or (comando != 'apagar'   and comando[0:6] == 'apagar'   and comando[6] == ' ' and comando[7:] != '') \
-                      or (comando != 'estado'   and comando[0:6] == 'estado'   and comando[6] == ' ' and comando[7:] != '') \
-                      :
+                    elif (comando != 'apagar'       and comando[:6] == 'apagar'     and comando[6] == ' ' and comando[ 7:] != '') \
+                      or (comando != 'conmutar'     and comando[:8] == 'conmutar'   and comando[8] == ' ' and comando[ 9:] != '') \
+                      or (comando != 'describir'    and comando[:9] == 'describir'  and comando[9] == ' ' and comando[10:] != '') \
+                      or (comando != 'encender'     and comando[:8] == 'encender'   and comando[8] == ' ' and comando[ 9:] != '') \
+                      or (comando != 'estado'       and comando[:6] == 'estado'     and comando[6] == ' ' and comando[ 7:] != '') \
+                      or (comando != 'hola'         and comando[:4] == 'hola'       and comando[4] == ' ' and comando[ 5:] != '') \
+                      or (comando != 'pulsar'       and comando[:6] == 'pulsar'     and comando[6] == ' ' and comando[ 7:] != '') \
+                    :
                         (funcion, params) = comando.split(' ', 1)
 
                         try:
@@ -128,13 +132,16 @@ class domotica_servidor(comun.app):
                             sc.send(mensaje.encode('utf_8'))
 
                         else:
-                            if comando[0:6] != 'estado' and respuesta:
+                            if comando[:6] != 'estado' and comando[:9] != 'describir' and respuesta:
                                 mensaje = 'ok: ejecutado'
                                 sc.send(mensaje.encode('utf_8'))
 
-                            elif comando[0:6] == 'estado' and respuesta != -1:
+                            elif (comando[:6] == 'estado' and respuesta != -1) or (comando[0:9] == 'describir' and respuesta != False):
                                 mensaje = 'info: ' + str(respuesta)
                                 sc.send(mensaje.encode('utf_8'))
+
+                            elif comando[:4] == 'hola':
+                                sc.send(respuesta.encode('utf_8'))
 
                             else:
                                 mensaje = 'err: no ejecutado, puerto incorrecto o no encontrado'
@@ -203,10 +210,21 @@ class domotica_servidor(comun.app):
             return False
 
 
+    def describir(self, puerto, modo = False):
+        if modo == False:
+            puerto = self.buscar_puerto_GPIO(puerto)
+
+        if puerto != -1:
+            return self._config.GPIOS[puerto][3]
+
+        else:
+            return False
+
+
     def encender(self, puerto, modo = False):
         if modo == False:
             puerto = self.buscar_puerto_GPIO(puerto)
-        
+
         if puerto != -1:
             with semaforo:                                                                                                          # Para realizar el encendido es necesaria un semáforo o podría haber problemas
                 GPIO.output(self._config.GPIOS[puerto][0], GPIO.HIGH if self._config.GPIOS[puerto][2] else GPIO.LOW)                # Se activa la salida del puerto GPIO
@@ -226,7 +244,22 @@ class domotica_servidor(comun.app):
 
         else:
             return -1
-        
+
+
+    def hola(self, version):
+        test = self._VERSION_PROTOCOLO - float(version)                                                                             # Evaluaremos ambas versiones (la nuestra y la del cliente) con una simple resta de "floats"
+
+        if test < 0:                                                                                                                # Si nuestra versión es superior...
+            self._VERSION_PROTOCOLO = float(version)                                                                                # ... nos adaptamos...
+
+            return 'Ok: ' + version                                                                                                 # ... y damos el OK
+
+        elif test == 0:                                                                                                             # Si nuestra versión es la misma
+            return 'Ok: ' + version                                                                                                 # ... damos el OK
+
+        else:                                                                                                                       # Si nuestra versión es inferior...
+            return 'Info: ' + str(self._VERSION_PROTOCOLO)                                                                          # ... pedimos que se adapte el cliente
+
 
     def pulsar(self, puerto, modo = False):
         if modo == False:
