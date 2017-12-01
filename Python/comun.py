@@ -85,10 +85,12 @@ class app(object):
                 mensaje = self._enviar_y_recibir('hola ' + str(self._VERSION_PROTOCOLO))
 
                 if(mensaje[:2] == 'ok'):                                        # Si el servidor nos da un ok, significa que la versión del protocolo que tenemos es la adecuada
-                    return VERSION_PROTOCOLO
+                    return True
 
                 elif(mensaje[:4] == 'info'):                                    # Si el servidor nos da un info, significa que usaremos una versión anterior
-                    return mensaje[5:]
+                    self._VERSION_PROTOCOLO = float(mensaje[5:])
+
+                    return True
 
                 else:                                                           # Si nos da un err u otra cosa, el protocolo es incompatible y desconectaremos
                     self._desconectar()
