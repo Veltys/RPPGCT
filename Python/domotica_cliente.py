@@ -88,7 +88,7 @@ class domotica_cliente(comun.app):
                     self._lista_GPIOS[i] = list()
                     self._lista_GPIOS[i].append(aux)
                     self._lista_GPIOS[i].append(self.__estado('estado ' + aux))
-                    self._lista_GPIOS[i].append(self.__varios('describir' + aux))
+                    self._lista_GPIOS[i].append(self.__varios('describir ' + aux))
 
             return True
 
