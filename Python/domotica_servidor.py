@@ -98,7 +98,7 @@ class domotica_servidor(comun.app):
                 if DEBUG:
                     print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
 
-                while comando[0:11] != 'desconectar' or comando != '  ':
+                while comando[0:11] != 'desconectar':
                     # listar
                     if comando == 'listar':
                         mensaje = 'info: '
@@ -150,22 +150,29 @@ class domotica_servidor(comun.app):
 
                     else:
                         mensaje = 'err: no ejecutado, comando incorrecto'
-                        sc.send(mensaje.encode('utf_8'))
 
-                    try:
-                        comando = sc.recv(1024)
+                        try:
+                            sc.send(mensaje.encode('utf_8'))
 
-                    except ConnectionResetError:
-                        comando = 'desconectar'
+                        except BrokenPipeError:
+                            comando = 'desconectar'
 
-                    else:
-                        comando = comando.decode('utf_8')
-                        comando = comando.lower()
+                        else:
+                            try:
+                                comando = sc.recv(1024)
 
-                        if DEBUG:
-                            print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
+                            except ConnectionResetError:
+                                comando = 'desconectar'
 
-                if comando[0:5] == 'desconectar' or comando == '  ':
+                            else:
+                                comando = comando.decode('utf_8')
+                                comando = comando.lower()
+
+                        finally:
+                            if DEBUG:
+                                print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
+
+                if comando[0:5] == 'desconectar':
                     sc.close()
 
         except KeyboardInterrupt:
