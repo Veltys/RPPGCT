@@ -24,21 +24,21 @@ else
 	done
 
 	for arrancable in "${arrancables[@]}"; do
-		/etc/init.d/${arrancable} stop
+		/etc/init.d/${arrancable} stop &> /dev/null
 		rm /var/lock/${arrancable}.lock &> /dev/null
-		rm /etc/init.d/${arrancable}
+		rm /etc/init.d/${arrancable} &> /dev/null
 
 		install ./init/${arrancable}.sh /etc/init.d/${arrancable}
 		update-rc.d ${arrancable} defaults
 	done
 
 	for dependencia in "${dependencias[@]}"; do
-		rm ${directorio}/${dependencia}
+		rm ${directorio}/${dependencia} &> /dev/null
 		install -m 0644 ./Python/${dependencia} ${directorio}/
 	done
 
 	for dep_ejecutable in "${dep_ejecutables[@]}"; do
-		rm ${directorio}/${dep_ejecutable}
+		rm ${directorio}/${dep_ejecutable} &> /dev/null
 		install -m 0644 ./Python/${dep_ejecutable} ${directorio}/
 	done
 fi
