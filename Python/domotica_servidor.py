@@ -5,7 +5,7 @@
 # Title         : domotica_servidor.py
 # Description   : Parte servidor del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 01-12-2017
+# Date          : 02-12-2017
 # Version       : 1.1.1
 # Usage         : python3 domotica_servidor.py
 # Notes         : Parte servidor del sistema en el que se gestionarán pares de puertos GPIO
@@ -109,8 +109,6 @@ class domotica_servidor(comun.app):
                         if DEBUG:
                             print('Padre #', os.getpid(), "\tVoy a mandarle el mensaje: ", mensaje, sep = '')
 
-                        sc.send(mensaje.encode('utf_8'))
-
                     # conmutar, pulsar, encender, apagar
                     elif (comando != 'apagar'       and comando[:6] == 'apagar'     and comando[6] == ' ' and comando[ 7:] != '') \
                       or (comando != 'conmutar'     and comando[:8] == 'conmutar'   and comando[8] == ' ' and comando[ 9:] != '') \
@@ -134,43 +132,43 @@ class domotica_servidor(comun.app):
 
                         else:
                             if comando[:4] == 'hola':
-                                sc.send(respuesta.encode('utf_8'))
+                                mensaje = respuesta
 
                             elif comando[:6] != 'estado' and comando[:9] != 'describir' and respuesta:
                                 mensaje = 'ok: ejecutado'
-                                sc.send(mensaje.encode('utf_8'))
 
                             elif (comando[:6] == 'estado' and respuesta != -1) or (comando[0:9] == 'describir' and respuesta != False):
                                 mensaje = 'info: ' + str(respuesta)
-                                sc.send(mensaje.encode('utf_8'))
 
                             else:
                                 mensaje = 'err: no ejecutado, puerto incorrecto o no encontrado'
-                                sc.send(mensaje.encode('utf_8'))
 
                     else:
                         mensaje = 'err: no ejecutado, comando incorrecto'
 
-                        try:
-                            sc.send(mensaje.encode('utf_8'))
+                    try:
+                        sc.send(mensaje.encode('utf_8'))
 
-                        except BrokenPipeError:
+                    except BrokenPipeError:
+                        comando = 'desconectar'
+
+                    except ConnectionResetError:
+                        comando = 'desconectar'
+
+                    else:
+                        try:
+                            comando = sc.recv(1024)
+
+                        except ConnectionResetError:
                             comando = 'desconectar'
 
                         else:
-                            try:
-                                comando = sc.recv(1024)
+                            comando = comando.decode('utf_8')
+                            comando = comando.lower()
 
-                            except ConnectionResetError:
-                                comando = 'desconectar'
-
-                            else:
-                                comando = comando.decode('utf_8')
-                                comando = comando.lower()
-
-                        finally:
-                            if DEBUG:
-                                print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
+                    finally:
+                        if DEBUG:
+                            print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
 
                 if comando[0:5] == 'desconectar':
                     sc.close()
