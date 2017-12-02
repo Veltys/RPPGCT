@@ -5,10 +5,13 @@
 # Title         : comun.py
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
-# Date          : 10-08-2017
-# Version       : 0.2.5
+# Date          : 01-12-2017
+# Version       : 0.3.0
 # Usage         : import comun | from comun import <clase>
 # Notes         : 
+
+
+DEBUG = False
 
 
 from abc import ABCMeta, abstractmethod                                         # Clases abstractas
@@ -19,6 +22,7 @@ import os                                                                       
 import signal                                                                   # Manejo de señales
 import sys                                                                      # Funcionalidades varias del sistema
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
+import socket                                                                   # Tratamiento de sockets
 
 
 class app(object):
@@ -36,8 +40,105 @@ class app(object):
 
         self._config = config
         self._bloqueo = bloqueo(nombre) if not(nombre == False) else False      # No siempre va a ser necesario realizar un bloqueo
+        self._estado = 0
         self._modo_apagado = False
+        self._VERSION_PROTOCOLO = 1.1
+
         self.asignar_senyales()
+
+
+    def _conectar(self, comando, salida = True):
+        ''' Realiza una conexión contra un servidor dado en el parámetro "comando"
+            - Comprueba el estado de la conexión
+                - Si es == 0 (no hay una conexión activa), intenta conectar
+                    - Si no puede conectar por algún motivo, informa del error (si procede) y retorna "False"
+                    - Si sí, conecta, informa (si procede) y retorna la versión del proteocolo empleada
+                - Si no, informa del error (si procede) y retorna "False"
+        '''
+
+        if self._estado == 0:
+            if salida:
+                print('Info: Conectando a ' + comando[9:])
+
+            try:
+                self._socket.connect((comando[9:], self._config.puerto))
+
+            except TimeoutError:
+                print('Error: Tiempo de espera agotado al conectar a ' + comando[9:], file = sys.stderr)
+
+                return False
+
+            except ConnectionRefusedError:
+                print('Error: Imposible conectar a ' + comando[9:], file = sys.stderr)
+
+                return False
+
+            except AttributeError:
+                return False
+
+            else:
+                if salida:
+                    print('Ok: Conectado a ' + comando[9:])
+
+                self._estado = 1
+
+                mensaje = self._enviar_y_recibir('hola ' + str(self._VERSION_PROTOCOLO))
+
+                if(mensaje[:2] == 'ok'):                                        # Si el servidor nos da un ok, significa que la versión del protocolo que tenemos es la adecuada
+                    return True
+
+                elif(mensaje[:4] == 'info'):                                    # Si el servidor nos da un info, significa que usaremos una versión anterior
+                    self._VERSION_PROTOCOLO = float(mensaje[5:])
+
+                    return True
+
+                else:                                                           # Si nos da un err u otra cosa, el protocolo es incompatible y desconectaremos
+                    self._desconectar()
+
+                    return False
+
+        else:
+            print('Error: Imposible conectar a ' + comando[9:] + ', ya hay una conexión activa', file = sys.stderr)
+
+            return False
+
+
+    def _desconectar(self):
+        ''' Desconecta, si se está conectado, una conexión existente contra un servidor
+            - Comprueba el estado de la conexión
+            - Si el estado es >= 1 (hay una conexión activa), la desconecta
+            - Si no, no hace nada
+        '''
+
+        if self._estado >= 1:
+            self._socket.sendall('desconectar'.encode('utf-8'))
+            self._socket.close()
+            self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+            self._estado = 0
+
+
+    def _enviar_y_recibir(self, comando, normalizar = True):
+        ''' Envía un comando dado en el parámetro "comando" y recibe la respuesta correspondiente
+            - Comprueba si existe el socket e intenta utilizarlo
+                - Si no, retorna "False"
+                - Si sí, recibe el mensaje y lo retorna
+        '''
+
+        try:
+            self._socket.send(comando.encode('utf-8'))
+
+        except AttributeError:
+            return False
+
+        else:
+            mensaje = self._socket.recv(1024)
+            mensaje = mensaje.decode('utf-8')
+
+            if normalizar:
+                mensaje = mensaje.lower()
+
+            return mensaje
 
 
     def _sig_apagado(self, signum, frame):
@@ -92,13 +193,23 @@ class app(object):
 
                 else:
                     GPIO.setmode(GPIO.BCM)                                      # Establecemos el sistema de numeración BCM
-                    GPIO.setwarnings(False)                                     # De esta forma no alertará de los problemas
+
+                    GPIO.setwarnings(DEBUG)                                     # De esta forma no alertará de los problemas
 
                     for i in range(len(self._config.GPIOS)):                    # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
+                        if DEBUG:
+                            print('Proceso  #', os.getpid(), "\tPreparando el puerto GPIO", self._config.GPIOS[i][0], sep = '')
+
                         if self._config.GPIOS[i][1]:
+                            if DEBUG:
+                                print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", self._config.GPIOS[i][0], ' como salida', sep = '')
+
                             GPIO.setup(self._config.GPIOS[i][0], GPIO.OUT, initial = GPIO.LOW if self._config.GPIOS[i][2] else GPIO.HIGH)
 
                         else:
+                            if DEBUG:
+                                print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", self._config.GPIOS[i][0], 'como entrada', sep = '')
+
                             GPIO.setup(self._config.GPIOS[i][0], GPIO.IN, pull_up_down = GPIO.PUD_DOWN) 
                             self._config.GPIOS[i] = list(self._config.GPIOS[i]) # En el caso de tener un pin GPIO de entrada, se necesitará transformar en lista la tupla, ya que es posible que haga falta modificar su contenido
 
@@ -130,6 +241,7 @@ class app(object):
             for senyal, funcion in self._config.senyales.items():
                 signal.signal(eval('signal.' + senyal), eval('self._' + funcion))
 
+
     @abstractmethod
     def bucle(self):
         ''' Función abstracta que será especificada en el sistema que la incluya.
@@ -155,6 +267,33 @@ class app(object):
 
         if not(self._bloqueo == False):
             self._bloqueo.desbloquear()
+
+        self._desconectar()
+
+
+    def estado(self, estado = False):
+        ''' Función "sobrecargada" gracias al parámetro "estado"
+            - Para "estado" == "False"
+                - Actúa como pseudo-observador de la variable "_estado" de la clase
+            - Para "estado" != "False"
+                - Actúa como modificador de la variable "_estado" de la clase
+        '''
+
+        if estado == False:
+            if self._estado == 0:
+                return 'no hay una conexión activa'
+
+            elif self._estado == 1:
+                return 'hay una conexión activa'
+
+            elif self._estado == 2:
+                return 'hay una lista de puertos GPIO cargada'
+
+            else:
+                return 'el estado es desconocido'
+
+        else:
+            self._estado = estado
 
 
     def test(self):

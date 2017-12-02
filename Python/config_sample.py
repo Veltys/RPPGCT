@@ -5,8 +5,8 @@
 # Title         : config.py
 # Description   : Módulo configurador para ser importado en el resto de módulos o sistemas que lo necesiten
 # Author        : Veltys
-# Date          : 18-11-2017
-# Version       : 1.4.2
+# Date          : 29-11-2017
+# Version       : 1.5.0
 # Usage         : import config | from config import <clase>
 # Notes         : A título ilustrativo, a se ofrece una configuración por defecto (la mía, para ser exactos)
 
@@ -20,11 +20,11 @@ class config_global:
 class cpu_config(config_global):
     # Configuración del sistema de CPU
 
-    GPIOS           = [(26, True,  True ),                                      # GPIOS contiene ternas de datos en formato lista:
-                       (19, True,  True ),                                      # el primer elemento será el número (BCM) de puerto GPIO a manipular,
-                       (13, True,  True ),                                      # el segundo, el modo (True para salida, False para entrada)
-                       ( 6, True,  True ),                                      # y el tercero, la activación si es de salida (True si es activo a alto nivel o False si es a bajo nivel) o el estado si es de entrada (True si está bajado y False subido)
-                       ( 5, True,  True ),
+    GPIOS           = [(26, True,  True , 'Verde'                   ),          # GPIOS contiene ternas de datos en formato lista:
+                       (19, True,  True , 'Amarillo'                ),          # el primer elemento será el número (BCM) de puerto GPIO a manipular,
+                       (13, True,  True , 'Naranja'                 ),          # el segundo, el modo (True para salida, False para entrada)
+                       ( 6, True,  True , 'Rojo'                    ),          # el tercero, la activación si es de salida (True si es activo a alto nivel o False si es a bajo nivel) o el estado si es de entrada (True si está bajado y False subido)
+                       ( 5, True,  True , 'Alarma'                  ),          # y el cuarto, una muy breve descripción de su función
                       ]
 
     PAUSA           = 10                                                        # PAUSA contiene el tiempo que el bucle estará parado
@@ -41,10 +41,14 @@ class domotica_cliente_config(config_global):
 
 
 class domotica_servidor_config(domotica_cliente_config):
-    GPIOS           = [(17, False, False),
-                       (27, True , False),
-                       (23, False, False),
-                       (24, True , False),
+    GPIOS           = [(22, False, False, 'Botón, reinicio router'  ),          # En este caso, los puertos GPIO serán dados por pares, siendo el primer elemento el que hará de pulsador y el segundo sobre el que se operará
+                       ( 4, True,  False, 'Relé reinicio router'    ),
+
+                       (17, False, False, 'Botón (vacío)'           ),
+                       (27, True,  False, 'Relé (vacío)'            ),
+
+                       (23, False, False, 'Botón (vacío)'           ),
+                       (24, True,  False, 'Relé (vacío)'            ),
                       ]
 
     PAUSA           = 0.20
@@ -68,15 +72,16 @@ class internet_config(config_global):
                       ]
 
 
-class reiniciar_router_config(config_global):
-    GPIOS           = [( 4, True,  False),
-                      ]
-
+class reiniciar_router_config(domotica_cliente_config):
     PAUSA           = 15
+
+    GPIO            = domotica_servidor_config.GPIOS[1]
 
     senyales        = {'SIGTERM': 'sig_cerrar',
                        'SIGUSR1': 'sig_test',
                       }
+
+    servidor        = 'localhost'
 
 
 class temperaturas_config(config_global):
@@ -88,10 +93,10 @@ class temperaturas_config(config_global):
 
     FRECUENCIA      = 60                                                        # FRECUENCIA contiene la frecuencia (en herzios) de refresco de los leds
 
-    GPIOS           = [(16, True,  True ),
-                       (20, True,  True ),
-                       (21, True,  True ),
-                       (12, True,  True ),
+    GPIOS           = [(16, True,  True , 'Rojo'                    ),
+                       (20, True,  True , 'Verde'                   ),
+                       (21, True,  True , 'Azul'                    ),
+                       (12, True,  True , 'Alarma'                  ),
                       ]
 
     TEMPERATURAS    = [40, 45, 50]                                              # TEMPERATURAS contiene las temperaturas de activación de cada etapa

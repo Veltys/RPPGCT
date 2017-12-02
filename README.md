@@ -4,7 +4,7 @@ Raspberry Pi Python GPIO Control Tools
 ## Descripción
 Colección de utilidades varias para el control GPIO en Python
 
-## Contenido
+## Sistemas
 - **cpu.py**: Sistema indicador led de la carga de CPU en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
 - **domotica_cliente.py**: Cliente del sistema gestor de domótica.
 - **domotica_servidor.py**: Servidor del sistema gestor de domótica.
@@ -20,13 +20,13 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.1.1:
     - Creación del scrpit de init.d **temperaturas.sh**, para darle a **temperaturas.py** la capacidad de autoarranque.
 - 0.1.2:
-    - Arreglo de un bug menor en **temperaturas.py**.
+    - Arreglo de un fallo menor en **temperaturas.py**.
 - 0.1.3:
-    - Arreglo del mismo bug anterior en **cpu.py**.
+    - Arreglo del mismo fallo anterior en **cpu.py**.
 - 0.1.4:
     - Redacción de **README.md**.
 - 0.1.5:
-    - Creación de la rama (*branch*) de *testing* y adición del instalador de pruebas.
+    - Creación de la *rama* (*branch*) de *testing* y adición del instalador de pruebas.
 - 0.1.6:
     - Añadida la sección de "Agradecimientos y otros créditos" en **README.md** y en los archivos correspondientes.
     - Añadido el instalador.
@@ -34,7 +34,7 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.1.7:
     - Añadidas cabeceras en **boton.py**, **cpu.py**, **internet.py**, **pid.py**, **reiniciar_router.py** y **temperaturas.py**.
     - Eliminada funcionalidad no necesaria en **reiniciar_router.py**.
-    - Arreglo de bugs menores.
+    - Arreglo de fallos menores.
 - 0.1.8:
     - Añadido el script actualizador.
 - 0.2.0:
@@ -44,9 +44,9 @@ Colección de utilidades varias para el control GPIO en Python
     - Eliminado *import* innecesario en **internet.py**.
     - Editado **.gitignore** para que no suba el archivo **config.py**.
 - 0.2.1:
-    - Arreglo de bug en los scripts de init.
+    - Arreglo de fallo en los scripts de init.
 - 0.2.2:
-    - Arreglo de bug en **temperaturas.py**.
+    - Arreglo de fallo en **temperaturas.py**.
 - 0.2.3:
     - Arreglos menores.
     - Cambio de editor, lo que puede provocar algún desajuste con las tabulaciones o similar.
@@ -67,7 +67,7 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.3.2:
     - Arreglo de fallos varios y limpieza de código en **actualizador.sh**.
 - 0.3.3:
-    - Arreglo de bug en **reiniciar_router.py**.
+    - Arreglo de fallo en **reiniciar_router.py**.
     - Añadido **domotica.py** en **actualizador.sh**.
     - Limpieza de código en **instalador.sh**, **actualizador.sh** y **desinstador.sh**.
 - 0.4.0:
@@ -128,7 +128,7 @@ Colección de utilidades varias para el control GPIO en Python
     - Arreglado fallo en las variables de depuración en **temperatura.py**.
     - Convertido (de nuevo y espero que no vuelva a fallar) el retorno de línea de modo Windows a Linux en **cpu.py**.
 - 0.5.2:
-    - Modificado el tiempo de pausa de la clase *domotica_servidor_config* en **config_sample.py** para reducir la tasa de fallo. Sigue sin ser perfecto, pero a la espera de que arreglen [este error](https://sourceforge.net/p/raspberry-gpio-python/tickets/103/), es lo mejor que puedo hacer.
+    - Modificado el tiempo de pausa de la clase *domotica_servidor_config* en **config_sample.py** para reducir la tasa de fallo. Sigue sin ser perfecto, pero a la espera de que arreglen [este fallo](https://sourceforge.net/p/raspberry-gpio-python/tickets/103/), es lo mejor que puedo hacer.
 - 0.5.3:
     - Arreglado fallo en **desinstalador.sh**.
 - 0.5.4:
@@ -136,6 +136,19 @@ Colección de utilidades varias para el control GPIO en Python
     - Eliminados *imports* no necesarios en **domotica_cliente.py**
     - Arreglada sangría de *imports* en **domotica_cliente.py**, **indice_gpio.py**, **internet.py**, **reiniciar_router.py** y **temperatura.py**.
     - Implementado el comando de ayuda en **domotica_cliente.py**.
+- 0.6.0:
+	- Modificado **reiniciar_router.py** para que no actúe de manera independiente, sino a través de **domotica_servidor.py**.
+	- Taspasados métodos que ahora son comunes a varios scripts de **domotica_cliente.py** a **comun.py**.
+	- Modificado **domotica_cliente.py** para que la clase principal herede de la clase principal de **comun.py**.
+	- Arreglado fallo en la función *estado* en **comun.py**.
+	- Reajustadas configuraciones en arreglo a los cambios anteriores en **config_sample.py**.
+	- Añadido el campo *"descripción"* en las "constantes" *GPIO* en **config_sample.py**.
+	- Añadidos mecanismos para depuración remota en **domotica_cliente.py** y **reiniciar_router.py**.
+	- Añadido un bloque para interceptar un posible fallo al intentar borrar un archivo de bloqueo inexistente en **pid.py**. Esto podía ocurrir al reinstalar el sistema, especialmente si la parada de un servicio implica tiempo de procesamiento adicional, como en **domotica_servidor.py**. En este caso, es posible que el archivo de bloqueo sea borrado antes de la completa detención del servicio y, por consiguiente, éste arrojaría un fallo.
+	- Renombrado de la sección *Contenido* a *Sistemas* en **README.md**.
+	- Ahora las eliminaciones de los archivos de bloqueo en **actualizador.sh** y **desinstalador.sh** son silenciosas (> /dev/null), para evitar exceso de flood de fallos.
+	- Actualizado el protocolo de comunicación entre **domotica_servidor.py** y **domotica_cliente.py** para el primero pueda indicar al segundo la descripción de los puertos GPIO y un "saludo" para acordar la versión del protocolo a emplear.
+	- Modificados **actualizador.sh**, **desinstalador.sh** e **instalador.sh** y añadido **config.sh** para ajustar más finamente los permisos a la hora de instalar / actualizar y agrupada toda la configuración común.
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
@@ -162,7 +175,7 @@ Colección de utilidades varias para el control GPIO en Python
 - [x] Implementar comando *estado* para ver en qué estado se encuentra un puerto GPIO en **domotica_cliente.py** y **domotica_servidor.py**.
 - [x] Implementar comandos por parámetros en **domotica_cliente.py**.
 - [ ] Implementar comandos por archivo en **domotica_cliente.py**.
-- [ ] Integrar el control de relés en un archivo separado.
+- [x] Integrar el control de relés en un archivo separado.
 - [ ] Añadir control de versiones en la instalación.
 - [ ] Hacer que **actualizador.sh** sea "inteligente" y actualice en función de la versión.
 - [ ] ¡Mucho más!

@@ -5,8 +5,8 @@
 # Title         : temperaturas.py
 # Description   : Sistema indicador led de la temperatura del procesador en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
 # Author        : Veltys
-# Date          : 13-08-2017
-# Version       : 2.2.0
+# Date          : 30-11-2017
+# Version       : 2.2.1
 # Usage         : python3 temperaturas.py
 # Notes         : Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual simplemente apaga todos los leds hasta que esta misma señal sea recibida de nuevo
@@ -31,10 +31,11 @@ from shlex import split                                                         
 from subprocess import check_output                                             # Llamadas a programas externos, recuperando su respuesta
 import comun                                                                    # Funciones comunes a varios sistemas
 import os                                                                       # Funcionalidades varias del sistema operativo
-import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 if DEBUG_REMOTO:
-    import pydevd
+    import pydevd                                                               # Depuración remota
+
+import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 class temperaturas(comun.app):
     def __init__(self, config, nombre):

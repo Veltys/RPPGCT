@@ -5,8 +5,8 @@
 # Title         : pid.py
 # Description   : Módulo auxiliar para ciertas funciones de bloqueo y de PIDs
 # Author        : Veltys
-# Date          : 23-07-2017
-# Version       : 0.2.1
+# Date          : 30-11-2017
+# Version       : 0.2.2
 # Usage         : import pid | from pid import <clase>
 # Notes         : TODO: Trabajar con PIDs, aún no es necesario y no está implementado
 
@@ -55,10 +55,18 @@ class bloqueo(object):
     def desbloquear(self):
         if self._bloqueado:
             if os.name == 'posix':
-                os.remove('/var/lock/' + self._nombre[0:-3] + '.lock')
+                try:
+                    os.remove('/var/lock/' + self._nombre[0:-3] + '.lock')
+
+                except FileNotFoundError:
+                    pass
 
             elif os.name == 'nt':
-                os.remove(gettempdir() + '\\' + self._nombre[0:-3] + '.lock')
+                try:
+                    os.remove(gettempdir() + '\\' + self._nombre[0:-3] + '.lock')
+
+                except FileNotFoundError:
+                    pass
 
             else:
                 pass
