@@ -5,7 +5,7 @@
 # Title         : domotica_cliente.py
 # Description   : Parte cliente del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 01-12-2017
+# Date          : 02-12-2017
 # Version       : 1.1.2
 # Usage         : python3 domotica_cliente.py [commands]
 # Notes         : Parte cliente del sistema en el que se gestionarán pares de puertos GPIO
@@ -26,6 +26,10 @@ except ImportError:
     sys.exit(errno.ENOENT)
 
 import comun                                                                                # Funciones comunes a varios sistemas
+
+if DEBUG_REMOTO:
+    import pydevd                                                                           # Depuración remota
+
 import socket                                                                               # Tratamiento de sockets
 
 
@@ -60,6 +64,20 @@ class domotica_cliente(comun.app):
         return comando
 
 
+    def __describir(self, comando):
+        if self._estado >= 2:
+            mensaje = self._enviar_y_recibir(comando, False)
+
+            if mensaje[0:4].lower() == 'info':
+                return mensaje[6:]
+
+            else:
+                return ''
+
+        else:
+            return ''
+
+
     def __estado(self, comando):
         if self._estado >= 2:
             mensaje = self._enviar_y_recibir(comando)
@@ -88,6 +106,7 @@ class domotica_cliente(comun.app):
                     self._lista_GPIOS[i] = list()
                     self._lista_GPIOS[i].append(aux)
                     self._lista_GPIOS[i].append(self.__estado('estado ' + aux))
+                    self._lista_GPIOS[i].append(self.__describir('describir ' + aux))
 
             return True
 
@@ -101,23 +120,23 @@ class domotica_cliente(comun.app):
         print('Comandos disponibles para la versión del protocolo ' , self._VERSION_PROTOCOLO  , ':', sep = ' ')
 
         if(self._estado == 0)            : print('Nota: después de conectar a un servidor, es posible que la lista de comandos se reduzca, si el protocolo a emplear es más antiguo respecto a la versión anteriormente citada')
-        if self._VERSION_PROTOCOLO <= 1.0: print("\tconectar <host>:\t\tConecta con un servidor")
-        if self._VERSION_PROTOCOLO <= 1.0: print("\tlistar:\t\t\t\tMuestra la lista de puertos GPIO disponibles")
-        if self._VERSION_PROTOCOLO <= 1.1: print("\tdescribir <puerto>:\t\tMuestra el uso que el servidor le está dando al puerto GPIO especificado")
-        if self._VERSION_PROTOCOLO <= 1.0: print("\testado <puerto>:\t\tMuestra el estado del puerto GPIO especificado")
-        if self._VERSION_PROTOCOLO <= 1.0: print("\tconmutar <puerto>:\t\tInvierte el estado del puerto GPIO especificado")
-        if self._VERSION_PROTOCOLO <= 1.0: print("\tencender <puerto>:\t\t\"Enciende\" el puerto GPIO especificado")
-        if self._VERSION_PROTOCOLO <= 1.0: print("\tapagar <puerto>:\t\t\"Apaga\" el puerto GPIO especificado")
-        if self._VERSION_PROTOCOLO <= 1.0: print("\tpulsar <puerto>:\t\t\"Pulsa\" (\"enciende\" y \"apaga\") el puerto GPIO especificado")
-        if self._VERSION_PROTOCOLO <= 1.0: print("\tsalir:\t\t\t\tCierra la conexión (si hay alguna abierta) y termina la ejecución")
+        if self._VERSION_PROTOCOLO >= 1.0: print("\tconectar <host>:\t\tConecta con un servidor")
+        if self._VERSION_PROTOCOLO >= 1.0: print("\tlistar:\t\t\t\tMuestra la lista de puertos GPIO disponibles")
+        if self._VERSION_PROTOCOLO >= 1.1: print("\tdescribir <puerto>:\t\tMuestra el uso que el servidor le está dando al puerto GPIO especificado")
+        if self._VERSION_PROTOCOLO >= 1.0: print("\testado <puerto>:\t\tMuestra el estado del puerto GPIO especificado")
+        if self._VERSION_PROTOCOLO >= 1.0: print("\tconmutar <puerto>:\t\tInvierte el estado del puerto GPIO especificado")
+        if self._VERSION_PROTOCOLO >= 1.0: print("\tencender <puerto>:\t\t\"Enciende\" el puerto GPIO especificado")
+        if self._VERSION_PROTOCOLO >= 1.0: print("\tapagar <puerto>:\t\t\"Apaga\" el puerto GPIO especificado")
+        if self._VERSION_PROTOCOLO >= 1.0: print("\tpulsar <puerto>:\t\t\"Pulsa\" (\"enciende\" y \"apaga\") el puerto GPIO especificado")
+        if self._VERSION_PROTOCOLO >= 1.0: print("\tsalir:\t\t\t\tCierra la conexión (si hay alguna abierta) y termina la ejecución")
 
 
     def __mostrar_lista(self):
         if self._estado >= 2:
             print('Ok: Puertos GPIO que están disponibles:')
 
-            for puerto, estado in self._lista_GPIOS:
-                print("\t" + 'Puerto GPIO' + puerto + ' --> Estado: ' + ('activo' if estado == 1 else 'inactivo'), sep = '')
+            for puerto, estado, descipcion in self._lista_GPIOS:
+                print("\t", 'Puerto GPIO', puerto, "\tEstado: ", ('activo' if estado == 1 else 'inactivo'), "\tDescripción: \"", descipcion, '"', sep = '')
 
             return True
 
@@ -149,10 +168,10 @@ class domotica_cliente(comun.app):
         if self._estado >= 2:
             mensaje = self._enviar_y_recibir(comando)
 
-            if mensaje[0:2] == 'ok':
+            if mensaje[:2] == 'ok':
                 print('Correcto: El servidor informa de que el comando "' + comando + '" ha sido ' + mensaje[4:], sep = '')
 
-            elif mensaje[0:4] == 'info' and (int(mensaje[5:]) == 0 or int(mensaje[5:]) == 1):
+            elif mensaje[:4] == 'info' and (int(mensaje[5:]) == 0 or int(mensaje[5:]) == 1):
                 print('Correcto: El servidor informa de que el estado del puerto "GPIO' + comando[7:] + '" es ' + mensaje[5:], sep = '')
 
             else:
@@ -183,13 +202,16 @@ class domotica_cliente(comun.app):
 
 
                 # conmutar, pulsar, encender, apagar
-                elif (self._VERSION_PROTOCOLO <= 1.0 and comando != 'apagar'       and comando[0:6] == 'apagar'    and comando[6] == ' ' and comando[ 7:] != '') \
-                  or (self._VERSION_PROTOCOLO <= 1.0 and comando != 'conmutar'     and comando[0:8] == 'conmutar'  and comando[8] == ' ' and comando[ 9:] != '') \
-                  or (self._VERSION_PROTOCOLO <= 1.1 and comando != 'describir'    and comando[0:9] == 'describir' and comando[9] == ' ' and comando[10:] != '') \
-                  or (self._VERSION_PROTOCOLO <= 1.0 and comando != 'encender'     and comando[0:8] == 'encender'  and comando[8] == ' ' and comando[ 9:] != '') \
-                  or (self._VERSION_PROTOCOLO <= 1.0 and comando != 'pulsar'       and comando[0:6] == 'pulsar'    and comando[6] == ' ' and comando[ 7:] != '') \
+                elif (self._VERSION_PROTOCOLO >= 1.0 and comando != 'apagar'    and comando[0:6] == 'apagar'    and comando[6] == ' ' and comando[ 7:] != '') \
+                  or (self._VERSION_PROTOCOLO >= 1.0 and comando != 'conmutar'  and comando[0:8] == 'conmutar'  and comando[8] == ' ' and comando[ 9:] != '') \
+                  or (self._VERSION_PROTOCOLO >= 1.0 and comando != 'encender'  and comando[0:8] == 'encender'  and comando[8] == ' ' and comando[ 9:] != '') \
+                  or (self._VERSION_PROTOCOLO >= 1.0 and comando != 'pulsar'    and comando[0:6] == 'pulsar'    and comando[6] == ' ' and comando[ 7:] != '') \
                 :
                     self.__varios(comando)
+
+                # describir
+                elif  self._VERSION_PROTOCOLO >= 1.1 and comando != 'describir' and comando[0:9] == 'describir' and comando[9] == ' ' and comando[10:] != '':
+                    self.__describir(comando)
 
                 # listar
                 elif comando == 'listar':
@@ -237,6 +259,9 @@ class domotica_cliente(comun.app):
 
 
 def main(argv = sys.argv):
+    if DEBUG_REMOTO:
+        pydevd.settrace(config.IP_DEP_REMOTA)
+
     app = domotica_cliente(config, sys.argv)
     err = app.arranque()
 
