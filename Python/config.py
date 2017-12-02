@@ -41,11 +41,8 @@ class domotica_cliente_config(config_global):
 
 
 class domotica_servidor_config(domotica_cliente_config):
-    GPIOS           = [(22, False, False, 'Botón reinicio switch A'   ),        # En este caso, los puertos GPIO serán dados por pares, siendo el primer elemento el que hará de pulsador y el segundo sobre el que se operará
-                       ( 4, True,  False, 'Relé reinicio switch A'    ),
-
-                       (17, False, False, 'Botón reinicio switch B'   ),
-                       (27, True,  False, 'Relé reinicio switch B'    ),
+    GPIOS           = [(22, False, False, 'Botón reinicio router'   ),          # En este caso, los puertos GPIO serán dados por pares, siendo el primer elemento el que hará de pulsador y el segundo sobre el que se operará
+                       ( 4, True,  False, 'Relé reinicio router'    ),
                       ]
 
     PAUSA           = 0.20
@@ -76,7 +73,6 @@ class reiniciar_router_config(domotica_cliente_config):
     PAUSA           = 15
 
     GPIO            = [domotica_servidor_config.GPIOS[1],
-                       domotica_servidor_config.GPIOS[3],
                       ]
 
     senyales        = {'SIGTERM': 'sig_cerrar',
