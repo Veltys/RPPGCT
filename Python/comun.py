@@ -118,7 +118,7 @@ class app(object):
             self._estado = 0
 
 
-    def _enviar_y_recibir(self, comando):
+    def _enviar_y_recibir(self, comando, normalizar = True):
         ''' Envía un comando dado en el parámetro "comando" y recibe la respuesta correspondiente
             - Comprueba si existe el socket e intenta utilizarlo
                 - Si no, retorna "False"
@@ -134,7 +134,9 @@ class app(object):
         else:
             mensaje = self._socket.recv(1024)
             mensaje = mensaje.decode('utf-8')
-            mensaje = mensaje.lower()
+
+            if normalizar:
+                mensaje = mensaje.lower()
 
             return mensaje
 

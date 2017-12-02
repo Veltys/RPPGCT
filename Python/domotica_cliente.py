@@ -66,9 +66,9 @@ class domotica_cliente(comun.app):
 
     def __describir(self, comando):
         if self._estado >= 2:
-            mensaje = self._enviar_y_recibir(comando)
+            mensaje = self._enviar_y_recibir(comando, False)
 
-            if mensaje[0:4] == 'info':
+            if lower(mensaje[0:4]) == 'info':
                 return mensaje[6:]
 
             else:
