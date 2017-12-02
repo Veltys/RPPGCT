@@ -120,15 +120,15 @@ class domotica_cliente(comun.app):
         print('Comandos disponibles para la versión del protocolo ' , self._VERSION_PROTOCOLO  , ':', sep = ' ')
 
         if(self._estado == 0)            : print('Nota: después de conectar a un servidor, es posible que la lista de comandos se reduzca, si el protocolo a emplear es más antiguo respecto a la versión anteriormente citada')
-        if self._VERSION_PROTOCOLO <= 1.0: print("\tconectar <host>:\t\tConecta con un servidor")
-        if self._VERSION_PROTOCOLO <= 1.0: print("\tlistar:\t\t\t\tMuestra la lista de puertos GPIO disponibles")
-        if self._VERSION_PROTOCOLO <= 1.1: print("\tdescribir <puerto>:\t\tMuestra el uso que el servidor le está dando al puerto GPIO especificado")
-        if self._VERSION_PROTOCOLO <= 1.0: print("\testado <puerto>:\t\tMuestra el estado del puerto GPIO especificado")
-        if self._VERSION_PROTOCOLO <= 1.0: print("\tconmutar <puerto>:\t\tInvierte el estado del puerto GPIO especificado")
-        if self._VERSION_PROTOCOLO <= 1.0: print("\tencender <puerto>:\t\t\"Enciende\" el puerto GPIO especificado")
-        if self._VERSION_PROTOCOLO <= 1.0: print("\tapagar <puerto>:\t\t\"Apaga\" el puerto GPIO especificado")
-        if self._VERSION_PROTOCOLO <= 1.0: print("\tpulsar <puerto>:\t\t\"Pulsa\" (\"enciende\" y \"apaga\") el puerto GPIO especificado")
-        if self._VERSION_PROTOCOLO <= 1.0: print("\tsalir:\t\t\t\tCierra la conexión (si hay alguna abierta) y termina la ejecución")
+        if self._VERSION_PROTOCOLO >= 1.0: print("\tconectar <host>:\t\tConecta con un servidor")
+        if self._VERSION_PROTOCOLO >= 1.0: print("\tlistar:\t\t\t\tMuestra la lista de puertos GPIO disponibles")
+        if self._VERSION_PROTOCOLO >= 1.1: print("\tdescribir <puerto>:\t\tMuestra el uso que el servidor le está dando al puerto GPIO especificado")
+        if self._VERSION_PROTOCOLO >= 1.0: print("\testado <puerto>:\t\tMuestra el estado del puerto GPIO especificado")
+        if self._VERSION_PROTOCOLO >= 1.0: print("\tconmutar <puerto>:\t\tInvierte el estado del puerto GPIO especificado")
+        if self._VERSION_PROTOCOLO >= 1.0: print("\tencender <puerto>:\t\t\"Enciende\" el puerto GPIO especificado")
+        if self._VERSION_PROTOCOLO >= 1.0: print("\tapagar <puerto>:\t\t\"Apaga\" el puerto GPIO especificado")
+        if self._VERSION_PROTOCOLO >= 1.0: print("\tpulsar <puerto>:\t\t\"Pulsa\" (\"enciende\" y \"apaga\") el puerto GPIO especificado")
+        if self._VERSION_PROTOCOLO >= 1.0: print("\tsalir:\t\t\t\tCierra la conexión (si hay alguna abierta) y termina la ejecución")
 
 
     def __mostrar_lista(self):
@@ -202,15 +202,15 @@ class domotica_cliente(comun.app):
 
 
                 # conmutar, pulsar, encender, apagar
-                elif (self._VERSION_PROTOCOLO <= 1.0 and comando != 'apagar'    and comando[0:6] == 'apagar'    and comando[6] == ' ' and comando[ 7:] != '') \
-                  or (self._VERSION_PROTOCOLO <= 1.0 and comando != 'conmutar'  and comando[0:8] == 'conmutar'  and comando[8] == ' ' and comando[ 9:] != '') \
-                  or (self._VERSION_PROTOCOLO <= 1.0 and comando != 'encender'  and comando[0:8] == 'encender'  and comando[8] == ' ' and comando[ 9:] != '') \
-                  or (self._VERSION_PROTOCOLO <= 1.0 and comando != 'pulsar'    and comando[0:6] == 'pulsar'    and comando[6] == ' ' and comando[ 7:] != '') \
+                elif (self._VERSION_PROTOCOLO >= 1.0 and comando != 'apagar'    and comando[0:6] == 'apagar'    and comando[6] == ' ' and comando[ 7:] != '') \
+                  or (self._VERSION_PROTOCOLO >= 1.0 and comando != 'conmutar'  and comando[0:8] == 'conmutar'  and comando[8] == ' ' and comando[ 9:] != '') \
+                  or (self._VERSION_PROTOCOLO >= 1.0 and comando != 'encender'  and comando[0:8] == 'encender'  and comando[8] == ' ' and comando[ 9:] != '') \
+                  or (self._VERSION_PROTOCOLO >= 1.0 and comando != 'pulsar'    and comando[0:6] == 'pulsar'    and comando[6] == ' ' and comando[ 7:] != '') \
                 :
                     self.__varios(comando)
 
                 # describir
-                elif  self._VERSION_PROTOCOLO <= 1.1 and comando != 'describir' and comando[0:9] == 'describir' and comando[9] == ' ' and comando[10:] != '':
+                elif  self._VERSION_PROTOCOLO >= 1.1 and comando != 'describir' and comando[0:9] == 'describir' and comando[9] == ' ' and comando[10:] != '':
                     self.__describir(comando)
 
                 # listar
