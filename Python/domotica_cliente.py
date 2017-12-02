@@ -64,6 +64,20 @@ class domotica_cliente(comun.app):
         return comando
 
 
+    def __describir(self, comando):
+        if self._estado >= 2:
+            mensaje = self._enviar_y_recibir(comando)
+
+            if mensaje[0:4] == 'info':
+                return mensaje[6:]
+
+            else:
+                return ''
+
+        else:
+            return ''
+
+
     def __estado(self, comando):
         if self._estado >= 2:
             mensaje = self._enviar_y_recibir(comando)
@@ -92,7 +106,7 @@ class domotica_cliente(comun.app):
                     self._lista_GPIOS[i] = list()
                     self._lista_GPIOS[i].append(aux)
                     self._lista_GPIOS[i].append(self.__estado('estado ' + aux))
-                    self._lista_GPIOS[i].append(self.__varios('describir ' + aux))
+                    self._lista_GPIOS[i].append(self.__describir('describir ' + aux))
 
             return True
 
@@ -154,10 +168,10 @@ class domotica_cliente(comun.app):
         if self._estado >= 2:
             mensaje = self._enviar_y_recibir(comando)
 
-            if mensaje[0:2] == 'ok':
+            if mensaje[:2] == 'ok':
                 print('Correcto: El servidor informa de que el comando "' + comando + '" ha sido ' + mensaje[4:], sep = '')
 
-            elif mensaje[0:4] == 'info' and (int(mensaje[5:]) == 0 or int(mensaje[5:]) == 1):
+            elif mensaje[:4] == 'info' and (int(mensaje[5:]) == 0 or int(mensaje[5:]) == 1):
                 print('Correcto: El servidor informa de que el estado del puerto "GPIO' + comando[7:] + '" es ' + mensaje[5:], sep = '')
 
             else:
@@ -188,13 +202,16 @@ class domotica_cliente(comun.app):
 
 
                 # conmutar, pulsar, encender, apagar
-                elif (self._VERSION_PROTOCOLO <= 1.0 and comando != 'apagar'       and comando[0:6] == 'apagar'    and comando[6] == ' ' and comando[ 7:] != '') \
-                  or (self._VERSION_PROTOCOLO <= 1.0 and comando != 'conmutar'     and comando[0:8] == 'conmutar'  and comando[8] == ' ' and comando[ 9:] != '') \
-                  or (self._VERSION_PROTOCOLO <= 1.1 and comando != 'describir'    and comando[0:9] == 'describir' and comando[9] == ' ' and comando[10:] != '') \
-                  or (self._VERSION_PROTOCOLO <= 1.0 and comando != 'encender'     and comando[0:8] == 'encender'  and comando[8] == ' ' and comando[ 9:] != '') \
-                  or (self._VERSION_PROTOCOLO <= 1.0 and comando != 'pulsar'       and comando[0:6] == 'pulsar'    and comando[6] == ' ' and comando[ 7:] != '') \
+                elif (self._VERSION_PROTOCOLO <= 1.0 and comando != 'apagar'    and comando[0:6] == 'apagar'    and comando[6] == ' ' and comando[ 7:] != '') \
+                  or (self._VERSION_PROTOCOLO <= 1.0 and comando != 'conmutar'  and comando[0:8] == 'conmutar'  and comando[8] == ' ' and comando[ 9:] != '') \
+                  or (self._VERSION_PROTOCOLO <= 1.0 and comando != 'encender'  and comando[0:8] == 'encender'  and comando[8] == ' ' and comando[ 9:] != '') \
+                  or (self._VERSION_PROTOCOLO <= 1.0 and comando != 'pulsar'    and comando[0:6] == 'pulsar'    and comando[6] == ' ' and comando[ 7:] != '') \
                 :
                     self.__varios(comando)
+
+                # describir
+                elif  self._VERSION_PROTOCOLO <= 1.1 and comando != 'describir' and comando[0:9] == 'describir' and comando[9] == ' ' and comando[10:] != '':
+                    self.__describir(comando)
 
                 # listar
                 elif comando == 'listar':
