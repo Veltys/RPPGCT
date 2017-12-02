@@ -75,7 +75,9 @@ class internet_config(config_global):
 class reiniciar_router_config(domotica_cliente_config):
     PAUSA           = 15
 
-    GPIO            = domotica_servidor_config.GPIOS[1]
+    GPIO            = [domotica_servidor_config.GPIOS[1],
+                       domotica_servidor_config.GPIOS[3],
+                      ]
 
     senyales        = {'SIGTERM': 'sig_cerrar',
                        'SIGUSR1': 'sig_test',

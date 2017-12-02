@@ -49,7 +49,8 @@ class reiniciar_router(comun.app):
     def bucle(self):
         try:
             if self._conectar('conectar ' + self._config.servidor, False):
-                self._enviar_y_recibir('apagar ' + str(self._config.GPIO[0]))
+                for GPIO in self._config.GPIO:
+                    self._enviar_y_recibir('apagar ' + str(GPIO[0]))
 
                 self._desconectar()
 
@@ -58,7 +59,8 @@ class reiniciar_router(comun.app):
             while True:
                 if hay_internet():                                                          # Si hay Internet, simplemente se esperará para hacer la próxima comprobación
                     if self._conectar('conectar ' + self._config.servidor, False):
-                        self._enviar_y_recibir('apagar ' + str(self._config.GPIO[0]))
+                        for GPIO in self._config.GPIO:
+                            self._enviar_y_recibir('apagar ' + str(GPIO[0]))
 
                         self._desconectar()
 
@@ -66,11 +68,13 @@ class reiniciar_router(comun.app):
 
                 else:                                                                       # En caso contrario, se mandará la orden de apagado durante el tiempo mínimo establecido y después se restablecerá
                     if self._conectar('conectar ' + self._config.servidor, False):
-                        self._enviar_y_recibir('encender ' + str(self._config.GPIO[0]))
+                        for GPIO in self._config.GPIO:
+                            self._enviar_y_recibir('encender ' + str(GPIO[0]))
 
                         sleep(self._config.PAUSA)
 
-                        self._enviar_y_recibir('apagar ' + str(self._config.GPIO[0]))
+                        for GPIO in self._config.GPIO:
+                            self._enviar_y_recibir('apagar ' + str(GPIO[0]))
 
                         self._desconectar()
 
