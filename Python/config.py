@@ -109,4 +109,3 @@ class temperaturas_config(config_global):
                        'SIGUSR1': 'sig_test',
                        'SIGUSR2': 'sig_apagado',
                       }
-
