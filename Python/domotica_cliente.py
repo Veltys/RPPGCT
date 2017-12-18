@@ -117,7 +117,7 @@ class domotica_cliente(comun.app):
 
 
     def __mostrar_ayuda(self):
-        print('Comandos disponibles para la versión del protocolo ' , self._VERSION_PROTOCOLO  , ':', sep = ' ')
+        print('Comandos disponibles para la versión del protocolo ' , self._VERSION_PROTOCOLO  , ':', sep = '')
 
         if(self._estado == 0)            : print('Nota: después de conectar a un servidor, es posible que la lista de comandos se reduzca, si el protocolo a emplear es más antiguo respecto a la versión anteriormente citada')
         if self._VERSION_PROTOCOLO >= 1.0: print("\tconectar <host>:\t\tConecta con un servidor")
