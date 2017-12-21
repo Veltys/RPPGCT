@@ -22,7 +22,7 @@ arrancables[1]='domotica_servidor'
 arrancables[2]='reiniciar_router'
 arrancables[3]='temperatura'
 
-dependencias[0]='config_sample.py'
+dependencias[0]='config.py'
 dependencias[1]='comun.py'
 dependencias[2]='pid.py'
 
