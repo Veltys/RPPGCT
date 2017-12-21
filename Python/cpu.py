@@ -61,23 +61,25 @@ class cpu(comun.app):
                 else:
                     cpu = cpu_percent()
 
-                    for i in range(len(self._config.GPIOS)):
-                        for gpio, modo, activacion, descripcion in self._config.GPIOS[i]:
-                            if i < len(self._config.GPIOS) - 1:
-                                if cpu >= 100 / (len(self._config.GPIOS) - 1) * i:
-                                    GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)
-                                else:
-                                    GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
-
-                            elif cpu >= 95:
-                                alarma = alarma + 1
-
-                                if alarma >= 5:
-                                    GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)
-
+                    i = 0
+                    for gpio, modo, activacion, descripcion in self._config.GPIOS:
+                        if i < len(self._config.GPIOS) - 1:
+                            if cpu >= 100 / (len(self._config.GPIOS) - 1) * i:
+                                GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)
                             else:
-                                alarma = 0
                                 GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
+
+                        elif cpu >= 95:
+                            alarma = alarma + 1
+
+                            if alarma >= 5:
+                                GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)
+
+                        else:
+                            alarma = 0
+                            GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
+
+                        i = i + 1
 
                 sleep(self._config.PAUSA)
 
