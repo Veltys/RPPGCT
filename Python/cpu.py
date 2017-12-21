@@ -12,8 +12,11 @@
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual simplemente apaga todos los leds hasta que esta misma señal sea recibida de nuevo
 
 
+DEBUG = False
+DEBUG_REMOTO = True
+
+
 import errno                                                                    # Códigos de error
-import os                                                                       # Funcionalidades varias del sistema operativo
 import sys                                                                      # Funcionalidades varias del sistema
 
 try:
@@ -22,6 +25,8 @@ try:
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
+
+import os                                                                       # Funcionalidades varias del sistema operativo
 
 try:
     from psutil import cpu_percent                                              # Obtención del porcentaje de uso de la CPU
@@ -33,6 +38,10 @@ except ImportError:
 from time import sleep                                                          # Para hacer pausas
 from shlex import split                                                         # Manejo de cadenas
 import comun                                                                    # Funciones comunes a varios sistemas
+
+if DEBUG_REMOTO:
+    import pydevd                                                               # Depuración remota
+
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 
@@ -83,6 +92,9 @@ class cpu(comun.app):
 
 
 def main(argv = sys.argv):
+    if DEBUG_REMOTO:
+        pydevd.settrace(config.IP_DEP_REMOTA)
+
     app = cpu(config, os.path.basename(argv[0]))
     err = app.arranque()
 
