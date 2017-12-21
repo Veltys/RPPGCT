@@ -14,6 +14,7 @@
 #                 Pendiente (TODO): Por ahora solamente responde a un pulsador local, queda pendiente la implementación remota (sockets)
 #                 Se está estudiando, para futuras versiones, la integración con servicios IoT, especuialmente con el "AWS IoT Button" --> http://amzn.eu/dsgsHvv
 
+
 DEBUG = False
 DEBUG_PADRE = False
 DEBUG_REMOTO = False
@@ -59,7 +60,7 @@ class domotica_servidor(comun.app):
     def apagar(self, puerto, modo = False):
         if modo == False:
             puerto = self.buscar_puerto_GPIO(puerto)
-        
+
         if puerto != -1:
             with semaforo:                                                                                                          # Para realizar el apagado es necesaria un semáforo o podría haber problemas
                 GPIO.output(self._config.GPIOS[puerto][0], GPIO.LOW if self._config.GPIOS[puerto][2] else GPIO.HIGH)                # Se desactiva la salida del puerto GPIO
@@ -205,7 +206,7 @@ class domotica_servidor(comun.app):
     def conmutar(self, puerto, modo = False):
         if modo == False:
             puerto = self.buscar_puerto_GPIO(puerto)
-        
+
         if puerto != -1:
             with semaforo:                                                                                                          # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
                 GPIO.output(self._config.GPIOS[puerto][0], not(GPIO.input(self._config.GPIOS[puerto][0])))                          # Se conmuta la salida del puerto GPIO
@@ -244,7 +245,7 @@ class domotica_servidor(comun.app):
     def estado(self, puerto, modo = False):
         if modo == False:
             puerto = self.buscar_puerto_GPIO(puerto)
-        
+
         if puerto != -1:
             return GPIO.input(self._config.GPIOS[puerto][0])
 
@@ -274,7 +275,7 @@ class domotica_servidor(comun.app):
         if puerto != -1:
             correcto = True
             correcto = correcto and self.encender(puerto, True)
-        
+
             sleep(2)
 
             correcto = correcto and self.apagar(puerto, True)
@@ -308,7 +309,7 @@ class domotica_servidor_hijos(comun.app):
         self._GPIOS = list()
         self._GPIOS.append(self._config.GPIOS[self._id_hijo * 2])
         self._GPIOS.append(self._config.GPIOS[self._id_hijo * 2 + 1])
-        
+
         if DEBUG:
             print('Hijo  #', self._id_hijo, "\tMi configuración es ", self._GPIOS, sep = '')
             print('Hijo  #', self._id_hijo, "\tDeberé escuchar en el puerto GPIO", self._GPIOS[0][0] , ' y conmutar el puerto GPIO', self._GPIOS[1][0], sep = '')
@@ -334,16 +335,16 @@ class domotica_servidor_hijos(comun.app):
                     if not(self._GPIOS[0][2]):                                                                                      # Si es una subida
                         if DEBUG:
                             print('Hijo  #', self._id_hijo, "\tSe ha disparado el evento de subida esperado en el puerto GPIO", self._GPIOS[0][0], sep = '')
-    
+
                         with semaforo:                                                                                              # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
                             GPIO.output(self._GPIOS[1][0], not(GPIO.input(self._GPIOS[1][0])))                                      # Se conmuta la salida del puerto GPIO
-    
+
                         self._GPIOS[0][2] = not(self._GPIOS[0][2])                                                                  # Así se diferencia de las bajadas
 
                     elif self._GPIOS[0][2]:                                                                                         # Si es una bajada
                         if DEBUG:
                             print('Hijo  #', self._id_hijo, "\tSe ha disparado el evento de bajada esperado en el puerto GPIO", self._GPIOS[0][0], sep = '')
-    
+
                         self._GPIOS[0][2] = not(self._GPIOS[0][2])                                                                  # Se prepara la próxima activación para una subida
 
                 sleep(self._config.PAUSA)

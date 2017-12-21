@@ -1,4 +1,4 @@
-﻿# RPPGCT
+﻿﻿# RPPGCT
 Raspberry Pi Python GPIO Control Tools
 
 ## Descripción
@@ -149,6 +149,8 @@ Colección de utilidades varias para el control GPIO en Python
 	- Ahora las eliminaciones de los archivos de bloqueo en **actualizador.sh** y **desinstalador.sh** son silenciosas (> /dev/null), para evitar exceso de flood de fallos.
 	- Actualizado el protocolo de comunicación entre **domotica_servidor.py** y **domotica_cliente.py** para el primero pueda indicar al segundo la descripción de los puertos GPIO y un "saludo" para acordar la versión del protocolo a emplear.
 	- Modificados **actualizador.sh**, **desinstalador.sh** e **instalador.sh** y añadido **config.sh** para ajustar más finamente los permisos a la hora de instalar / actualizar y agrupada toda la configuración común.
+- 0.6.1:
+	- Renombrado **config_sample.py** a **config.py** y actualizadas referencias.
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
