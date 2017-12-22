@@ -13,7 +13,7 @@
 
 
 DEBUG = False
-DEBUG_REMOTO = True
+DEBUG_REMOTO = False
 
 
 import errno                                                                    # Códigos de error
