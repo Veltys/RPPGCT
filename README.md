@@ -1,4 +1,4 @@
-﻿# RPPGCT
+﻿﻿﻿# RPPGCT
 Raspberry Pi Python GPIO Control Tools
 
 ## Descripción
@@ -149,6 +149,9 @@ Colección de utilidades varias para el control GPIO en Python
 	- Ahora las eliminaciones de los archivos de bloqueo en **actualizador.sh** y **desinstalador.sh** son silenciosas (> /dev/null), para evitar exceso de flood de fallos.
 	- Actualizado el protocolo de comunicación entre **domotica_servidor.py** y **domotica_cliente.py** para el primero pueda indicar al segundo la descripción de los puertos GPIO y un "saludo" para acordar la versión del protocolo a emplear.
 	- Modificados **actualizador.sh**, **desinstalador.sh** e **instalador.sh** y añadido **config.sh** para ajustar más finamente los permisos a la hora de instalar / actualizar y agrupada toda la configuración común.
+- 0.6.1:
+	- Renombrado **config_sample.py** a **config.py** y actualizadas referencias.
+	- Arreglado fallo en **cpu.py**, que podría provocar que no se ejecutase correctamente.
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
@@ -176,8 +179,9 @@ Colección de utilidades varias para el control GPIO en Python
 - [x] Implementar comandos por parámetros en **domotica_cliente.py**.
 - [ ] Implementar comandos por archivo en **domotica_cliente.py**.
 - [x] Integrar el control de relés en un archivo separado.
-- [ ] Añadir control de versiones en la instalación.
-- [ ] Hacer que **actualizador.sh** sea "inteligente" y actualice en función de la versión.
+- [ ]~~Añadir control de versiones en la instalación.~~
+- [ ] ~~Hacer que **actualizador.sh** sea "inteligente" y actualice en función de la versión.~~
+- [ ] Hacer un cliente en Django, que permita una gestión más visual del sistema.
 - [ ] ¡Mucho más!
 
 ## F. A. Q. (*Frequently Asked Questions*) o P. F. (Preguntas Frecuentes)
@@ -221,7 +225,7 @@ Desengañémosnos, nadie en su sano juicio preguntaría estas cosas, pero al men
         - Control manual del ventilador al que antes hice referencia.
     - Control de un termo eléctrico (necesitaré un relé de más potencia que no he adquirido aún).
     - Control de varios elementos calefactores (necesitaré relés de más potencia que no he adquirido aún).
-    - Control de una vávula de riego (necesitaré adquirirla).
+    - ~~Control de una vávula de riego (necesitaré adquirirla).~~
 - **indice_gpio.py**: Esta herramienta (no lo llamo sistema, ya que no está integrado con nada) sirve para enumerar los puertos GPIO que quedan libres; entiéndanse libres los que no han sido todavía utilizados en la configuración. 
 - **internet.py**: Este módulo proporciona utilidades para saber si hay actualmente acceso a Internet.
 - **pid.py**: Este módulo proporciona actualmente utilidades para evitar más de una instancia de ejecucución a los sistemas que lo requieran. En un futuro pienso ampliar sus funcionalidades. 

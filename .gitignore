@@ -104,6 +104,3 @@ ENV/
 /.project
 /.pydevproject
 /.settings/
-
-# Archivos de configuración
-config*.py
