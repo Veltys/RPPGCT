@@ -17,7 +17,7 @@ class config_global:
     IP_DEP_REMOTA   = '192.168.0.4'                                             # IP del servidor de depuración
 
 
-class cpu_config(config_global):
+''' class cpu_config(config_global):
     # Configuración del sistema de CPU
 
     GPIOS           = [(26, True,  True , 'Verde'                   ),          # GPIOS contiene ternas de datos en formato lista:
@@ -33,14 +33,14 @@ class cpu_config(config_global):
                        'SIGUSR1': 'sig_test',
                        'SIGUSR2': 'sig_apagado',
                       }
+'''
 
-
-class domotica_cliente_config(config_global):
+''' class domotica_cliente_config(config_global):
     puerto          = 4710                                                      # El puerto 4710 ha sido escogido arbitrariamente por estar libre, según la IANA:
                                                                                 # https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?&page=85
+'''
 
-
-class domotica_servidor_config(domotica_cliente_config):
+''' class domotica_servidor_config(domotica_cliente_config):
     GPIOS           = [(22, False, False, 'Botón reinicio router'   ),          # En este caso, los puertos GPIO serán dados por pares, siendo el primer elemento el que hará de pulsador y el segundo sobre el que se operará
                        ( 4, True,  False, 'Relé reinicio router'    ),
 
@@ -56,7 +56,7 @@ class domotica_servidor_config(domotica_cliente_config):
     senyales        = {'SIGTERM': 'sig_cerrar',
                        'SIGUSR1': 'sig_test',
                       }
-
+'''
 
 class internet_config(config_global):
     HOSTS           = ['***REMOVED***',                                  # HOSTS contiene los servidores a los cuales se les hará ping para comprobar si hay internet
@@ -75,7 +75,7 @@ class internet_config(config_global):
                       ]
 
 
-class reiniciar_router_config(domotica_cliente_config):
+''' class reiniciar_router_config(domotica_cliente_config):
     PAUSA           = 15
 
     GPIO            = [domotica_servidor_config.GPIOS[1],
@@ -87,9 +87,9 @@ class reiniciar_router_config(domotica_cliente_config):
                       }
 
     servidor        = 'localhost'
+'''
 
-
-class temperaturas_config(config_global):
+''' class temperaturas_config(config_global):
     COLORES         = [(0.0, 0.0, 1.0, 0.0),                                    # COLORES contiene una matriz de 4 x 4 que, por columnas, representa cada led y, por filas, la etapa de temperatura
                        (0.0, 1.0, 0.0, 0.0),
                        (1.0, 0.6, 0.0, 0.0),
@@ -112,3 +112,4 @@ class temperaturas_config(config_global):
                        'SIGUSR1': 'sig_test',
                        'SIGUSR2': 'sig_apagado',
                       }
+'''
