@@ -21,7 +21,7 @@ Humidity = 0
 Temperature = 0
 
 
-pin = 18
+pin = 16
 
 
 GPIO.setmode(GPIO.BCM)
