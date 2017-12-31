@@ -15,7 +15,7 @@ GPIO.setup(16, GPIO.OUT)                                                        
 GPIO.output(16, GPIO.HIGH)                                                          # Enviamos una señal
 sleep(0.025)                                                                        # Pequeña pausa
 GPIO.output(16, GPIO.LOW)                                                           # Cerramos la señal
-time.sleep(0.02)                                                                    # Pequeña pausa
+sleep(0.02)                                                                         # Pequeña pausa
 
 GPIO.setup(16, GPIO.IN, pull_up_down = GPIO.PUD_UP)                                 # Ponemos el pin 16 en modo lectura
 
