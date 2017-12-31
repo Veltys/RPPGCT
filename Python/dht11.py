@@ -5,6 +5,7 @@
 import RPi.GPIO as GPIO
 import time
 import sys
+import pydevd                                                               # Depuración remota
 
 def bin2dec(string_num):
     return str(int(string_num, 2))
@@ -183,6 +184,8 @@ def printData():
 
 
 # {{{ Main loop
+
+pydevd.settrace('192.168.0.4')
 
 while (not crc_OK):
     pullData();
