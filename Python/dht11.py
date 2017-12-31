@@ -2,99 +2,196 @@
 # -*- coding: utf-8 -*-
 
 
-import RPi.GPIO as GPIO                                                             # Importamos las librerias necesarias para usar los pines GPIO
-from time import sleep                                                              # Importamos time para poder realizar pausas
+import RPi.GPIO as GPIO
+import time
+import sys
 
-def bin2dec(string_num):                                                            # Creamos una funcion para transformar de binario a decimal
+def bin2dec(string_num):
     return str(int(string_num, 2))
 
-data = []                                                                           # Definimos data como un array
-
-GPIO.setmode(GPIO.BCM)                                                              # Ponemos la placa en modo BCM
-GPIO.setup(16, GPIO.OUT)                                                            # Configuramos el pin 4 como salida
-GPIO.output(16 , GPIO.HIGH)                                                          # Enviamos una señal
-sleep(0.025)                                                                        # Pequeña pausa
-GPIO.output(16 , GPIO.LOW)                                                           # Cerramos la señal
-sleep(0.02)                                                                         # Pequeña pausa
-
-GPIO.setup(16, GPIO.IN, pull_up_down = GPIO.PUD_UP)                                   # Ponemos el pin 4 en modo lectura
-
-for i in range(0, 500):                                                             # Lee los bits que conforman la respuesta binaria del sensor
-    data.append(GPIO.input(16))
-
-# Define algunas variables usadas para cálculos más adelante
-bit_count = 0
-tmp = 0
-count = 0
+data = []
+effectiveData = []
+bits_min = 999;
+bits_max = 0;
 HumidityBit = ""
 TemperatureBit = ""
 crc = ""
+crc_OK = False;
+Humidity = 0
+Temperature = 0
 
-''' Hazlo mientras no existan errores, si detectas error salta a "except"
-    El siguiente código lee los bits de respuesta que envia el
-    sensor y los transforma a un número decimal leíble.
-'''
-try:
-    while data[count] == 1:
-        tmp = 1
-        count = count + 1
 
-    for i in range(0, 32):
-        bit_count = 0
+pin = 18
 
-        while data[count] == 0:
-            tmp = 1
-            count = count + 1
 
-        while data[count] == 1:
-            bit_count = bit_count + 1
-            count = count + 1
+GPIO.setmode(GPIO.BCM)
 
-        if bit_count > 3:
-            if i >= 0 and i < 8:
-                HumidityBit = HumidityBit + "1"
-            if i >= 16 and i < 24:
-                TemperatureBit = TemperatureBit + "1"
+
+def pullData():
+# {{{ Pull data from GPIO
+    global data
+    global effectiveData
+    global pin
+
+    data = []
+    effectiveData = []
+
+    GPIO.setup(pin, GPIO.OUT)
+    GPIO.output(pin, GPIO.HIGH)
+    time.sleep(0.025)
+    GPIO.output(pin, GPIO.LOW)
+    time.sleep(0.14)
+
+    GPIO.setup(pin, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+
+    for i in range(0, 1000):
+        data.append(GPIO.input(pin))
+
+    """   
+    for i in range(0,len(data)):
+        print "%d" % data[i],
+    print
+    """
+
+# }}}
+
+
+def analyzeData():
+# {{{ Analyze data
+
+# {{{ Add HI (2x8)x3 bits to array
+
+    seek = 0;
+    bits_min = 9999;
+    bits_max = 0;
+
+    global HumidityBit
+    global TemperatureBit
+    global crc
+    global Humidity
+    global Temperature
+
+    HumidityBit = ""
+    TemperatureBit = ""
+    crc = ""
+
+    """
+    Snip off the first bit - it simply says "Hello, I got your request, will send you temperature and humidity information along with checksum shortly"
+    """
+    while(seek < len(data) and data[seek] == 0):
+        seek += 1;
+
+    while(seek < len(data) and data[seek] == 1):
+         seek += 1;
+
+    """
+    Extract all HIGH bits' blocks. Add each block as separate item in data[] 
+    """
+    for i in range(0, 40):
+
+        buffer = "";
+
+        while(seek < len(data) and data[seek] == 0):
+            seek += 1;
+
+
+        while(seek < len(data) and data[seek] == 1):
+            seek += 1;
+            buffer += "1";
+
+        """
+        Find the longest and the shortest block of HIGHs. Average of those two will distinct whether block represents '0' (shorter than avg) or '1' (longer than avg)
+        """
+
+        if (len(buffer) < bits_min):
+            bits_min = len(buffer)
+
+        if (len(buffer) > bits_max):
+            bits_max = len(buffer)
+
+        effectiveData.append(buffer);
+        # print "%s " % buffer
+
+# }}}
+
+
+
+# {{{ Make effectiveData smaller
+
+    """
+    Replace blocks of HIs with either '1' or '0' depending on block length
+    """
+    for i in range(0, len(effectiveData)):
+        if (len(effectiveData[i]) < ((bits_max + bits_min) / 2)):
+            effectiveData[i] = "0";
         else:
-            if i >= 0 and i < 8:
-                HumidityBit = HumidityBit + "0"
-            if i >= 16 and i < 24:
-                TemperatureBit = TemperatureBit + "0"
+            effectiveData[i] = "1";
 
-except:
-    print('ERR_RANGE')
+        # print "%s " % effectiveData[i],
+   # print
 
-    exit(0)
 
-try:
+# }}}
+
+
+# {{{ Extract Humidity and Temperature values
+
     for i in range(0, 8):
-        bit_count = 0
+        HumidityBit += str(effectiveData[i]);
 
-        while data[count] == 0:
-            tmp = 1
-            count = count + 1
+    for i in range(16, 24):
+        TemperatureBit += str(effectiveData[i]);
 
-        while data[count] == 1:
-            bit_count = bit_count + 1
-            count = count + 1
 
-        if bit_count > 3:
-            crc = crc + "1"
+    for i in range(32, 40):
+        crc += str(effectiveData[i]);
 
-        else:
-            crc = crc + "0"
-except:                                                                             # Errores en el bloque
-    print('ERR_RANGE')
+    Humidity = bin2dec(HumidityBit)
+    Temperature = bin2dec(TemperatureBit)
 
-    exit(0)                                                                         # Salimos
+    # print "HumidityBit=%s, TemperatureBit=%s, crc=%s" % (HumidityBit, TemperatureBit, crc)
 
-# Aquí obtendríamos las lecturas de humedad y temperatura en un formato mas manejable
-Humidity = bin2dec(HumidityBit)
-Temperature = bin2dec(TemperatureBit)
+# }}}
 
-if int(Humidity) + int(Temperature) - int(bin2dec(crc)) == 0:                       # La comprobacion del CRC se ha validado
-    print('Humidity: ', Humidity, '%')
-    print('Temperature: ', Temperature, 'C')
+# }}}
 
-else:                                                                               # Si no es valido
-    print('ERR_CRC')
+
+# {{{ Check CRC
+def isDataValid():
+
+    global Humidity
+    global Temperature
+    global crc
+
+    # print "isDataValid(): H=%d, T=%d, crc=%d"% (int(Humidity), int(Temperature), int(bin2dec(crc)))
+    if int(Humidity) + int(Temperature) == int(bin2dec(crc)):
+        return True;
+    else:
+        return False;
+# }}}
+
+
+# {{{ Print data
+def printData():
+   global Humidity
+   global Temperature
+
+   print('H: ', Humidity)
+   print('T: ', Temperature)
+# }}}
+
+
+
+# {{{ Main loop
+
+while (not crc_OK):
+    pullData();
+    analyzeData();
+    if (isDataValid()):
+        crc_OK = True;
+        print("\r"),
+        printData();
+    else:
+        sys.stderr.write(".")
+        time.sleep(2);
+# }}}
