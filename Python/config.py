@@ -12,13 +12,13 @@
 
 
 class config_global:
-    # Configuración común
+# Configuración común
 
     IP_DEP_REMOTA   = '192.168.0.4'                                             # IP del servidor de depuración
 
 
 ''' class cpu_config(config_global):
-    # Configuración del sistema de CPU
+# Configuración del sistema de CPU
 
     GPIOS           = [(26, True,  True , 'Verde'                   ),          # GPIOS contiene ternas de datos en formato lista:
                        (19, True,  True , 'Amarillo'                ),          # el primer elemento será el número (BCM) de puerto GPIO a manipular,
@@ -34,6 +34,16 @@ class config_global:
                        'SIGUSR2': 'sig_apagado',
                       }
 '''
+
+class dht11_servidor_config(config_global):
+    GPIOS_1Wire     = [(16,               'Sonda DHT11 de pruebas'  ),
+                      ]
+
+    PAUSA           = 60
+
+    senyales        = {'SIGTERM': 'sig_cerrar',
+                      }
+
 
 ''' class domotica_cliente_config(config_global):
     puerto          = 4710                                                      # El puerto 4710 ha sido escogido arbitrariamente por estar libre, según la IANA:
