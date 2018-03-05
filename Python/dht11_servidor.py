@@ -86,14 +86,14 @@ class dht11_servidor(comun.app):
             GPIO.setup(self._config.GPIOS_1Wire[i][0], GPIO.OUT)
 
             if DEBUG:
-                print('Proceso  #', os.getpid(), "\tEnviando señal de lectura en el puerto GPIO con el protocolo 1 Wire", self._config.GPIOS_1Wire[i][0], sep = '')
+                print('Proceso  #', os.getpid(), "\tEnviando señal de lectura en el puerto GPIO", self._config.GPIOS_1Wire[i][0], ' con el protocolo 1 Wire', sep = '')
 
             GPIO.output(self._config.GPIOS_1Wire[i][0], GPIO.HIGH)
 
             sleep(0.025)
 
             if DEBUG:
-                print('Proceso  #', os.getpid(), "\tEnviada señal de lectura en el puerto GPIO con el protocolo 1 Wire", self._config.GPIOS_1Wire[i][0], sep = '')
+                print('Proceso  #', os.getpid(), "\tEnviada señal de lectura en el puerto GPIO", self._config.GPIOS_1Wire[i][0], ' con el protocolo 1 Wire', sep = '')
 
             GPIO.output(self._config.GPIOS_1Wire[i][0], GPIO.LOW)
 
@@ -104,7 +104,9 @@ class dht11_servidor(comun.app):
 
             GPIO.setup(self._config.GPIOS_1Wire[i][0], GPIO.IN, pull_up_down = GPIO.PUD_UP)
 
-            for i in range(0, 1000):
+            self._datos.append([])
+
+            for j in range(0, 1000):
                 self._datos[i].append(GPIO.input(self._config.GPIOS_1Wire[i][0]))
 
 
