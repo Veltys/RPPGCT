@@ -24,7 +24,7 @@ import sys                                                                      
 import os                                                                       # Funcionalidades varias del sistema operativo
 
 try:
-    from config import domotica_servidor_config as config                       # Configuración
+    from config import dht11_servidor_config as config                          # Configuración
 
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
