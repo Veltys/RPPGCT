@@ -137,21 +137,21 @@ Colección de utilidades varias para el control GPIO en Python
     - Arreglada sangría de *imports* en **domotica_cliente.py**, **indice_gpio.py**, **internet.py**, **reiniciar_router.py** y **temperatura.py**.
     - Implementado el comando de ayuda en **domotica_cliente.py**.
 - 0.6.0:
-	- Modificado **reiniciar_router.py** para que no actúe de manera independiente, sino a través de **domotica_servidor.py**.
-	- Taspasados métodos que ahora son comunes a varios scripts de **domotica_cliente.py** a **comun.py**.
-	- Modificado **domotica_cliente.py** para que la clase principal herede de la clase principal de **comun.py**.
-	- Arreglado fallo en la función *estado* en **comun.py**.
-	- Reajustadas configuraciones en arreglo a los cambios anteriores en **config_sample.py**.
-	- Añadido el campo *"descripción"* en las "constantes" *GPIO* en **config_sample.py**.
-	- Añadidos mecanismos para depuración remota en **domotica_cliente.py** y **reiniciar_router.py**.
-	- Añadido un bloque para interceptar un posible fallo al intentar borrar un archivo de bloqueo inexistente en **pid.py**. Esto podía ocurrir al reinstalar el sistema, especialmente si la parada de un servicio implica tiempo de procesamiento adicional, como en **domotica_servidor.py**. En este caso, es posible que el archivo de bloqueo sea borrado antes de la completa detención del servicio y, por consiguiente, éste arrojaría un fallo.
-	- Renombrado de la sección *Contenido* a *Sistemas* en **README.md**.
-	- Ahora las eliminaciones de los archivos de bloqueo en **actualizador.sh** y **desinstalador.sh** son silenciosas (> /dev/null), para evitar exceso de flood de fallos.
-	- Actualizado el protocolo de comunicación entre **domotica_servidor.py** y **domotica_cliente.py** para el primero pueda indicar al segundo la descripción de los puertos GPIO y un "saludo" para acordar la versión del protocolo a emplear.
-	- Modificados **actualizador.sh**, **desinstalador.sh** e **instalador.sh** y añadido **config.sh** para ajustar más finamente los permisos a la hora de instalar / actualizar y agrupada toda la configuración común.
+    - Modificado **reiniciar_router.py** para que no actúe de manera independiente, sino a través de **domotica_servidor.py**.
+    - Taspasados métodos que ahora son comunes a varios scripts de **domotica_cliente.py** a **comun.py**.
+    - Modificado **domotica_cliente.py** para que la clase principal herede de la clase principal de **comun.py**.
+    - Arreglado fallo en la función *estado* en **comun.py**.
+    - Reajustadas configuraciones en arreglo a los cambios anteriores en **config_sample.py**.
+    - Añadido el campo *"descripción"* en las "constantes" *GPIO* en **config_sample.py**.
+    - Añadidos mecanismos para depuración remota en **domotica_cliente.py** y **reiniciar_router.py**.
+    - Añadido un bloque para interceptar un posible fallo al intentar borrar un archivo de bloqueo inexistente en **pid.py**. Esto podía ocurrir al reinstalar el sistema, especialmente si la parada de un servicio implica tiempo de procesamiento adicional, como en **domotica_servidor.py**. En este caso, es posible que el archivo de bloqueo sea borrado antes de la completa detención del servicio y, por consiguiente, éste arrojaría un fallo.
+    - Renombrado de la sección *Contenido* a *Sistemas* en **README.md**.
+    - Ahora las eliminaciones de los archivos de bloqueo en **actualizador.sh** y **desinstalador.sh** son silenciosas (> /dev/null), para evitar exceso de flood de fallos.
+    - Actualizado el protocolo de comunicación entre **domotica_servidor.py** y **domotica_cliente.py** para el primero pueda indicar al segundo la descripción de los puertos GPIO y un "saludo" para acordar la versión del protocolo a emplear.
+    - Modificados **actualizador.sh**, **desinstalador.sh** e **instalador.sh** y añadido **config.sh** para ajustar más finamente los permisos a la hora de instalar / actualizar y agrupada toda la configuración común.
 - 0.6.1:
-	- Renombrado **config_sample.py** a **config.py** y actualizadas referencias.
-	- Arreglado fallo en **cpu.py**, que podría provocar que no se ejecutase correctamente.
+    - Renombrado **config_sample.py** a **config.py** y actualizadas referencias.
+    - Arreglado fallo en **cpu.py**, que podría provocar que no se ejecutase correctamente.
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
