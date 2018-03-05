@@ -89,7 +89,7 @@ class internet_config(config_global):
     servidor        = 'localhost'
 '''
 
-''' class temperaturas_config(config_global):
+''' class temperatura_config(config_global):
     COLORES         = [(0.0, 0.0, 1.0, 0.0),                                    # COLORES contiene una matriz de 4 x 4 que, por columnas, representa cada led y, por filas, la etapa de temperatura
                        (0.0, 1.0, 0.0, 0.0),
                        (1.0, 0.6, 0.0, 0.0),
