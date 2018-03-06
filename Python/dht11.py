@@ -44,24 +44,8 @@ from time import sleep                                                          
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 
-class DHT11Result:
-    # Clase resultado devuelto por el método dht11.leer()
-
-    error = ERR_NO_ERROR
-    temperatura = -1
-    humedad = -1
-
-    def __init__(self, error, temperatura, humedad):
-        self.error = error
-        self.temperatura = temperatura
-        self.humedad = humedad
-
-    def valido(self):
-        return self.error == DHT11Result.ERR_NO_ERROR
-
-
-class DHT11:
-    # Clase de lectura del sensor DHT11 para Raspberry Pi
+class dht11:
+    # Clase de gestión del sensor DHT11 para Raspberry Pi
 
     _sensor = 0
 
@@ -245,7 +229,7 @@ class DHT11:
 
         # Si no coincide la congitud con el valor esperado, ha habido un fallo en la transmisión
         if len(longitudes) != LONGITUD_DATOS:
-            return DHT11Result(DHT11Result.ERR_MISSING_DATA, 0, 0)
+            return resultado_dht11(ERR_MISSING_DATA, 0, 0)
 
         else:
             # Calcular bits a partir de las longitudes
@@ -258,10 +242,27 @@ class DHT11:
             checksum = self._calcular_checksum(bytes)
 
             if bytes[4] != checksum:
-                return DHT11Result(DHT11Result.ERR_CRC, 0, 0)
+                return resultado_dht11(ERR_CRC, 0, 0)
 
             else:
-                return DHT11Result(DHT11Result.ERR_NO_ERROR, bytes[2], bytes[0])
+                return resultado_dht11(ERR_NO_ERROR, bytes[2], bytes[0])
+
+
+class resultado_dht11:
+    # Clase resultado devuelto por el método dht11.leer()
+
+    error = ERR_NO_ERROR
+    temperatura = -1
+    humedad = -1
+
+    def __init__(self, error, temperatura, humedad):
+        self.error = error
+        self.temperatura = temperatura
+        self.humedad = humedad
+
+    def valido(self):
+        return self.error == DHT11Result.ERR_NO_ERROR
+
 
 def main(argv = sys.argv):
     sensor = dht11(0)
