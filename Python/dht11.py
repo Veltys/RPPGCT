@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from psutil._compat import long
 
 
 # Title             : dht11.py
@@ -13,7 +12,8 @@ from psutil._compat import long
 # Notes             : Este módulo está pensado para ser llamado desde otros módulos y no directamente, aunque si es llamado de esta forma, también hará su trabajo e informará al usuario de los valores del sensor
 
 
-DEBUG = True
+DEBUG = False
+DEBUG_REMOTO = True
 LONGITUD_DATOS = 40                                                             # 4 bytes de datos + 1 byte de comprobación = 5 * 8 = 40
 
 ERR_NO_ERROR = 0
@@ -38,6 +38,9 @@ try:
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
+
+if DEBUG_REMOTO:
+    import pydevd                                                               # Depuración remota
 
 from time import sleep                                                          # Para hacer pausas
 
@@ -258,6 +261,9 @@ class resultado_dht11:
 
 
 def main(argv = sys.argv):
+    if DEBUG_REMOTO:
+        pydevd.settrace(config.IP_DEP_REMOTA)
+
     try:
         sensor = dht11(0)
 
