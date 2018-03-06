@@ -50,16 +50,9 @@ class dht11:
     _sensor = 0
 
     def __init__(self, sensor):
-        try:
-            config.GPIOS[sensor]
+        config.GPIOS[sensor]
 
-        except AttributeError:
-            False
-
-        else:
-            self._sensor = sensor
-
-            return True
+        self._sensor = sensor
 
 
     def _bits_a_bytes(self, bits):
@@ -265,16 +258,22 @@ class resultado_dht11:
 
 
 def main(argv = sys.argv):
-    sensor = dht11(0)
+    try:
+        sensor = dht11(0)
 
-    resultado = sensor.leer()
-
-    while not resultado.valido():
+    except AttributeError:
         resultado = sensor.leer()
 
-        sleep(config.PAUSA)
+        while not resultado.valido():
+            resultado = sensor.leer()
 
-    print('Temperatura: ', resultado.temperatura, 'º C, humedad relativa: ', resultado.humedad, '%', sep = '')
+            sleep(config.PAUSA)
+
+        print('Temperatura: ', resultado.temperatura, 'º C, humedad relativa: ', resultado.humedad, '%', sep = '')
+
+    else:
+        print('El sensor selccionado no es válido')
+
 
 if __name__ == '__main__':
     main(sys.argv)
