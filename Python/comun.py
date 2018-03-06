@@ -267,6 +267,8 @@ class app(object):
             - Desbloquea la posible ejecución de otra futura instancia del mismo sistema
         '''
 
+        self._desconectar()
+
         try:
             self._config.GPIOS
 
@@ -278,8 +280,6 @@ class app(object):
 
         if not(self._bloqueo == False):
             self._bloqueo.desbloquear()
-
-        self._desconectar()
 
 
     def estado(self, estado = False):
