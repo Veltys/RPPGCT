@@ -30,7 +30,6 @@ STATE_DATA_PULL_DOWN = 5
 
 import errno                                                                    # Códigos de error
 import sys                                                                      # Funcionalidades varias del sistema
-import os                                                                       # Funcionalidades varias del sistema operativo
 
 try:
     from config import dht11_config as config                                   # Configuración
@@ -60,7 +59,7 @@ class dht11:
 
     def _bits_a_bytes(self, bits):
         byte = 0
-        bytes = []
+        bytess = []
 
         for i in range(0, len(bits)):
             byte = byte << 1
@@ -71,11 +70,11 @@ class dht11:
                 byte = byte | 0
 
             if ((i + 1) % 8 == 0):
-                bytes.append(byte)
+                bytess.append(byte)
 
                 byte = 0
 
-        return bytes
+        return bytess
 
 
     def __calcular_bits(self, longitudes):
@@ -107,8 +106,8 @@ class dht11:
         return bits
 
 
-    def __calcular_checksum(self, bytes):
-        return bytes[0] + bytes[1] + bytes[2] + bytes[3] & 255
+    def __calcular_checksum(self, bytess):
+        return bytess[0] + bytess[1] + bytess[2] + bytess[3] & 255
 
 
     def _enviar_y_esperar(self, salida, pausa):
@@ -128,7 +127,7 @@ class dht11:
             longitud_actual += 1
 
             if estado == STATE_INIT_PULL_DOWN:
-                if actual == RPi.GPIO.LOW:                                      # Tenemos la bajada inicial
+                if actual == GPIO.LOW:                                          # Tenemos la bajada inicial
                     estado = STATE_INIT_PULL_UP
 
                     continue
@@ -137,7 +136,7 @@ class dht11:
                     continue
 
             if estado == STATE_INIT_PULL_UP:
-                if actual == RPi.GPIO.HIGH:                                     # Tenemos la subida inicial
+                if actual == GPIO.HIGH:                                         # Tenemos la subida inicial
                     estado = STATE_DATA_FIRST_PULL_DOWN
 
                     continue
@@ -146,7 +145,7 @@ class dht11:
                     continue
 
             if estado == STATE_DATA_FIRST_PULL_DOWN:
-                if actual == RPi.GPIO.LOW:                                      # Tenemos la bajada inicial, lo siguiente será una subida
+                if actual == GPIO.LOW:                                          # Tenemos la bajada inicial, lo siguiente será una subida
                     estado = STATE_DATA_PULL_UP
 
                     continue
@@ -155,8 +154,8 @@ class dht11:
                     continue
 
             if estado == STATE_DATA_PULL_UP:
-                if actual == RPi.GPIO.HIGH:                                     # Subida, la longitud de ésta estará determinada en función de si viene un 0 o un 1
-                    actual_length = 0
+                if actual == GPIO.HIGH:                                         # Subida, la longitud de ésta estará determinada en función de si viene un 0 o un 1
+                    longitud_actual = 0
 
                     estado = STATE_DATA_PULL_DOWN
 
@@ -166,7 +165,7 @@ class dht11:
                     continue
 
             if estado == STATE_DATA_PULL_DOWN:
-                if actual == RPi.GPIO.LOW:                                      # Bajada, almacenaremos la longitud del periodo previo de subida
+                if actual == GPIO.LOW:                                          # Bajada, almacenaremos la longitud del periodo previo de subida
                     longitudes.append(longitud_actual)
 
                     estado = STATE_DATA_PULL_UP
@@ -221,7 +220,7 @@ class dht11:
         datos = self._recoger_datos()
 
         # Procesamiento de datos
-        longitudes = self._procesar_datos(data)
+        longitudes = self._procesar_datos(datos)
 
         # Si no coincide la congitud con el valor esperado, ha habido un fallo en la transmisión
         if len(longitudes) != LONGITUD_DATOS:
@@ -232,16 +231,16 @@ class dht11:
             bits = self._calcular_bits(longitudes)
 
             # Calcular bytes
-            bytes = self._bits_a_bytes(bits)
+            bytess = self._bits_a_bytes(bits)
 
             # Calcular comprobación y comprobar
-            checksum = self._calcular_checksum(bytes)
+            checksum = self._calcular_checksum(bytess)
 
-            if bytes[4] != checksum:
+            if bytess[4] != checksum:
                 return resultado_dht11(ERR_CRC, 0, 0)
 
             else:
-                return resultado_dht11(ERR_NO_ERROR, bytes[2], bytes[0])
+                return resultado_dht11(ERR_NO_ERROR, bytess[2], bytess[0])
 
 
 class resultado_dht11:
@@ -257,7 +256,7 @@ class resultado_dht11:
         self.humedad = humedad
 
     def valido(self):
-        return self.error == DHT11Result.ERR_NO_ERROR
+        return self.error == ERR_NO_ERROR
 
 
 def main(argv = sys.argv):
