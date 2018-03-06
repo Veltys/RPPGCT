@@ -263,6 +263,9 @@ def main(argv = sys.argv):
     if DEBUG_REMOTO:
         pydevd.settrace(config.IP_DEP_REMOTA)
 
+    GPIO.setmode(GPIO.BCM)                                                      # Establecemos el sistema de numeración BCM
+    GPIO.setwarnings(DEBUG)                                                     # De esta forma alertará de los problemas sólo cuando se esté depurando
+
     try:
         sensor = dht11(0)
 
