@@ -5,8 +5,8 @@
 # Title         : domotica_servidor.py
 # Description   : Parte servidor del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 02-12-2017
-# Version       : 1.1.1
+# Date          : 06-03-2018
+# Version       : 1.1.2
 # Usage         : python3 domotica_servidor.py
 # Notes         : Parte servidor del sistema en el que se gestionarán pares de puertos GPIO
 #                 Las entradas impares en la variable de configuración asociada GPIOS corresponderán a los relés que se gestionarán
@@ -57,6 +57,8 @@ class domotica_servidor(comun.app):
 
 
     def apagar(self, puerto, modo = False):
+        global semaforo
+
         if modo == False:
             puerto = self.buscar_puerto_GPIO(puerto)
 
@@ -203,6 +205,8 @@ class domotica_servidor(comun.app):
 
 
     def conmutar(self, puerto, modo = False):
+        global semaforo
+
         if modo == False:
             puerto = self.buscar_puerto_GPIO(puerto)
 
@@ -228,6 +232,8 @@ class domotica_servidor(comun.app):
 
 
     def encender(self, puerto, modo = False):
+        global semaforo
+
         if modo == False:
             puerto = self.buscar_puerto_GPIO(puerto)
 
@@ -321,7 +327,7 @@ class domotica_servidor_hijos(comun.app):
 
 
     def bucle(self):
-        global salir
+        global semaforo, salir
 
         try:
             GPIO.add_event_detect(self._GPIOS[0][0], GPIO.BOTH)                                                                     # Se añade el evento; se ha empleado GPIO.BOTH porque GPIO.RISING y GPIO.FALLING no parecen funcionar del todo bien

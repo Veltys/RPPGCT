@@ -5,8 +5,8 @@
 # Title         : comun.py
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
-# Date          : 01-12-2017
-# Version       : 0.3.0
+# Date          : 06-03-2018
+# Version       : 0.3.1
 # Usage         : import comun | from comun import <clase>
 # Notes         : 
 
@@ -28,7 +28,13 @@ import socket                                                                   
 class app(object):
     # Clase abstracta que contiene todos los métodos comunes para una app de este sistema
  
-    __metaclass__ = ABCMeta
+    __metaclass__       = ABCMeta
+    _config             = []
+    _bloqueo            = False
+    _estado             = 0
+    _modo_apagado       = False
+    _socket             = False
+    _VERSION_PROTOCOLO  = 1.1
 
 
     def __init__(self, config, nombre):
@@ -40,9 +46,6 @@ class app(object):
 
         self._config = config
         self._bloqueo = bloqueo(nombre) if not(nombre == False) else False      # No siempre va a ser necesario realizar un bloqueo
-        self._estado = 0
-        self._modo_apagado = False
-        self._VERSION_PROTOCOLO = 1.1
 
         self.asignar_senyales()
 
@@ -128,6 +131,7 @@ class app(object):
         try:
             self._socket.send(comando.encode('utf-8'))
 
+        # FIXME: Nueva comprobación
         except AttributeError:
             return False
 
@@ -142,23 +146,20 @@ class app(object):
 
 
     def _sig_apagado(self, signum, frame):
-        ''' Funcion "wrapper" para el procesamiento de la señal de apagado
-        '''
+        # Funcion "wrapper" para el procesamiento de la señal de apagado
 
         self.apagado()
 
 
     def _sig_cerrar(self, signum, frame):
-        ''' Funcion "wrapper" para el procesamiento de la señal de cierre
-        '''
+        # Funcion "wrapper" para el procesamiento de la señal de cierre
 
         self.cerrar()
         os._exit(0)
 
 
     def _sig_test(self, signum, frame):
-        ''' Funcion "wrapper" para el procesamiento de la señal de pruebas
-        '''
+        # Funcion "wrapper" para el procesamiento de la señal de pruebas
 
         self.test()
 
@@ -244,8 +245,7 @@ class app(object):
 
     @abstractmethod
     def bucle(self):
-        ''' Función abstracta que será especificada en el sistema que la incluya.
-        '''
+        # Función abstracta que será especificada en el sistema que la incluya
 
         pass
 
@@ -297,8 +297,7 @@ class app(object):
 
 
     def test(self):
-        ''' Ejecuta el modo de pruebas.
-        '''
+        # Ejecuta el modo de pruebas
 
         try:
             self._config.GPIOS
@@ -314,7 +313,6 @@ class app(object):
 
 
     def __del__(self):
-        ''' Destructor de la clase: Ya que su ejecución no está asegurada, no hace nada
-        '''
+        # Destructor de la clase: Ya que su ejecución no está asegurada, no hace nada
 
         pass
