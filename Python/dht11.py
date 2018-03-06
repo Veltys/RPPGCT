@@ -16,6 +16,11 @@ from psutil._compat import long
 DEBUG = True
 LONGITUD_DATOS = 40                                                             # 4 bytes de datos + 1 byte de comprobación = 5 * 8 = 40
 
+ERR_NO_ERROR = 0
+ERR_MISSING_DATA = 1
+ERR_CRC = 2
+
+
 STATE_INIT_PULL_DOWN = 1
 STATE_INIT_PULL_UP = 2
 STATE_DATA_FIRST_PULL_DOWN = 3
@@ -40,27 +45,23 @@ import RPi.GPIO as GPIO                                                         
 
 
 class DHT11Result:
-    'DHT11 sensor result returned by DHT11.read() method'
+    # Clase resultado devuelto por el método dht11.leer()
 
-    ERR_NO_ERROR = 0
-    ERR_MISSING_DATA = 1
-    ERR_CRC = 2
+    error = ERR_NO_ERROR
+    temperatura = -1
+    humedad = -1
 
-    error_code = ERR_NO_ERROR
-    temperature = -1
-    humidity = -1
+    def __init__(self, error, temperatura, humedad):
+        self.error = error
+        self.temperatura = temperatura
+        self.humedad = humedad
 
-    def __init__(self, error_code, temperature, humidity):
-        self.error_code = error_code
-        self.temperature = temperature
-        self.humidity = humidity
-
-    def is_valid(self):
-        return self.error_code == DHT11Result.ERR_NO_ERROR
+    def valido(self):
+        return self.error == DHT11Result.ERR_NO_ERROR
 
 
 class DHT11:
-# Clase de lectura del sensor DHT11 para Raspberry Pi
+    # Clase de lectura del sensor DHT11 para Raspberry Pi
 
     _sensor = 0
 
@@ -261,3 +262,18 @@ class DHT11:
 
             else:
                 return DHT11Result(DHT11Result.ERR_NO_ERROR, bytes[2], bytes[0])
+
+def main(argv = sys.argv):
+    sensor = dht11(0)
+
+    resultado = sensor.leer()
+
+    while not resultado.valido():
+        resultado = sensor.leer()
+
+        sleep(config.PAUSA)
+
+    print('Temperatura: ', resultado.temperatura, 'º C, humedad relativa: ', resultado.humedad, '%', sep = '')
+
+if __name__ == '__main__':
+    main(sys.argv)
