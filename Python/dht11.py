@@ -268,6 +268,9 @@ def main(argv = sys.argv):
         sensor = dht11(0)
 
     except AttributeError:
+        print('El sensor selccionado no es válido')
+
+    else:
         resultado = sensor.leer()
 
         while not resultado.valido():
@@ -276,9 +279,6 @@ def main(argv = sys.argv):
             sleep(config.PAUSA)
 
         print('Temperatura: ', resultado.temperatura, 'º C, humedad relativa: ', resultado.humedad, '%', sep = '')
-
-    else:
-        print('El sensor selccionado no es válido')
 
 
 if __name__ == '__main__':
