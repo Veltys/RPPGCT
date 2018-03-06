@@ -195,7 +195,7 @@ class app(object):
                 else:
                     GPIO.setmode(GPIO.BCM)                                      # Establecemos el sistema de numeración BCM
 
-                    GPIO.setwarnings(DEBUG)                                     # De esta forma no alertará de los problemas
+                    GPIO.setwarnings(DEBUG)                                     # De esta forma alertará de los problemas sólo cuando se esté depurando
 
                     for i in range(len(self._config.GPIOS)):                    # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
                         if DEBUG:
