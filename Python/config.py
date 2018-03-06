@@ -35,14 +35,11 @@ class config_global:
                       }
 '''
 
-class dht11_servidor_config(config_global):
-    GPIOS_1Wire     = [(16,               'Sonda DHT11 de pruebas'  ),
+class dht11_config(config_global):
+    GPIOS           = [(16,               'Sonda DHT11 de pruebas'  ),
                       ]
 
     PAUSA           = 60
-
-    senyales        = {'SIGTERM': 'sig_cerrar',
-                      }
 
 
 ''' class domotica_cliente_config(config_global):

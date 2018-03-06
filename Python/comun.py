@@ -214,17 +214,6 @@ class app(object):
                             GPIO.setup(self._config.GPIOS[i][0], GPIO.IN, pull_up_down = GPIO.PUD_DOWN) 
                             self._config.GPIOS[i] = list(self._config.GPIOS[i]) # En el caso de tener un pin GPIO de entrada, se necesitará transformar en lista la tupla, ya que es posible que haga falta modificar su contenido
 
-                try:
-                    self._config.GPIOS_1Wire
-
-                except AttributeError:
-                    pass
-
-                else:
-                    GPIO.setmode(GPIO.BCM)                                      # Establecemos el sistema de numeración BCM
-
-                    GPIO.setwarnings(DEBUG)                                     # De esta forma no alertará de los problemas
-
                 return 0
     
             else:
