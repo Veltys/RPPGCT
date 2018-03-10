@@ -155,6 +155,9 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.6.2:    
     - Arreglado fallo en la sangría en **README.md**.
     - Añadida la sección de *Otras licencias* en **README.md**.
+- 0.7.0:
+    - Implementado un sistema de lectura de sondas de temperatura DHT11 en **dht11.py**.
+    - Añadida otra licencia en la sección de *Otras licencias* en **README.md**.
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
@@ -167,6 +170,7 @@ Colección de utilidades varias para el control GPIO en Python
 * A *Alberto Vela*, por [el minitutorial de sockets en la web *developeando.net*](http://developeando.net/sockets-python/), el cual me ha permitido adaptar mis conocimientos en C / C++ en este campo en **domotica_cliente.py** y **domotica_servidor.py**.
 * A *Barlan*, por [la entrada sobre sockets en Python 3.4 en el foro de *underc0de.org*](https://underc0de.org/foro/python/(mini-guia)-sockets-en-python-(3-4)/), la cual me ha permitido adaptar mis conocimientos en C / C++ en este campo en **domotica_cliente.py** y **domotica_servidor.py**.
 * A *Pherkad*, por [la sección de "Control del acceso a los recursos. Bloqueos" en la web *python-para-impacientes.blogspot.com.es*](http://python-para-impacientes.blogspot.com.es/2016/12/threading-programacion-con-hilos-y-ii.html), la cual me ha evitado dolores de cabeza variados en **domotica_servidor.py**.
+* A *szazo*, por [su implementación de la lectura de la sonda de temperatura DHT11 en Python](https://github.com/szazo/DHT11_Python), la cuál he utilizado (adaptado) en mi **dht11.py**.
 
 ## Por hacer (*TODO*)
 - [x] Crear una rama (*branch*) de *testing*.
@@ -433,3 +437,26 @@ d. Nothing in this Public License constitutes or may be interpreted as a limitat
 > Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
 >
 > Creative Commons may be contacted at creativecommons.org
+
+### MIT License (**dht11.py**)
+MIT License
+
+Copyright (c) 2016 Zoltan Szarvas
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
