@@ -5,8 +5,8 @@
 # Title         : domotica_cliente.py
 # Description   : Parte cliente del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 02-12-2017
-# Version       : 1.1.2
+# Date          : 06-03-2018
+# Version       : 1.1.3
 # Usage         : python3 domotica_cliente.py [commands]
 # Notes         : Parte cliente del sistema en el que se gestionarán pares de puertos GPIO
 
@@ -34,22 +34,14 @@ import socket                                                                   
 
 
 class domotica_cliente(comun.app):
+    _argumentos = []
+
+
     def __init__(self, config, argumentos):
         super().__init__(config, False)
 
         self._argumentos = argumentos
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-
-    def _comprobar_lista_GPIOS(self):
-        try:
-            self._lista_GPIOS
-
-        except AttributeError:
-            return False
-
-        else:
-            return True
 
 
     def __comando(self):
@@ -182,6 +174,17 @@ class domotica_cliente(comun.app):
 
         else:
             print('Error: Imposible interaccionar con el puerto GPIO solicitado, no ' + self.estado(self._estado + 1), file = sys.stderr)
+
+
+    def _comprobar_lista_GPIOS(self):
+        try:
+            self._lista_GPIOS
+
+        except AttributeError:
+            return False
+
+        else:
+            return True
 
 
     def bucle(self):

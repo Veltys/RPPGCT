@@ -5,20 +5,20 @@
 # Title         : config.py
 # Description   : Módulo configurador para ser importado en el resto de módulos o sistemas que lo necesiten
 # Author        : Veltys
-# Date          : 02-12-2017
-# Version       : 1.5.0
+# Date          : 07-03-2018
+# Version       : 1.6.0
 # Usage         : import config | from config import <clase>
 # Notes         : A título ilustrativo, a se ofrece una configuración por defecto (la mía, para ser exactos)
 
 
 class config_global:
-    # Configuración común
+# Configuración común
 
     IP_DEP_REMOTA   = '192.168.0.4'                                             # IP del servidor de depuración
 
 
 ''' class cpu_config(config_global):
-    # Configuración del sistema de CPU
+# Configuración del sistema de CPU
 
     GPIOS           = [(26, True,  True , 'Verde'                   ),          # GPIOS contiene ternas de datos en formato lista:
                        (19, True,  True , 'Amarillo'                ),          # el primer elemento será el número (BCM) de puerto GPIO a manipular,
@@ -34,6 +34,13 @@ class config_global:
                        'SIGUSR2': 'sig_apagado',
                       }
 '''
+
+class dht11_config(config_global):
+    GPIOS           = [(16,               'Sonda DHT11 de pruebas'  ),
+                      ]
+
+    PAUSA           = 60
+
 
 ''' class domotica_cliente_config(config_global):
     puerto          = 4710                                                      # El puerto 4710 ha sido escogido arbitrariamente por estar libre, según la IANA:
@@ -89,7 +96,7 @@ class internet_config(config_global):
     servidor        = 'localhost'
 '''
 
-''' class temperaturas_config(config_global):
+''' class temperatura_config(config_global):
     COLORES         = [(0.0, 0.0, 1.0, 0.0),                                    # COLORES contiene una matriz de 4 x 4 que, por columnas, representa cada led y, por filas, la etapa de temperatura
                        (0.0, 1.0, 0.0, 0.0),
                        (1.0, 0.6, 0.0, 0.0),
