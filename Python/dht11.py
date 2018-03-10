@@ -77,7 +77,7 @@ class dht11:
         return bytess
 
 
-    def __calcular_bits(self, longitudes):
+    def _calcular_bits(self, longitudes):
         mas_corta = 1000
         mas_larga = 0
 
@@ -106,7 +106,7 @@ class dht11:
         return bits
 
 
-    def __calcular_checksum(self, bytess):
+    def _calcular_checksum(self, bytess):
         return bytess[0] + bytess[1] + bytess[2] + bytess[3] & 255
 
 
