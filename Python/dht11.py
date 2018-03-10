@@ -12,7 +12,7 @@
 # Notes             : Este módulo está pensado para ser llamado desde otros módulos y no directamente, aunque si es llamado de esta forma, también hará su trabajo e informará al usuario de los valores del sensor
 
 
-DEBUG = False
+DEBUG = True
 DEBUG_REMOTO = True
 LONGITUD_DATOS = 40                                                             # 4 bytes de datos + 1 byte de comprobación = 5 * 8 = 40
 
@@ -278,7 +278,7 @@ def main(argv = sys.argv):
         while not resultado.valido():
             resultado = sensor.leer()
 
-            sleep(config.PAUSA)
+            sleep(0.5)
 
         print('Temperatura: ', resultado.temperatura, 'º C, humedad relativa: ', resultado.humedad, '%', sep = '')
 
