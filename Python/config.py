@@ -11,15 +11,11 @@
 # Notes         : A título ilustrativo, a se ofrece una configuración por defecto (la mía, para ser exactos)
 
 
-class config_global:
-# Configuración común
+class config_global:                                                            # Configuración común
 
     IP_DEP_REMOTA   = '192.168.0.4'                                             # IP del servidor de depuración
 
-
-''' class cpu_config(config_global):
-# Configuración del sistema de CPU
-
+''' class cpu_config(config_global):                                            # Configuración del sistema de CPU
     GPIOS           = [(26, True,  True , 'Verde'                   ),          # GPIOS contiene ternas de datos en formato lista:
                        (19, True,  True , 'Amarillo'                ),          # el primer elemento será el número (BCM) de puerto GPIO a manipular,
                        (13, True,  True , 'Naranja'                 ),          # el segundo, el modo (True para salida, False para entrada)
