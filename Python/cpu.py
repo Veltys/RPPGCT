@@ -36,7 +36,6 @@ except ImportError:
     sys.exit(errno.ENOENT)
 
 from time import sleep                                                          # Para hacer pausas
-from shlex import split                                                         # Manejo de cadenas
 import comun                                                                    # Funciones comunes a varios sistemas
 
 if DEBUG_REMOTO:

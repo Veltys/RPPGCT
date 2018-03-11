@@ -155,6 +155,7 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.6.2:    
     - Arreglado fallo en la sangría en **README.md**.
     - Añadida la sección de *Otras licencias* en **README.md**.
+    - Eliminado *import* innecesario en **cpu.py**.
 - 0.7.0:
     - Implementado un sistema de lectura de sondas de temperatura DHT11 en **dht11.py**.
     - Añadida otra licencia en la sección de *Otras licencias* en **README.md**.
