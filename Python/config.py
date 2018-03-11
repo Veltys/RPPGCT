@@ -39,6 +39,7 @@ class dht11_config(config_global):
 
     PAUSA           = 0.5
 
+
 class domotica_cliente_config(config_global):
     puerto          = 4710                                                      # El puerto 4710 ha sido escogido arbitrariamente por estar libre, según la IANA:
                                                                                 # https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?&page=85
