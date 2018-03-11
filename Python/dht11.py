@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from distutils.log import debug
 
 
 # Title             : dht11.py
@@ -261,30 +260,42 @@ def main(argv = sys.argv):
     GPIO.setmode(GPIO.BCM)                                                      # Establecemos el sistema de numeración BCM
     GPIO.setwarnings(DEBUG)                                                     # De esta forma alertará de los problemas sólo cuando se esté depurando
 
-    try:
-        sensor = dht11(0)
+    for i in len(config.GPIOS):
+        try:
+            sensor = dht11(i)
 
-    except AttributeError:
-        print('El sensor selccionado no es válido')
+        except AttributeError:
+            print('Sensor', i, '-> No válido',)
 
-    else:
-        resultado = sensor.leer()
-
-        while not resultado.valido():
-            if DEBUG:
-                print('Resultado no válido: ', end = '')
-
-                if resultado.error == ERR_MISSING_DATA:
-                    print('sin datos')
-    
-                else: # resultado.error == ERR_CRC
-                    print('error de redundancia cíclica')
-
-            sleep(config.PAUSA)
-
+        else:
             resultado = sensor.leer()
 
-        print('Temperatura: ', resultado.temperatura, 'º C, humedad relativa: ', resultado.humedad, '%', sep = '')
+            j = 0
+
+            while not resultado.valido() or j < config.LIMITE:
+                if DEBUG:
+                    print('Sensor', i, '-> Resultado no válido:', end = '', sep = ' ')
+
+                    if resultado.error == ERR_MISSING_DATA:
+                        print('sin datos')
+
+                    else: # resultado.error == ERR_CRC
+                        print('error de redundancia cíclica')
+
+                sleep(config.PAUSA)
+
+                resultado = sensor.leer()
+
+                j = j + 1
+
+            if resultado.valido():
+                print('Sensor ', i, ' -> temperatura: ', resultado.temperatura, 'º C, humedad relativa: ', resultado.humedad, '%', sep = '')
+
+            else:
+                print('Sensor', i, '-> Imposible obtener un resultado válido en', config.LIMITE, 'intentos')
+
+        finally:
+            del sensor
 
         GPIO.cleanup()                                                          # Devolvemos los pines a su estado inicial
 if __name__ == '__main__':
