@@ -39,6 +39,12 @@ class dht11_config(config_global):
 
     PAUSA           = 0.5
 
+
+class domotica_cliente_config(config_global):
+    puerto          = 4710                                                      # El puerto 4710 ha sido escogido arbitrariamente por estar libre, según la IANA:
+                                                                                # https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?&page=85
+
+
 class domotica_servidor_config(domotica_cliente_config):
     GPIOS           = [(22, False, False, 'Botón reinicio router'   ),          # En este caso, los puertos GPIO serán dados por pares, siendo el primer elemento el que hará de pulsador y el segundo sobre el que se operará
                        ( 4, True,  False, 'Relé reinicio router'    ),
