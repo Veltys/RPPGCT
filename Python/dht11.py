@@ -264,7 +264,7 @@ def main(argv = sys.argv):
         try:
             sensor = dht11(i)
 
-        except AttributeError:
+        except IndexError:
             print('Sensor', i, '-> No válido',)
 
         else:
@@ -294,7 +294,6 @@ def main(argv = sys.argv):
             else:
                 print('Sensor', i, '-> Imposible obtener un resultado válido en', config.LIMITE, 'intentos')
 
-        finally:
             del sensor
 
         GPIO.cleanup()                                                          # Devolvemos los pines a su estado inicial
