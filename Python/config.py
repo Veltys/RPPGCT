@@ -12,8 +12,8 @@
 
 
 class config_global:                                                            # Configuración común
-
     IP_DEP_REMOTA   = '192.168.0.4'                                             # IP del servidor de depuración
+
 
 ''' class cpu_config(config_global):                                            # Configuración del sistema de CPU
     GPIOS           = [(26, True,  True , 'Verde'                   ),          # GPIOS contiene ternas de datos en formato lista:
@@ -101,9 +101,9 @@ class internet_config(config_global):
 
     FRECUENCIA      = 60                                                        # FRECUENCIA contiene la frecuencia (en herzios) de refresco de los leds
 
-    GPIOS           = [(16, True,  True , 'Rojo'                    ),
-                       (20, True,  True , 'Verde'                   ),
-                       (21, True,  True , 'Azul'                    ),
+    GPIOS           = [(16, True,  True , 'Frío'                    ),
+                       (20, True,  True , 'Intermedio'              ),
+                       (21, True,  True , 'Caliente'                ),
                        (12, True,  True , 'Alarma'                  ),
                       ]
 
