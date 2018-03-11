@@ -11,7 +11,6 @@
 # Usage             : python3 dht11.py o from dht11 import
 # Notes             : Este módulo está pensado para ser llamado desde otros módulos y no directamente, aunque si es llamado de esta forma, también hará su trabajo e informará al usuario de los valores del sensor
 
-
 DEBUG = True
 DEBUG_REMOTO = True
 LONGITUD_DATOS = 40                                                             # 4 bytes de datos + 1 byte de comprobación = 5 * 8 = 40
@@ -26,7 +25,6 @@ STATE_INIT_PULL_UP = 2
 STATE_DATA_FIRST_PULL_DOWN = 3
 STATE_DATA_PULL_UP = 4
 STATE_DATA_PULL_DOWN = 5
-
 
 import errno                                                                    # Códigos de error
 import sys                                                                      # Funcionalidades varias del sistema
@@ -46,9 +44,7 @@ from time import sleep                                                          
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 
-class dht11:
-    # Clase de gestión del sensor DHT11 para Raspberry Pi
-
+class dht11:                                                                    # Clase de gestión del sensor DHT11 para Raspberry Pi
     _sensor = 0
 
     def __init__(self, sensor):
@@ -243,9 +239,7 @@ class dht11:
                 return resultado_dht11(ERR_NO_ERROR, bytess[2], bytess[0])
 
 
-class resultado_dht11:
-    # Clase resultado devuelto por el método dht11.leer()
-
+class resultado_dht11:                                                          # Clase resultado devuelto por el método dht11.leer()
     error = ERR_NO_ERROR
     temperatura = -1
     humedad = -1
@@ -276,9 +270,17 @@ def main(argv = sys.argv):
         resultado = sensor.leer()
 
         while not resultado.valido():
-            resultado = sensor.leer()
+            print('Resultado no válido:', end = '')
+
+            if resultado.error == ERR_MISSING_DATA:
+                print('sin datos')
+
+            else: # resultado.error == ERR_CRC
+                print('error de redundancia cíclica')
 
             sleep(0.5)
+
+            resultado = sensor.leer()
 
         print('Temperatura: ', resultado.temperatura, 'º C, humedad relativa: ', resultado.humedad, '%', sep = '')
 
