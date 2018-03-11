@@ -32,7 +32,7 @@ class config_global:                                                            
 '''
 
 class dht11_config(config_global):
-    GPIOS           = [(16,               'Sonda DHT11 de pruebas'  ),
+    GPIOS           = [(25,               'Sonda DHT11 de pruebas'  ),
                       ]
 
     PAUSA           = 60
