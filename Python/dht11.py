@@ -6,14 +6,13 @@
 # Description       : Módulo auxiliar para la gestión de la sonda de temperatura DHT11
 # Author            : Veltys
 # Original author   : szazo
-# Date              : 05-03-2018
+# Date              : 11-03-2018
 # Version           : 1.0.0
 # Usage             : python3 dht11.py o from dht11 import
 # Notes             : Este módulo está pensado para ser llamado desde otros módulos y no directamente, aunque si es llamado de esta forma, también hará su trabajo e informará al usuario de los valores del sensor
 
-
-DEBUG = True
-DEBUG_REMOTO = True
+DEBUG = False
+DEBUG_REMOTO = False
 LONGITUD_DATOS = 40                                                             # 4 bytes de datos + 1 byte de comprobación = 5 * 8 = 40
 
 ERR_NO_ERROR = 0
@@ -26,7 +25,6 @@ STATE_INIT_PULL_UP = 2
 STATE_DATA_FIRST_PULL_DOWN = 3
 STATE_DATA_PULL_UP = 4
 STATE_DATA_PULL_DOWN = 5
-
 
 import errno                                                                    # Códigos de error
 import sys                                                                      # Funcionalidades varias del sistema
@@ -46,9 +44,7 @@ from time import sleep                                                          
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 
-class dht11:
-    # Clase de gestión del sensor DHT11 para Raspberry Pi
-
+class dht11:                                                                    # Clase de gestión del sensor DHT11 para Raspberry Pi
     _sensor = 0
 
     def __init__(self, sensor):
@@ -243,9 +239,7 @@ class dht11:
                 return resultado_dht11(ERR_NO_ERROR, bytess[2], bytess[0])
 
 
-class resultado_dht11:
-    # Clase resultado devuelto por el método dht11.leer()
-
+class resultado_dht11:                                                          # Clase resultado devuelto por el método dht11.leer()
     error = ERR_NO_ERROR
     temperatura = -1
     humedad = -1
@@ -266,22 +260,42 @@ def main(argv = sys.argv):
     GPIO.setmode(GPIO.BCM)                                                      # Establecemos el sistema de numeración BCM
     GPIO.setwarnings(DEBUG)                                                     # De esta forma alertará de los problemas sólo cuando se esté depurando
 
-    try:
-        sensor = dht11(0)
+    for i in range(len(config.GPIOS)):
+        try:
+            sensor = dht11(i)
 
-    except AttributeError:
-        print('El sensor selccionado no es válido')
+        except IndexError:
+            print('Sensor', i, '-> No válido',)
 
-    else:
-        resultado = sensor.leer()
-
-        while not resultado.valido():
+        else:
             resultado = sensor.leer()
 
-            sleep(0.5)
+            j = 0
 
-        print('Temperatura: ', resultado.temperatura, 'º C, humedad relativa: ', resultado.humedad, '%', sep = '')
+            while not resultado.valido() and j < config.LIMITE:
+                if DEBUG:
+                    print('Sensor', i, '-> Resultado no válido:', end = '', sep = ' ')
 
+                    if resultado.error == ERR_MISSING_DATA:
+                        print('sin datos')
 
+                    else: # resultado.error == ERR_CRC
+                        print('error de redundancia cíclica')
+
+                sleep(config.PAUSA)
+
+                resultado = sensor.leer()
+
+                j = j + 1
+
+            if resultado.valido():
+                print('Sensor ', i, ' -> temperatura: ', resultado.temperatura, 'º C, humedad relativa: ', resultado.humedad, '%', sep = '')
+
+            else:
+                print('Sensor', i, '-> Imposible obtener un resultado válido en', config.LIMITE, 'intentos')
+
+            del sensor
+
+        GPIO.cleanup()                                                          # Devolvemos los pines a su estado inicial
 if __name__ == '__main__':
     main(sys.argv)

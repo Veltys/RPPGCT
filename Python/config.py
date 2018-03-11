@@ -32,11 +32,12 @@ class cpu_config(config_global):                                                
 
 
 class dht11_config(config_global):
-    GPIOS           = [(16,               'Sonda DHT11 de pruebas'  ),
+    GPIOS           = [(25,               'Sonda DHT11 de pruebas'  ),
                       ]
 
-    PAUSA           = 60
+    LIMITE          = 10
 
+    PAUSA           = 0.5
 
 class domotica_cliente_config(config_global):
     puerto          = 4710                                                      # El puerto 4710 ha sido escogido arbitrariamente por estar libre, según la IANA:
@@ -98,9 +99,9 @@ class temperatura_config(config_global):
 
     FRECUENCIA      = 60                                                        # FRECUENCIA contiene la frecuencia (en herzios) de refresco de los leds
 
-    GPIOS           = [(16, True,  True , 'Rojo'                    ),
-                       (20, True,  True , 'Verde'                   ),
-                       (21, True,  True , 'Azul'                    ),
+    GPIOS           = [(16, True,  True , 'Frío'                    ),
+                       (20, True,  True , 'Intermedio'              ),
+                       (21, True,  True , 'Caliente'                ),
                        (12, True,  True , 'Alarma'                  ),
                       ]
 
