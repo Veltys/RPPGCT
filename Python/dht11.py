@@ -278,7 +278,7 @@ def main(argv = sys.argv):
             else: # resultado.error == ERR_CRC
                 print('error de redundancia cíclica')
 
-            sleep(2)
+            sleep(0.5)
 
             resultado = sensor.leer()
 
