@@ -60,7 +60,10 @@ class domotica_cliente(comun.app):
         if self._estado >= 2:
             mensaje = self._enviar_y_recibir(comando, False)
 
-            if mensaje[0:4].lower() == 'info':
+            if mensaje == False:
+                return ''
+
+            elif mensaje[0:4].lower() == 'info':
                 return mensaje[6:]
 
             else:
@@ -74,7 +77,10 @@ class domotica_cliente(comun.app):
         if self._estado >= 2:
             mensaje = self._enviar_y_recibir(comando)
 
-            if mensaje[0:4] == 'info' and (int(mensaje[6:]) == 0 or int(mensaje[6:]) == 1):
+            if mensaje == False:
+                return -1
+
+            elif mensaje[0:4] == 'info' and (int(mensaje[6:]) == 0 or int(mensaje[6:]) == 1):
                 return mensaje[6:]
 
             else:
@@ -87,20 +93,27 @@ class domotica_cliente(comun.app):
     def __listar(self):
         if self._estado >= 1:
             self._lista_GPIOS = self._enviar_y_recibir('listar')
-            self._lista_GPIOS = self._lista_GPIOS[6:-1]
-            self._lista_GPIOS = self._lista_GPIOS.split(' ')
 
-            if self._comprobar_lista_GPIOS():
-                self._estado = 2
+            if self._lista_GPIOS == False:
+                print('Error: Imposible solicitar una lista de puertos GPIO, el servidor no responde', file = sys.stderr)
 
-                for i in range(len(self._lista_GPIOS)):
-                    aux = self._lista_GPIOS[i]
-                    self._lista_GPIOS[i] = list()
-                    self._lista_GPIOS[i].append(aux)
-                    self._lista_GPIOS[i].append(self.__estado('estado ' + aux))
-                    self._lista_GPIOS[i].append(self.__describir('describir ' + aux))
+                return False
 
-            return True
+            else:
+                self._lista_GPIOS = self._lista_GPIOS[6:-1]
+                self._lista_GPIOS = self._lista_GPIOS.split(' ')
+
+                if self._comprobar_lista_GPIOS():
+                    self._estado = 2
+
+                    for i in range(len(self._lista_GPIOS)):
+                        aux = self._lista_GPIOS[i]
+                        self._lista_GPIOS[i] = list()
+                        self._lista_GPIOS[i].append(aux)
+                        self._lista_GPIOS[i].append(self.__estado('estado ' + aux))
+                        self._lista_GPIOS[i].append(self.__describir('describir ' + aux))
+
+                return True
 
         else:
             print('Error: Imposible solicitar una lista de puertos GPIO, no ' + self.estado(self._estado + 1), file = sys.stderr)
@@ -160,7 +173,10 @@ class domotica_cliente(comun.app):
         if self._estado >= 2:
             mensaje = self._enviar_y_recibir(comando)
 
-            if mensaje[:2] == 'ok':
+            if mensaje == False:
+                print('Error: Imposible interaccionar con el puerto GPIO solicitado, el servidor no responde', file = sys.stderr)
+
+            elif mensaje[:2] == 'ok':
                 print('Correcto: El servidor informa de que el comando "' + comando + '" ha sido ' + mensaje[4:], sep = '')
 
             elif mensaje[:4] == 'info' and (int(mensaje[5:]) == 0 or int(mensaje[5:]) == 1):
