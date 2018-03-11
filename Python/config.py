@@ -35,7 +35,7 @@ class dht11_config(config_global):
     GPIOS           = [(25,               'Sonda DHT11 de pruebas'  ),
                       ]
 
-    PAUSA           = 60
+    PAUSA           = 0.5
 
 
 ''' class domotica_cliente_config(config_global):

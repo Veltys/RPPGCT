@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from distutils.log import debug
 
 
 # Title             : dht11.py
 # Description       : Módulo auxiliar para la gestión de la sonda de temperatura DHT11
 # Author            : Veltys
 # Original author   : szazo
-# Date              : 05-03-2018
+# Date              : 11-03-2018
 # Version           : 1.0.0
 # Usage             : python3 dht11.py o from dht11 import
 # Notes             : Este módulo está pensado para ser llamado desde otros módulos y no directamente, aunque si es llamado de esta forma, también hará su trabajo e informará al usuario de los valores del sensor
 
-DEBUG = True
+DEBUG = False
 DEBUG_REMOTO = False
 LONGITUD_DATOS = 40                                                             # 4 bytes de datos + 1 byte de comprobación = 5 * 8 = 40
 
@@ -270,20 +271,21 @@ def main(argv = sys.argv):
         resultado = sensor.leer()
 
         while not resultado.valido():
-            print('Resultado no válido: ', end = '')
+            if DEBUG:
+                print('Resultado no válido: ', end = '')
 
-            if resultado.error == ERR_MISSING_DATA:
-                print('sin datos')
+                if resultado.error == ERR_MISSING_DATA:
+                    print('sin datos')
+    
+                else: # resultado.error == ERR_CRC
+                    print('error de redundancia cíclica')
 
-            else: # resultado.error == ERR_CRC
-                print('error de redundancia cíclica')
-
-            sleep(0.5)
+            sleep(config.PAUSA)
 
             resultado = sensor.leer()
 
         print('Temperatura: ', resultado.temperatura, 'º C, humedad relativa: ', resultado.humedad, '%', sep = '')
 
-
+        GPIO.cleanup()                                                          # Devolvemos los pines a su estado inicial
 if __name__ == '__main__':
     main(sys.argv)
