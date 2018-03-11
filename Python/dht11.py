@@ -260,7 +260,7 @@ def main(argv = sys.argv):
     GPIO.setmode(GPIO.BCM)                                                      # Establecemos el sistema de numeración BCM
     GPIO.setwarnings(DEBUG)                                                     # De esta forma alertará de los problemas sólo cuando se esté depurando
 
-    for i in len(config.GPIOS):
+    for i in range(len(config.GPIOS)):
         try:
             sensor = dht11(i)
 
