@@ -47,11 +47,12 @@ class domotica_cliente(comun.app):
     def __comando(self):
         if len(self._argumentos) == 1:
             comando = input('Introduzca un comando: ')
-            comando = comando.lower()
 
         else:
             comando = self._argumentos[1]
             self._argumentos.pop(1)
+
+        comando = comando.lower()
 
         return comando
 
