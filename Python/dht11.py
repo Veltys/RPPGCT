@@ -270,7 +270,7 @@ def main(argv = sys.argv):
         resultado = sensor.leer()
 
         while not resultado.valido():
-            print('Resultado no válido:', end = '')
+            print('Resultado no válido: ', end = '')
 
             if resultado.error == ERR_MISSING_DATA:
                 print('sin datos')
@@ -278,7 +278,7 @@ def main(argv = sys.argv):
             else: # resultado.error == ERR_CRC
                 print('error de redundancia cíclica')
 
-            sleep(0.5)
+            sleep(2)
 
             resultado = sensor.leer()
 
