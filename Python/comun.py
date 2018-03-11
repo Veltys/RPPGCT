@@ -87,7 +87,10 @@ class app(object):
 
                 mensaje = self._enviar_y_recibir('hola ' + str(self._VERSION_PROTOCOLO))
 
-                if(mensaje[:2] == 'ok'):                                        # Si el servidor nos da un ok, significa que la versión del protocolo que tenemos es la adecuada
+                if mensaje == False:                                            # Si hay algún fallo al conectar con el servidor, simplemente informaremos de este fallo
+                    return False
+
+                elif(mensaje[:2] == 'ok'):                                      # Si el servidor nos da un ok, significa que la versión del protocolo que tenemos es la adecuada
                     return True
 
                 elif(mensaje[:4] == 'info'):                                    # Si el servidor nos da un info, significa que usaremos una versión anterior
@@ -128,14 +131,9 @@ class app(object):
                 - Si sí, recibe el mensaje y lo retorna
         '''
 
-        try:
+        if self._socket != False:
             self._socket.send(comando.encode('utf-8'))
 
-        # FIXME: Nueva comprobación
-        except AttributeError:
-            return False
-
-        else:
             mensaje = self._socket.recv(1024)
             mensaje = mensaje.decode('utf-8')
 
@@ -143,6 +141,9 @@ class app(object):
                 mensaje = mensaje.lower()
 
             return mensaje
+
+        else:
+            return False
 
 
     def _sig_apagado(self, signum, frame):
