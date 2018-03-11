@@ -272,7 +272,7 @@ def main(argv = sys.argv):
 
             j = 0
 
-            while not resultado.valido() or j < config.LIMITE:
+            while not resultado.valido() and j < config.LIMITE:
                 if DEBUG:
                     print('Sensor', i, '-> Resultado no válido:', end = '', sep = ' ')
 
