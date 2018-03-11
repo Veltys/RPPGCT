@@ -15,7 +15,7 @@ import errno                                                                    
 import sys                                                                      # Funcionalidades varias del sistema
 
 try:
-    import config                                                                 # Configuración
+    import config                                                               # Configuración
 
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
