@@ -12,7 +12,7 @@
 # Notes             : Este módulo está pensado para ser llamado desde otros módulos y no directamente, aunque si es llamado de esta forma, también hará su trabajo e informará al usuario de los valores del sensor
 
 DEBUG = True
-DEBUG_REMOTO = True
+DEBUG_REMOTO = False
 LONGITUD_DATOS = 40                                                             # 4 bytes de datos + 1 byte de comprobación = 5 * 8 = 40
 
 ERR_NO_ERROR = 0
