@@ -5,21 +5,17 @@
 # Title         : config.py
 # Description   : Módulo configurador para ser importado en el resto de módulos o sistemas que lo necesiten
 # Author        : Veltys
-# Date          : 02-12-2017
-# Version       : 1.5.0
+# Date          : 07-03-2018
+# Version       : 1.6.0
 # Usage         : import config | from config import <clase>
 # Notes         : A título ilustrativo, a se ofrece una configuración por defecto (la mía, para ser exactos)
 
 
-class config_global:
-    # Configuración común
-
+class config_global:                                                            # Configuración común
     IP_DEP_REMOTA   = '192.168.0.4'                                             # IP del servidor de depuración
 
 
-class cpu_config(config_global):
-    # Configuración del sistema de CPU
-
+class cpu_config(config_global):                                                # Configuración del sistema de CPU
     GPIOS           = [(26, True,  True , 'Verde'                   ),          # GPIOS contiene ternas de datos en formato lista:
                        (19, True,  True , 'Amarillo'                ),          # el primer elemento será el número (BCM) de puerto GPIO a manipular,
                        (13, True,  True , 'Naranja'                 ),          # el segundo, el modo (True para salida, False para entrada)
@@ -35,10 +31,13 @@ class cpu_config(config_global):
                       }
 
 
-class domotica_cliente_config(config_global):
-    puerto          = 4710                                                      # El puerto 4710 ha sido escogido arbitrariamente por estar libre, según la IANA:
-                                                                                # https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?&page=85
+class dht11_config(config_global):
+    GPIOS           = [(25,               'Sonda DHT11 de pruebas'  ),
+                      ]
 
+    LIMITE          = 10
+
+    PAUSA           = 0.5
 
 class domotica_servidor_config(domotica_cliente_config):
     GPIOS           = [(22, False, False, 'Botón reinicio router'   ),          # En este caso, los puertos GPIO serán dados por pares, siendo el primer elemento el que hará de pulsador y el segundo sobre el que se operará
@@ -98,9 +97,9 @@ class temperaturas_config(config_global):
 
     FRECUENCIA      = 60                                                        # FRECUENCIA contiene la frecuencia (en herzios) de refresco de los leds
 
-    GPIOS           = [(16, True,  True , 'Rojo'                    ),
-                       (20, True,  True , 'Verde'                   ),
-                       (21, True,  True , 'Azul'                    ),
+    GPIOS           = [(16, True,  True , 'Frío'                    ),
+                       (20, True,  True , 'Intermedio'              ),
+                       (21, True,  True , 'Caliente'                ),
                        (12, True,  True , 'Alarma'                  ),
                       ]
 

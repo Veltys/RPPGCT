@@ -8,7 +8,7 @@
 # Author            : Veltys
 # Date              : 02-07-2017
 # Version           : 2.0.3
-# Usage             : python3 internet.py
+# Usage             : python3 internet.py o from internet import hay_internet
 # Notes             : Se debe poder generar tráfico ICMP (ping), es decir, no debe ser bloqueado por un cortafuegos
 #                     Este módulo está pensado para ser llamado desde otros módulos y no directamente, aunque si es llamado de esta forma, también hará su trabajo e informará al usuario de si hay conexión a Internet
 
