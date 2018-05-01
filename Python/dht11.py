@@ -254,6 +254,41 @@ class resultado_dht11:                                                          
         return self.error == ERR_NO_ERROR
 
 
+def procesar_argumentos(argumentos):
+    res = []
+
+    if len(argv) == 1:
+        for i in range(4):
+            res.append(true)
+        
+    else:
+        if any('-i' in s for s in argv):
+            res.append(true)
+    
+        else:
+            res.append(false)
+    
+        if any('-t' in s for s in argv):
+            res.append(true)
+    
+        else:
+            res.append(false)
+    
+        if any('-h' in s for s in argv):
+            res.append(true)
+    
+        else:
+            res.append(false)
+    
+        if any('-u' in s for s in argv):
+            res.append(true)
+    
+        else:
+            res.append(false)
+
+    return res
+
+
 def main(argv = sys.argv):
     if DEBUG_REMOTO:
         pydevd.settrace(config.IP_DEP_REMOTA)
