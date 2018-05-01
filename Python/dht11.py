@@ -259,32 +259,32 @@ def procesar_argumentos(argumentos):
 
     if len(argumentos) == 1:
         for i in range(4):
-            res.append(true)
+            res.append(True)
         
     else:
         if any('-i' in s for s in argumentos):
-            res.append(true)
+            res.append(True)
     
         else:
-            res.append(false)
+            res.append(False)
     
         if any('-t' in s for s in argumentos):
-            res.append(true)
+            res.append(True)
     
         else:
-            res.append(false)
+            res.append(False)
     
         if any('-h' in s for s in argumentos):
-            res.append(true)
+            res.append(True)
     
         else:
-            res.append(false)
+            res.append(False)
     
         if any('-u' in s for s in argumentos):
-            res.append(true)
+            res.append(True)
     
         else:
-            res.append(false)
+            res.append(False)
 
     return res
 
