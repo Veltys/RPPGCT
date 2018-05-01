@@ -257,45 +257,51 @@ def main(argv = sys.argv):
     if DEBUG_REMOTO:
         pydevd.settrace(config.IP_DEP_REMOTA)
 
-    GPIO.setmode(GPIO.BCM)                                                      # Establecemos el sistema de numeración BCM
-    GPIO.setwarnings(DEBUG)                                                     # De esta forma alertará de los problemas sólo cuando se esté depurando
-
-    for i in range(len(config.GPIOS)):
-        try:
-            sensor = dht11(i)
-
-        except IndexError:
-            print('Sensor', i, '-> No válido',)
+    if(len(argv) != 2 or argv[1] != '-h'):
+        GPIO.setmode(GPIO.BCM)                                                      # Establecemos el sistema de numeración BCM
+        GPIO.setwarnings(DEBUG)                                                     # De esta forma alertará de los problemas sólo cuando se esté depurando
+    
+        for i in range(len(config.GPIOS)):
+            try:
+                sensor = dht11(i)
+    
+            except IndexError:
+                print('Sensor', i, '-> No válido',)
+    
+            else:
+                resultado = sensor.leer()
+    
+                j = 0
+    
+                while not resultado.valido() and j < config.LIMITE:
+                    if DEBUG:
+                        print('Sensor', i, '-> Resultado no válido:', end = '', sep = ' ')
+    
+                        if resultado.error == ERR_MISSING_DATA:
+                            print('sin datos')
+    
+                        else: # resultado.error == ERR_CRC
+                            print('error de redundancia cíclica')
+    
+                    sleep(config.PAUSA)
+    
+                    resultado = sensor.leer()
+    
+                    j = j + 1
+    
+                if resultado.valido():
+                    print('Sensor ', i, ' -> temperatura: ', resultado.temperatura, 'º C, humedad relativa: ', resultado.humedad, '%', sep = '')
+    
+                else:
+                    print('Sensor', i, '-> Imposible obtener un resultado válido en', config.LIMITE, 'intentos')
+    
+                del sensor
+    
+            GPIO.cleanup()                                                          # Devolvemos los pines a su estado inicial
 
         else:
-            resultado = sensor.leer()
+            print('Ayuda: ...')
 
-            j = 0
 
-            while not resultado.valido() and j < config.LIMITE:
-                if DEBUG:
-                    print('Sensor', i, '-> Resultado no válido:', end = '', sep = ' ')
-
-                    if resultado.error == ERR_MISSING_DATA:
-                        print('sin datos')
-
-                    else: # resultado.error == ERR_CRC
-                        print('error de redundancia cíclica')
-
-                sleep(config.PAUSA)
-
-                resultado = sensor.leer()
-
-                j = j + 1
-
-            if resultado.valido():
-                print('Sensor ', i, ' -> temperatura: ', resultado.temperatura, 'º C, humedad relativa: ', resultado.humedad, '%', sep = '')
-
-            else:
-                print('Sensor', i, '-> Imposible obtener un resultado válido en', config.LIMITE, 'intentos')
-
-            del sensor
-
-        GPIO.cleanup()                                                          # Devolvemos los pines a su estado inicial
 if __name__ == '__main__':
     main(sys.argv)
