@@ -299,8 +299,8 @@ def main(argv = sys.argv):
     
             GPIO.cleanup()                                                          # Devolvemos los pines a su estado inicial
 
-        else:
-            print('Ayuda: ...')
+    else:
+        print('Ayuda: ...')
 
 
 if __name__ == '__main__':
