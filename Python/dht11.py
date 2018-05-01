@@ -257,30 +257,30 @@ class resultado_dht11:                                                          
 def procesar_argumentos(argumentos):
     res = []
 
-    if len(argv) == 1:
+    if len(argumentos) == 1:
         for i in range(4):
             res.append(true)
         
     else:
-        if any('-i' in s for s in argv):
+        if any('-i' in s for s in argumentos):
             res.append(true)
     
         else:
             res.append(false)
     
-        if any('-t' in s for s in argv):
+        if any('-t' in s for s in argumentos):
             res.append(true)
     
         else:
             res.append(false)
     
-        if any('-h' in s for s in argv):
+        if any('-h' in s for s in argumentos):
             res.append(true)
     
         else:
             res.append(false)
     
-        if any('-u' in s for s in argv):
+        if any('-u' in s for s in argumentos):
             res.append(true)
     
         else:
