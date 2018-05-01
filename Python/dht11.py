@@ -6,10 +6,11 @@
 # Description       : Módulo auxiliar para la gestión de la sonda de temperatura DHT11
 # Author            : Veltys
 # Original author   : szazo
-# Date              : 11-03-2018
-# Version           : 1.0.0
+# Date              : 01-05-2018
+# Version           : 1.0.1
 # Usage             : python3 dht11.py o from dht11 import
-# Notes             : Este módulo está pensado para ser llamado desde otros módulos y no directamente, aunque si es llamado de esta forma, también hará su trabajo e informará al usuario de los valores del sensor
+# Notes             : Este módulo está pensado para ser llamado desde otros módulos o no directamente; si es llamado directamente, hará su trabajo e informará por pantalla de los valores del sensor
+
 
 DEBUG = False
 DEBUG_REMOTO = False
