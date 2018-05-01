@@ -293,7 +293,11 @@ def main(argv = sys.argv):
     if DEBUG_REMOTO:
         pydevd.settrace(config.IP_DEP_REMOTA)
 
-    if(len(argv) != 2 or argv[1] != '-h'):
+    argc = len(argv)
+
+    if argc != 2 or argv[1] != '-h':
+        argumentos = procesar_argumentos(argv)
+
         GPIO.setmode(GPIO.BCM)                                                      # Establecemos el sistema de numeración BCM
         GPIO.setwarnings(DEBUG)                                                     # De esta forma alertará de los problemas sólo cuando se esté depurando
     
@@ -326,8 +330,37 @@ def main(argv = sys.argv):
                     j = j + 1
     
                 if resultado.valido():
-                    print('Sensor ', i, ' -> temperatura: ', resultado.temperatura, 'º C, humedad relativa: ', resultado.humedad, '%', sep = '')
-    
+                    if argc < 1:
+                        if argumentos[0]:   # Información del sensor
+                            print('Sensor', i, '->', end = '')
+
+                        if argumentos[0] and argumentos[1]:
+                            print('t', end = '')
+
+                        else:
+                            print('T', end = '')
+
+                        if argumentos[1]:   # Temperatura
+                            print('emperatura:', resultado.temperatura, end = '')
+
+                        if argumentos[3]:   # Unidades
+                            print('º C', end = '')
+
+                        if argumentos[1] and argumentos[2]:
+                            print(',', sep = '')
+
+                        if (argumentos[0] and argumentos[2]) or (argumentos[1] and argumentos[2]):
+                            print('h', end = '')
+
+                        else:
+                            print('H', end = '')
+
+                        if argumentos[2]:   # Humedad
+                            print('umedad relativa:', resultado.humedad, end = '')
+
+                        if unidades:
+                            print('%')
+
                 else:
                     print('Sensor', i, '-> Imposible obtener un resultado válido en', config.LIMITE, 'intentos')
     
