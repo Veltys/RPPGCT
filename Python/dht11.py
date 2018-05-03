@@ -275,7 +275,7 @@ def procesar_argumentos(argumentos):
         else:
             res.append(False)
     
-        if any('-h' in s for s in argumentos):
+        if any('-m' in s for s in argumentos):
             res.append(True)
     
         else:
