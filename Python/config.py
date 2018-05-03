@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 
@@ -31,6 +31,7 @@ class config_global:                                                            
                       }
 '''
 
+
 class dht11_config(config_global):
     GPIOS           = [(25,               'Sonda DHT11 de pruebas'  ),
                       ]
@@ -44,6 +45,7 @@ class dht11_config(config_global):
     puerto          = 4710                                                      # El puerto 4710 ha sido escogido arbitrariamente por estar libre, según la IANA:
                                                                                 # https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?&page=85
 '''
+
 
 ''' class domotica_servidor_config(domotica_cliente_config):
     GPIOS           = [(22, False, False, 'Botón reinicio router'   ),          # En este caso, los puertos GPIO serán dados por pares, siendo el primer elemento el que hará de pulsador y el segundo sobre el que se operará
@@ -62,6 +64,7 @@ class dht11_config(config_global):
                        'SIGUSR1': 'sig_test',
                       }
 '''
+
 
 class internet_config(config_global):
     HOSTS           = ['***REMOVED***',                                  # HOSTS contiene los servidores a los cuales se les hará ping para comprobar si hay internet
@@ -93,6 +96,7 @@ class internet_config(config_global):
 
     servidor        = 'localhost'
 '''
+
 
 ''' class temperatura_config(config_global):
     COLORES         = [(0.0, 0.0, 1.0, 0.0),                                    # COLORES contiene una matriz de 4 x 4 que, por columnas, representa cada led y, por filas, la etapa de temperatura

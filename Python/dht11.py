@@ -6,7 +6,7 @@
 # Description       : Módulo auxiliar para la gestión de la sonda de temperatura DHT11
 # Author            : Veltys
 # Original author   : szazo
-# Date              : 01-05-2018
+# Date              : 03-05-2018
 # Version           : 1.0.1
 # Usage             : python3 dht11.py o from dht11 import
 # Notes             : Este módulo está pensado para ser llamado desde otros módulos o no directamente; si es llamado directamente, hará su trabajo e informará por pantalla de los valores del sensor
@@ -275,7 +275,7 @@ def procesar_argumentos(argumentos):
         else:
             res.append(False)
     
-        if any('-h' in s for s in argumentos):
+        if any('-m' in s for s in argumentos):
             res.append(True)
     
         else:
@@ -299,8 +299,8 @@ def main(argv = sys.argv):
     if argc != 2 or argv[1] != '-h':
         argumentos = procesar_argumentos(argv)
 
-        GPIO.setmode(GPIO.BCM)                                                      # Establecemos el sistema de numeración BCM
-        GPIO.setwarnings(DEBUG)                                                     # De esta forma alertará de los problemas sólo cuando se esté depurando
+        GPIO.setmode(GPIO.BCM)                                                  # Establecemos el sistema de numeración BCM
+        GPIO.setwarnings(DEBUG)                                                 # De esta forma alertará de los problemas sólo cuando se esté depurando
     
         for i in range(len(config.GPIOS)):
             try:
@@ -332,45 +332,60 @@ def main(argv = sys.argv):
                         j = j + 1
     
                 if DEBUG_SENSOR or resultado.valido():
-                    if argumentos[0]:   # Información del sensor
-                        print('Sensor', i, '->', end = '')
+                    if argumentos[0]:                                           # Información del sensor
+                        print('Sensor', i, '-> ', end = '')
+
+                    if argumentos[0] and not argumentos[1] and not argumentos[2]:
+                        print('operativo', end = '')
 
                     if argumentos[0] and argumentos[1]:
                         print('t', end = '')
 
-                    else:
+                    elif argumentos[1]:
                         print('T', end = '')
 
-                    if argumentos[1]:   # Temperatura
+                    if argumentos[1]:                                           # Temperatura
                         print('emperatura:', resultado.temperatura, end = '')
 
-                    if argumentos[3]:   # Unidades
+                    if argumentos[1] and argumentos[3]:                         # Unidades
                         print('º C', end = '')
 
                     if argumentos[1] and argumentos[2]:
-                        print(',', sep = '')
+                        print(', ', end = '')
 
-                    if (argumentos[0] and argumentos[2]) or (argumentos[1] and argumentos[2]):
+                    if (argumentos[0] or argumentos[1]) and argumentos[2]:
                         print('h', end = '')
 
-                    else:
+                    elif argumentos[2]:
                         print('H', end = '')
 
-                    if argumentos[2]:   # Humedad
+                    if argumentos[2]:                                           # Humedad
                         print('umedad relativa:', resultado.humedad, end = '')
 
-                    if unidades:
-                        print('%')
+                    if argumentos[2] and argumentos[3]:
+                        print('%', end = '')
+
+                    print("\n")
 
                 else:
                     print('Sensor', i, '-> Imposible obtener un resultado válido en', config.LIMITE, 'intentos')
     
                 del sensor
     
-            GPIO.cleanup()                                                          # Devolvemos los pines a su estado inicial
+            GPIO.cleanup()                                                      # Devolvemos los pines a su estado inicial
 
     else:
-        print('Ayuda: ...')
+        print('Uso:', argv[0], '''[opciones]
+
+Opciones:
+    -h    Muestra esta pantalla
+    -i    Información / listado de sensores
+    -t    Mostrar la temperatura
+    -m    Mostrar la humedad relativa
+    -u    Mostrar las unidades y no solamente la magnitud
+
+Nota: invocar el programa sin parámetros equivale a invocarlo con todos excepto -h (-i -t -m -u)
+''')
 
 
 if __name__ == '__main__':
