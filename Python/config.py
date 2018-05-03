@@ -12,7 +12,7 @@
 
 
 class config_global:                                                            # Configuración común
-    IP_DEP_REMOTA = '192.168.0.4'                                             # IP del servidor de depuración
+    IP_DEP_REMOTA   = '192.168.0.4'                                             # IP del servidor de depuración
 
 
 ''' class cpu_config(config_global):                                            # Configuración del sistema de CPU
@@ -64,7 +64,7 @@ class dht11_config(config_global):
 '''
 
 class internet_config(config_global):
-    HOSTS = ['***REMOVED***',                                  # HOSTS contiene los servidores a los cuales se les hará ping para comprobar si hay internet
+    HOSTS           = ['***REMOVED***',                                  # HOSTS contiene los servidores a los cuales se les hará ping para comprobar si hay internet
                        '***REMOVED***',
                        '***REMOVED***',
                        'google.es',
