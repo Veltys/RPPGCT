@@ -332,34 +332,34 @@ def main(argv = sys.argv):
                         j = j + 1
     
                 if DEBUG_SENSOR or resultado.valido():
-                    if argumentos[0]:   # Información del sensor
+                    if argumentos[0]:                                               # Información del sensor
                         print('Sensor', i, '-> ', end = '')
 
                     if argumentos[0] and argumentos[1]:
                         print('t', end = '')
 
-                    else:
+                    elif argumentos[1]:
                         print('T', end = '')
 
-                    if argumentos[1]:   # Temperatura
+                    if argumentos[1]:                                               # Temperatura
                         print('emperatura:', resultado.temperatura, end = '')
 
-                    if argumentos[3]:   # Unidades
+                    if argumentos[1] and argumentos[3]:                             # Unidades
                         print('º C', end = '')
 
                     if argumentos[1] and argumentos[2]:
                         print(', ', end = '')
 
-                    if (argumentos[0] and argumentos[2]) or (argumentos[1] and argumentos[2]):
+                    if (argumentos[0] or argumentos[1]) and argumentos[2]:
                         print('h', end = '')
 
-                    else:
+                    elif argumentos[2]:
                         print('H', end = '')
 
-                    if argumentos[2]:   # Humedad
+                    if argumentos[2]:                                               # Humedad
                         print('umedad relativa:', resultado.humedad, end = '')
 
-                    if argumentos[3]:
+                    if argumentos[2] and argumentos[3]:
                         print('%', end = '')
 
                     print()
