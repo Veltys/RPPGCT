@@ -333,7 +333,7 @@ def main(argv = sys.argv):
     
                 if DEBUG_SENSOR or resultado.valido():
                     if argumentos[0]:   # Información del sensor
-                        print('Sensor', i, '->', end = '')
+                        print('Sensor', i, '-> ', end = '')
 
                     if argumentos[0] and argumentos[1]:
                         print('t', end = '')
@@ -348,7 +348,7 @@ def main(argv = sys.argv):
                         print('º C', end = '')
 
                     if argumentos[1] and argumentos[2]:
-                        print(',', sep = '')
+                        print(', ', end = '')
 
                     if (argumentos[0] and argumentos[2]) or (argumentos[1] and argumentos[2]):
                         print('h', end = '')
@@ -360,7 +360,9 @@ def main(argv = sys.argv):
                         print('umedad relativa:', resultado.humedad, end = '')
 
                     if argumentos[3]:
-                        print('%')
+                        print('%', end = '')
+
+                    print()
 
                 else:
                     print('Sensor', i, '-> Imposible obtener un resultado válido en', config.LIMITE, 'intentos')
