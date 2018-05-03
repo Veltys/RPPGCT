@@ -14,6 +14,7 @@
 
 DEBUG = False
 DEBUG_REMOTO = False
+DEBUG_SENSOR = False
 LONGITUD_DATOS = 40                                                             # 4 bytes de datos + 1 byte de comprobación = 5 * 8 = 40
 
 ERR_NO_ERROR = 0
@@ -306,60 +307,60 @@ def main(argv = sys.argv):
                 sensor = dht11(i)
     
             except IndexError:
-                print('Sensor', i, '-> No válido',)
+                print('Sensor', i, '-> No válido')
     
             else:
                 resultado = sensor.leer()
     
                 j = 0
+
+                if not DEBUG_SENSOR:
+                    while not resultado.valido() and j < config.LIMITE:
+                        if DEBUG:
+                            print('Sensor', i, '-> Resultado no válido: ', end = '', sep = ' ')
+
+                            if resultado.error == ERR_MISSING_DATA:
+                                print('sin datos')
+
+                            else: # resultado.error == ERR_CRC
+                                print('error de redundancia cíclica')
+
+                        sleep(config.PAUSA)
+
+                        resultado = sensor.leer()
+
+                        j = j + 1
     
-                while not resultado.valido() and j < config.LIMITE:
-                    if DEBUG:
-                        print('Sensor', i, '-> Resultado no válido:', end = '', sep = ' ')
-    
-                        if resultado.error == ERR_MISSING_DATA:
-                            print('sin datos')
-    
-                        else: # resultado.error == ERR_CRC
-                            print('error de redundancia cíclica')
-    
-                    sleep(config.PAUSA)
-    
-                    resultado = sensor.leer()
-    
-                    j = j + 1
-    
-                if resultado.valido():
-                    if argc < 1:
-                        if argumentos[0]:   # Información del sensor
-                            print('Sensor', i, '->', end = '')
+                if DEBUG_SENSOR or resultado.valido():
+                    if argumentos[0]:   # Información del sensor
+                        print('Sensor', i, '->', end = '')
 
-                        if argumentos[0] and argumentos[1]:
-                            print('t', end = '')
+                    if argumentos[0] and argumentos[1]:
+                        print('t', end = '')
 
-                        else:
-                            print('T', end = '')
+                    else:
+                        print('T', end = '')
 
-                        if argumentos[1]:   # Temperatura
-                            print('emperatura:', resultado.temperatura, end = '')
+                    if argumentos[1]:   # Temperatura
+                        print('emperatura:', resultado.temperatura, end = '')
 
-                        if argumentos[3]:   # Unidades
-                            print('º C', end = '')
+                    if argumentos[3]:   # Unidades
+                        print('º C', end = '')
 
-                        if argumentos[1] and argumentos[2]:
-                            print(',', sep = '')
+                    if argumentos[1] and argumentos[2]:
+                        print(',', sep = '')
 
-                        if (argumentos[0] and argumentos[2]) or (argumentos[1] and argumentos[2]):
-                            print('h', end = '')
+                    if (argumentos[0] and argumentos[2]) or (argumentos[1] and argumentos[2]):
+                        print('h', end = '')
 
-                        else:
-                            print('H', end = '')
+                    else:
+                        print('H', end = '')
 
-                        if argumentos[2]:   # Humedad
-                            print('umedad relativa:', resultado.humedad, end = '')
+                    if argumentos[2]:   # Humedad
+                        print('umedad relativa:', resultado.humedad, end = '')
 
-                        if unidades:
-                            print('%')
+                    if unidades:
+                        print('%')
 
                 else:
                     print('Sensor', i, '-> Imposible obtener un resultado válido en', config.LIMITE, 'intentos')
