@@ -335,6 +335,9 @@ def main(argv = sys.argv):
                     if argumentos[0]:                                           # Información del sensor
                         print('Sensor', i, '-> ', end = '')
 
+                    if argumentos[0] and not argumentos[1] and not argumentos[2]:
+                        print('operativo')
+
                     if argumentos[0] and argumentos[1]:
                         print('t', end = '')
 
