@@ -359,7 +359,7 @@ def main(argv = sys.argv):
                     if argumentos[2]:   # Humedad
                         print('umedad relativa:', resultado.humedad, end = '')
 
-                    if unidades:
+                    if argumentos[3]:
                         print('%')
 
                 else:
