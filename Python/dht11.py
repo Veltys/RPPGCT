@@ -299,8 +299,8 @@ def main(argv = sys.argv):
     if argc != 2 or argv[1] != '-h':
         argumentos = procesar_argumentos(argv)
 
-        GPIO.setmode(GPIO.BCM)                                                      # Establecemos el sistema de numeración BCM
-        GPIO.setwarnings(DEBUG)                                                     # De esta forma alertará de los problemas sólo cuando se esté depurando
+        GPIO.setmode(GPIO.BCM)                                                  # Establecemos el sistema de numeración BCM
+        GPIO.setwarnings(DEBUG)                                                 # De esta forma alertará de los problemas sólo cuando se esté depurando
     
         for i in range(len(config.GPIOS)):
             try:
@@ -332,7 +332,7 @@ def main(argv = sys.argv):
                         j = j + 1
     
                 if DEBUG_SENSOR or resultado.valido():
-                    if argumentos[0]:                                               # Información del sensor
+                    if argumentos[0]:                                           # Información del sensor
                         print('Sensor', i, '-> ', end = '')
 
                     if argumentos[0] and argumentos[1]:
@@ -341,10 +341,10 @@ def main(argv = sys.argv):
                     elif argumentos[1]:
                         print('T', end = '')
 
-                    if argumentos[1]:                                               # Temperatura
+                    if argumentos[1]:                                           # Temperatura
                         print('emperatura:', resultado.temperatura, end = '')
 
-                    if argumentos[1] and argumentos[3]:                             # Unidades
+                    if argumentos[1] and argumentos[3]:                         # Unidades
                         print('º C', end = '')
 
                     if argumentos[1] and argumentos[2]:
@@ -356,7 +356,7 @@ def main(argv = sys.argv):
                     elif argumentos[2]:
                         print('H', end = '')
 
-                    if argumentos[2]:                                               # Humedad
+                    if argumentos[2]:                                           # Humedad
                         print('umedad relativa:', resultado.humedad, end = '')
 
                     if argumentos[2] and argumentos[3]:
@@ -369,7 +369,7 @@ def main(argv = sys.argv):
     
                 del sensor
     
-            GPIO.cleanup()                                                          # Devolvemos los pines a su estado inicial
+            GPIO.cleanup()                                                      # Devolvemos los pines a su estado inicial
 
     else:
         print('Ayuda: ...')
