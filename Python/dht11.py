@@ -306,27 +306,27 @@ def main(argv = sys.argv):
                 sensor = dht11(i)
     
             except IndexError:
-                print('Sensor', i, '-> No válido',)
+                print('Sensor', i, '-> No válido')
     
             else:
                 resultado = sensor.leer()
     
                 j = 0
-    
+
                 while not resultado.valido() and j < config.LIMITE:
                     if DEBUG:
-                        print('Sensor', i, '-> Resultado no válido:', end = '', sep = ' ')
-    
+                        print('Sensor', i, '-> Resultado no válido: ', end = '', sep = ' ')
+
                         if resultado.error == ERR_MISSING_DATA:
                             print('sin datos')
-    
+
                         else: # resultado.error == ERR_CRC
                             print('error de redundancia cíclica')
-    
+
                     sleep(config.PAUSA)
-    
+
                     resultado = sensor.leer()
-    
+
                     j = j + 1
     
                 if resultado.valido():
