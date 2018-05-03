@@ -14,6 +14,7 @@
 
 DEBUG = True
 DEBUG_REMOTO = True
+DEBUG_SENSOR = True
 LONGITUD_DATOS = 40                                                             # 4 bytes de datos + 1 byte de comprobación = 5 * 8 = 40
 
 ERR_NO_ERROR = 0
@@ -313,23 +314,24 @@ def main(argv = sys.argv):
     
                 j = 0
 
-                while not resultado.valido() and j < config.LIMITE:
-                    if DEBUG:
-                        print('Sensor', i, '-> Resultado no válido: ', end = '', sep = ' ')
+                if not DEBUG_SENSOR:
+                    while not resultado.valido() and j < config.LIMITE:
+                        if DEBUG:
+                            print('Sensor', i, '-> Resultado no válido: ', end = '', sep = ' ')
 
-                        if resultado.error == ERR_MISSING_DATA:
-                            print('sin datos')
+                            if resultado.error == ERR_MISSING_DATA:
+                                print('sin datos')
 
-                        else: # resultado.error == ERR_CRC
-                            print('error de redundancia cíclica')
+                            else: # resultado.error == ERR_CRC
+                                print('error de redundancia cíclica')
 
-                    sleep(config.PAUSA)
+                        sleep(config.PAUSA)
 
-                    resultado = sensor.leer()
+                        resultado = sensor.leer()
 
-                    j = j + 1
+                        j = j + 1
     
-                if resultado.valido():
+                if DEBUG_SENSOR or resultado.valido():
                     if argc < 1:
                         if argumentos[0]:   # Información del sensor
                             print('Sensor', i, '->', end = '')
