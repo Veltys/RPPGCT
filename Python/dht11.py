@@ -336,7 +336,7 @@ def main(argv = sys.argv):
                         print('Sensor', i, '-> ', end = '')
 
                     if argumentos[0] and not argumentos[1] and not argumentos[2]:
-                        print('operativo')
+                        print('operativo', end = '')
 
                     if argumentos[0] and argumentos[1]:
                         print('t', end = '')
@@ -365,7 +365,7 @@ def main(argv = sys.argv):
                     if argumentos[2] and argumentos[3]:
                         print('%', end = '')
 
-                    print()
+                    print("\n")
 
                 else:
                     print('Sensor', i, '-> Imposible obtener un resultado válido en', config.LIMITE, 'intentos')
