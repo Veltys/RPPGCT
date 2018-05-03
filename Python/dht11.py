@@ -6,13 +6,15 @@
 # Description       : Módulo auxiliar para la gestión de la sonda de temperatura DHT11
 # Author            : Veltys
 # Original author   : szazo
-# Date              : 11-03-2018
-# Version           : 1.0.0
+# Date              : 03-05-2018
+# Version           : 1.0.1
 # Usage             : python3 dht11.py o from dht11 import
-# Notes             : Este módulo está pensado para ser llamado desde otros módulos y no directamente, aunque si es llamado de esta forma, también hará su trabajo e informará al usuario de los valores del sensor
+# Notes             : Este módulo está pensado para ser llamado desde otros módulos o no directamente; si es llamado directamente, hará su trabajo e informará por pantalla de los valores del sensor
+
 
 DEBUG = False
 DEBUG_REMOTO = False
+DEBUG_SENSOR = False
 LONGITUD_DATOS = 40                                                             # 4 bytes de datos + 1 byte de comprobación = 5 * 8 = 40
 
 ERR_NO_ERROR = 0
@@ -253,49 +255,138 @@ class resultado_dht11:                                                          
         return self.error == ERR_NO_ERROR
 
 
+def procesar_argumentos(argumentos):
+    res = []
+
+    if len(argumentos) == 1:
+        for i in range(4):
+            res.append(True)
+        
+    else:
+        if any('-i' in s for s in argumentos):
+            res.append(True)
+    
+        else:
+            res.append(False)
+    
+        if any('-t' in s for s in argumentos):
+            res.append(True)
+    
+        else:
+            res.append(False)
+    
+        if any('-m' in s for s in argumentos):
+            res.append(True)
+    
+        else:
+            res.append(False)
+    
+        if any('-u' in s for s in argumentos):
+            res.append(True)
+    
+        else:
+            res.append(False)
+
+    return res
+
+
 def main(argv = sys.argv):
     if DEBUG_REMOTO:
         pydevd.settrace(config.IP_DEP_REMOTA)
 
-    GPIO.setmode(GPIO.BCM)                                                      # Establecemos el sistema de numeración BCM
-    GPIO.setwarnings(DEBUG)                                                     # De esta forma alertará de los problemas sólo cuando se esté depurando
+    argc = len(argv)
 
-    for i in range(len(config.GPIOS)):
-        try:
-            sensor = dht11(i)
+    if argc != 2 or argv[1] != '-h':
+        argumentos = procesar_argumentos(argv)
 
-        except IndexError:
-            print('Sensor', i, '-> No válido',)
-
-        else:
-            resultado = sensor.leer()
-
-            j = 0
-
-            while not resultado.valido() and j < config.LIMITE:
-                if DEBUG:
-                    print('Sensor', i, '-> Resultado no válido:', end = '', sep = ' ')
-
-                    if resultado.error == ERR_MISSING_DATA:
-                        print('sin datos')
-
-                    else: # resultado.error == ERR_CRC
-                        print('error de redundancia cíclica')
-
-                sleep(config.PAUSA)
-
-                resultado = sensor.leer()
-
-                j = j + 1
-
-            if resultado.valido():
-                print('Sensor ', i, ' -> temperatura: ', resultado.temperatura, 'º C, humedad relativa: ', resultado.humedad, '%', sep = '')
-
+        GPIO.setmode(GPIO.BCM)                                                  # Establecemos el sistema de numeración BCM
+        GPIO.setwarnings(DEBUG)                                                 # De esta forma alertará de los problemas sólo cuando se esté depurando
+    
+        for i in range(len(config.GPIOS)):
+            try:
+                sensor = dht11(i)
+    
+            except IndexError:
+                print('Sensor', i, '-> No válido')
+    
             else:
-                print('Sensor', i, '-> Imposible obtener un resultado válido en', config.LIMITE, 'intentos')
+                resultado = sensor.leer()
+    
+                j = 0
 
-            del sensor
+                if not DEBUG_SENSOR:
+                    while not resultado.valido() and j < config.LIMITE:
+                        if DEBUG:
+                            print('Sensor', i, '-> Resultado no válido: ', end = '', sep = ' ')
 
-        GPIO.cleanup()                                                          # Devolvemos los pines a su estado inicial
+                            if resultado.error == ERR_MISSING_DATA:
+                                print('sin datos')
+
+                            else: # resultado.error == ERR_CRC
+                                print('error de redundancia cíclica')
+
+                        sleep(config.PAUSA)
+
+                        resultado = sensor.leer()
+
+                        j = j + 1
+    
+                if DEBUG_SENSOR or resultado.valido():
+                    if argumentos[0]:                                           # Información del sensor
+                        print('Sensor', i, '-> ', end = '')
+
+                    if argumentos[0] and not argumentos[1] and not argumentos[2]:
+                        print('operativo', end = '')
+
+                    if argumentos[0] and argumentos[1]:
+                        print('t', end = '')
+
+                    elif argumentos[1]:
+                        print('T', end = '')
+
+                    if argumentos[1]:                                           # Temperatura
+                        print('emperatura:', resultado.temperatura, end = '')
+
+                    if argumentos[1] and argumentos[3]:                         # Unidades
+                        print('º C', end = '')
+
+                    if argumentos[1] and argumentos[2]:
+                        print(', ', end = '')
+
+                    if (argumentos[0] or argumentos[1]) and argumentos[2]:
+                        print('h', end = '')
+
+                    elif argumentos[2]:
+                        print('H', end = '')
+
+                    if argumentos[2]:                                           # Humedad
+                        print('umedad relativa:', resultado.humedad, end = '')
+
+                    if argumentos[2] and argumentos[3]:
+                        print('%', end = '')
+
+                    print("\n")
+
+                else:
+                    print('Sensor', i, '-> Imposible obtener un resultado válido en', config.LIMITE, 'intentos')
+    
+                del sensor
+    
+            GPIO.cleanup()                                                      # Devolvemos los pines a su estado inicial
+
+    else:
+        print('Uso:', argv[0], '''[opciones]
+
+Opciones:
+    -h    Muestra esta pantalla
+    -i    Información / listado de sensores
+    -t    Mostrar la temperatura
+    -m    Mostrar la humedad relativa
+    -u    Mostrar las unidades y no solamente la magnitud
+
+Nota: invocar el programa sin parámetros equivale a invocarlo con todos excepto -h (-i -t -m -u)
+''')
+
+
 if __name__ == '__main__':
     main(sys.argv)

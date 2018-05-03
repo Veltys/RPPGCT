@@ -159,6 +159,9 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.7.0:
     - Implementado un sistema de lectura de sondas de temperatura DHT11 en **dht11.py**.
     - Añadida otra licencia en la sección de *Otras licencias* en **README.md**.
+- 0.7.1:
+    - Implementados varios parámetros para variar la salida en **dht11.py**.
+    - Añadida otra licencia en la sección de *Otras licencias* en **README.md**.
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
@@ -190,6 +193,7 @@ Colección de utilidades varias para el control GPIO en Python
 - [ ]~~Añadir control de versiones en la instalación.~~
 - [ ] ~~Hacer que **actualizador.sh** sea "inteligente" y actualice en función de la versión.~~
 - [ ] Hacer un cliente en Django, que permita una gestión más visual del sistema.
+- [ ] Rehacer **dht11.py** de manera que pueda ser configurado para leer individualmente cada sensor
 - [ ] ¡Mucho más!
 
 ## F. A. Q. (*Frequently Asked Questions*) o P. F. (Preguntas Frecuentes)
