@@ -193,6 +193,7 @@ Colección de utilidades varias para el control GPIO en Python
 - [ ]~~Añadir control de versiones en la instalación.~~
 - [ ] ~~Hacer que **actualizador.sh** sea "inteligente" y actualice en función de la versión.~~
 - [ ] Hacer un cliente en Django, que permita una gestión más visual del sistema.
+- [ ] Rehacer **dht11.py** de manera que pueda ser configurado para leer individualmente cada sensor
 - [ ] ¡Mucho más!
 
 ## F. A. Q. (*Frequently Asked Questions*) o P. F. (Preguntas Frecuentes)
