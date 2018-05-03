@@ -332,36 +332,35 @@ def main(argv = sys.argv):
                         j = j + 1
     
                 if DEBUG_SENSOR or resultado.valido():
-                    if argc < 1:
-                        if argumentos[0]:   # Información del sensor
-                            print('Sensor', i, '->', end = '')
+                    if argumentos[0]:   # Información del sensor
+                        print('Sensor', i, '->', end = '')
 
-                        if argumentos[0] and argumentos[1]:
-                            print('t', end = '')
+                    if argumentos[0] and argumentos[1]:
+                        print('t', end = '')
 
-                        else:
-                            print('T', end = '')
+                    else:
+                        print('T', end = '')
 
-                        if argumentos[1]:   # Temperatura
-                            print('emperatura:', resultado.temperatura, end = '')
+                    if argumentos[1]:   # Temperatura
+                        print('emperatura:', resultado.temperatura, end = '')
 
-                        if argumentos[3]:   # Unidades
-                            print('º C', end = '')
+                    if argumentos[3]:   # Unidades
+                        print('º C', end = '')
 
-                        if argumentos[1] and argumentos[2]:
-                            print(',', sep = '')
+                    if argumentos[1] and argumentos[2]:
+                        print(',', sep = '')
 
-                        if (argumentos[0] and argumentos[2]) or (argumentos[1] and argumentos[2]):
-                            print('h', end = '')
+                    if (argumentos[0] and argumentos[2]) or (argumentos[1] and argumentos[2]):
+                        print('h', end = '')
 
-                        else:
-                            print('H', end = '')
+                    else:
+                        print('H', end = '')
 
-                        if argumentos[2]:   # Humedad
-                            print('umedad relativa:', resultado.humedad, end = '')
+                    if argumentos[2]:   # Humedad
+                        print('umedad relativa:', resultado.humedad, end = '')
 
-                        if unidades:
-                            print('%')
+                    if unidades:
+                        print('%')
 
                 else:
                     print('Sensor', i, '-> Imposible obtener un resultado válido en', config.LIMITE, 'intentos')
