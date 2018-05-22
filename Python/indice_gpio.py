@@ -50,20 +50,21 @@ def main(argv = sys.argv):
 
     gpios_libres = gpios_bcm_normales_libres + gpios_bcm_extendidos_libres + gpios_bcm_especiales_libres
 
-    print('Quedan: ', len(gpios_libres), '/', len(gpios), ' libres', sep = '')
-    print('De los cuales:', os.linesep,
-          len(gpios_bcm_normales_libres),   '/', len(gpios_bcm_normales),   ' normales', os.linesep,
-          len(gpios_bcm_extendidos_libres), '/', len(gpios_bcm_extendidos), ' extendidos', os.linesep,
-          len(gpios_bcm_especiales_libres), '/', len(gpios_bcm_especiales), ' especiales', os.linesep,
-          sep = '',
-         )
+    print('Quedan: ', len(gpios_libres), '/', len(gpios), ' puertos libres', sep = '')
+    print()
+    print('De los cuales:')
+    print(len(gpios_bcm_normales_libres),   '/', len(gpios_bcm_normales),   "\tnormales",   sep = '')
+    print(len(gpios_bcm_extendidos_libres), '/', len(gpios_bcm_extendidos), "\textendidos", sep = '')
+    print(len(gpios_bcm_especiales_libres), '/', len(gpios_bcm_especiales), "\tespeciales", sep = '')
+    print()
+    print()
+
     print('Los puertos GPIO libres son:', sorted(gpios_libres), sep = ' ')
-    print('De los cuales:', os.linesep,
-          'Normales: ', sorted(gpios_bcm_normales_libres), os.linesep,
-          'Extendidos: ', sorted(gpios_bcm_extendidos_libres), os.linesep,
-          'Especiales: ', sorted(gpios_bcm_especiales_libres), os.linesep,
-          sep = '',
-         )
+    print()
+    print('De los cuales:')
+    print('Normales:',   ((sorted(gpios_bcm_normales_libres))   if (len(gpios_bcm_normales_libres)   > 0) else "(ninguno)"), sep = "\t")
+    print('Extendidos:', ((sorted(gpios_bcm_extendidos_libres)) if (len(gpios_bcm_extendidos_libres) > 0) else "(ninguno)"), sep = "\t")
+    print('Especiales:', ((sorted(gpios_bcm_especiales_libres)) if (len(gpios_bcm_especiales_libres) > 0) else "(ninguno)"), sep = "\t")
 
 
 if __name__ == '__main__':
