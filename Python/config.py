@@ -5,8 +5,8 @@
 # Title         : config.py
 # Description   : Módulo configurador para ser importado en el resto de módulos o sistemas que lo necesiten
 # Author        : Veltys
-# Date          : 07-03-2018
-# Version       : 1.6.0
+# Date          : 22-05-2018
+# Version       : 1.7.0
 # Usage         : import config | from config import <clase>
 # Notes         : A título ilustrativo, a se ofrece una configuración por defecto (la mía, para ser exactos)
 
@@ -41,13 +41,13 @@ class dht11_config(config_global):
     PAUSA           = 0.5
 
 
-''' class domotica_cliente_config(config_global):
+class domotica_cliente_config(config_global):
     puerto          = 4710                                                      # El puerto 4710 ha sido escogido arbitrariamente por estar libre, según la IANA:
                                                                                 # https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?&page=85
-'''
 
 
-''' class domotica_servidor_config(domotica_cliente_config):
+
+class domotica_servidor_config(domotica_cliente_config):
     GPIOS           = [(22, False, False, 'Botón reinicio router'   ),          # En este caso, los puertos GPIO serán dados por pares, siendo el primer elemento el que hará de pulsador y el segundo sobre el que se operará
                        ( 4, True,  False, 'Relé reinicio router'    ),
 
@@ -56,6 +56,15 @@ class dht11_config(config_global):
 
                        (17, False, False, 'Botón reinicio cámara'   ),
                        (27, True,  False, 'Relé reinicio cámara'    ),
+
+                       (13, False, False, 'Indicador electricidad'  ),
+                       (16, True,  False, 'Relé activación router'  ),
+                      ]
+
+    LLAMADAS        = [None,
+                       None,
+                       None,
+                       "aviso_electricidad.py"
                       ]
 
     PAUSA           = 0.20
@@ -63,7 +72,7 @@ class dht11_config(config_global):
     senyales        = {'SIGTERM': 'sig_cerrar',
                        'SIGUSR1': 'sig_test',
                       }
-'''
+
 
 
 class internet_config(config_global):
