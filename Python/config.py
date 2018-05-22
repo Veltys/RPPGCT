@@ -93,8 +93,6 @@ class internet_config(config_global):
     senyales        = {'SIGTERM': 'sig_cerrar',
                        'SIGUSR1': 'sig_test',
                       }
-
-    servidor        = 'localhost'
 '''
 
 
