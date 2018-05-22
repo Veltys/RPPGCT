@@ -52,7 +52,7 @@ class domotica_servidor(comun.app):
         super().__init__(config, nombre)
 
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._socket.bind(('127.0.0.1', self._config.puerto))
+        self._socket.bind(('127.0.0.1', self._config.puerto))                                                                       # TODO: IPv6
         self._socket.listen(1)                                                                                                      # No se preveen muchas conexiones, así que, por ahora, se soportará solamente un cliente
 
 
