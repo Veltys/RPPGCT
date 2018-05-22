@@ -163,6 +163,10 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.7.1:
     - Implementados varios parámetros para variar la salida en **dht11.py**.
     - Añadida otra licencia en la sección de *Otras licencias* en **README.md**.
+- 0.8.0:
+	- Añadida la posibilidad de invocar código al dispararse eventos en puertos GPIO en **domotica_servidor.py**.
+	- Eliminada la posibilidad de conectar a un servidor que no sea el local en **comun.py** y adecuado el código a la nueva conexión en **config.py**, **domotica_cliente.py** y **reiniciar_router.py**.
+	- Eliminado código innecesario en **reiniciar_router.py**.
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
