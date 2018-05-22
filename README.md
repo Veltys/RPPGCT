@@ -6,6 +6,7 @@ Colección de utilidades varias para el control GPIO en Python
 
 ## Sistemas
 - **cpu.py**: Sistema indicador led de la carga de CPU en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
+- **dht11.py**: Sistema de lectura de sondas de temperatura DHT11.
 - **domotica_cliente.py**: Cliente del sistema gestor de domótica.
 - **domotica_servidor.py**: Servidor del sistema gestor de domótica.
 - **indice_gpio.py**: Sistema indicador de los puertos GPIO que quedan libres.
