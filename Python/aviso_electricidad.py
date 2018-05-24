@@ -44,6 +44,7 @@ def main(argv = sys.argv):
     mensaje['To']       = config.PARA
 
     s = SMTP(host = '')
+    s.starttls()
     s.send_message(mensaje)
     s.quit()
 
