@@ -15,6 +15,7 @@ DEBUG           = False
 DEBUG_REMOTO    = False
 
 
+import errno                                                                                # Códigos de error
 import sys                                                                                  # Funcionalidades varias del sistema
 
 if DEBUG_REMOTO:

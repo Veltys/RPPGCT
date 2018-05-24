@@ -25,7 +25,7 @@ class config_global:                                                            
     SONDA           = 2
 
 
-class aviso_electricidad(config_global):
+class aviso_electricidad_config(config_global):
     DE              = ''
     PARA            = ''
     ASUNTO          = '<NOMBRE_SISTEMA>: informe especial'
