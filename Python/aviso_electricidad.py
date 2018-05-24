@@ -43,7 +43,7 @@ def main(argv = sys.argv):
     mensaje['From']     = config.DE
     mensaje['To']       = config.PARA
 
-    s = SMTP('')
+    s = SMTP(host = '')
     s.send_message(mensaje)
     s.quit()
 
