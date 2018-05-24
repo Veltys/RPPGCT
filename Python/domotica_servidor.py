@@ -34,7 +34,7 @@ import RPi.GPIO as GPIO                                                         
 
 import comun                                                                                                                        # Funciones comunes a varios sistemas
 
-from subprocess import Call                                                                                                         # Lanzamiento de nuevos procesos
+from subprocess import call                                                                                                         # Lanzamiento de nuevos procesos
 from threading import Lock, Thread                                                                                                  # Capacidades multihilo
 from time import sleep                                                                                                              # Para hacer pausas
 
@@ -379,7 +379,7 @@ class domotica_servidor_hijos(comun.app):
 
 
     def cargar_y_ejecutar(archivo):
-        proceso = Call('python3 ' + archivo, shell = True)
+        proceso = call('python3 ' + archivo, shell = True)
 
 
     def cerrar(self):
