@@ -5,6 +5,7 @@ Raspberry Pi Python GPIO Control Tools
 Colección de utilidades varias para el control GPIO en Python
 
 ## Sistemas
+- **aviso_electricidad.py**: Sistema avisador de corte de luz.
 - **cpu.py**: Sistema indicador led de la carga de CPU en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
 - **dht11.py**: Sistema de lectura de sondas de temperatura DHT11.
 - **domotica_cliente.py**: Cliente del sistema gestor de domótica.
