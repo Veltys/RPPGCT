@@ -378,7 +378,7 @@ class domotica_servidor_hijos(comun.app):
             return
 
 
-    def cargar_y_ejecutar(archivo):
+    def cargar_y_ejecutar(self, archivo):
         proceso = call('python3 ' + archivo, shell = True)
 
 
