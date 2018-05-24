@@ -65,9 +65,9 @@ class domotica_servidor_config(domotica_cliente_config):
                        (16, True,  False, config_global.RELE , 'Relé activación router'  ),
                       ]
 
-    LLAMADAS        = [(None,                    False, False),
-                       (None,                    False, False),
-                       (None,                    False, False),
+    LLAMADAS        = [# (None,                    False, False),
+                       # (None,                    False, False),
+                       # (None,                    False, False),
                        ('aviso_electricidad.py', False, True ),
                       ]
 
