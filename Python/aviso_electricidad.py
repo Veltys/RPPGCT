@@ -16,6 +16,7 @@ DEBUG_REMOTO    = False
 
 
 import errno                                                                                # Códigos de error
+import ssl                                                                                  # Seguridad
 import sys                                                                                  # Funcionalidades varias del sistema
 
 if DEBUG_REMOTO:
@@ -44,7 +45,7 @@ def main(argv = sys.argv):
     mensaje['To']       = config.PARA
 
     s = SMTP(host = config.SERVIDOR)
-    s.starttls()
+    s.starttls(context = ssl.create_default_context())
     s.login(config.USUARIO, config.CONTRASENYA)
     s.send_message(mensaje)
     s.quit()
