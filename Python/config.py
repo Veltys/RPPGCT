@@ -32,7 +32,7 @@ class aviso_electricidad_config(config_global):
     DE              = ''
     PARA            = ''
     SERVIDOR        = ''
-
+    USUARIO         = ''
 
 ''' class cpu_config(config_global):                                                        # Configuración del sistema de CPU
     GPIOS           = [(26, True,  True , config_global.LED  , 'Verde'                   ), # GPIOS contiene ternas de datos en formato lista:

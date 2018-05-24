@@ -45,6 +45,7 @@ def main(argv = sys.argv):
 
     s = SMTP(host = config.SERVIDOR)
     s.starttls()
+    s.login(config.USUARIO, config.CONTRASENYA)
     s.send_message(mensaje)
     s.quit()
 
