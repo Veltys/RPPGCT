@@ -5,28 +5,36 @@
 # Title         : cpu.py
 # Description   : Sistema indicador led de la carga de CPU en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma"
 # Author        : Veltys
-# Date          : 10-08-2017
-# Version       : 2.1.7
+# Date          : 24-05-2018
+# Version       : 2.1.8
 # Usage         : python3 cpu.py
 # Notes         : Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual simplemente apaga todos los leds hasta que esta misma señal sea recibida de nuevo
 
 
-DEBUG = False
-DEBUG_REMOTO = False
+DEBUG           = False
+DEBUG_REMOTO    = False
 
 
 import errno                                                                    # Códigos de error
+import os                                                                       # Funcionalidades varias del sistema operativo
 import sys                                                                      # Funcionalidades varias del sistema
 
+import comun                                                                    # Funciones comunes a varios sistemas
+
+if DEBUG_REMOTO:
+    import pydevd                                                               # Depuración remota
+
+import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
+
+from time import sleep                                                          # Para hacer pausas
+
 try:
-    from config import cpu_config as config                                       # Configuración
+    from config import cpu_config as config                                     # Configuración
 
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
-
-import os                                                                       # Funcionalidades varias del sistema operativo
 
 try:
     from psutil import cpu_percent                                              # Obtención del porcentaje de uso de la CPU
@@ -34,14 +42,6 @@ try:
 except ImportError:
     print('Error: Paquete "psutil" no encontrado' + os.linesep + 'Puede instalarlo con la orden "[sudo] pip3 install psutil"', file = sys.stderr)
     sys.exit(errno.ENOENT)
-
-from time import sleep                                                          # Para hacer pausas
-import comun                                                                    # Funciones comunes a varios sistemas
-
-if DEBUG_REMOTO:
-    import pydevd                                                               # Depuración remota
-
-import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 
 class cpu(comun.app):

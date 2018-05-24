@@ -5,13 +5,15 @@
 # Title         : indice_gpio.py
 # Description   : Sistema indizador de puertos GPIO
 # Author        : Veltys
-# Date          : 10-08-2017
-# Version       : 1.0.3
+# Date          : 24-05-2018
+# Version       : 1.0.4
 # Usage         : python3 indice_gpio.py
 # Notes         : Sistema que lee las distintas configuraciones y muestra cuáles puertos están ocupados y cuáles no
 
 
 import errno                                                                    # Códigos de error
+import inspect                                                                  # Metaprogramación
+import os                                                                       # Funcionalidades varias del sistema operativo
 import sys                                                                      # Funcionalidades varias del sistema
 
 try:
@@ -20,9 +22,6 @@ try:
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
-
-import inspect                                                                  # Metaprogramación
-import os                                                                       # Funcionalidades varias del sistema operativo
 
 
 def main(argv = sys.argv):

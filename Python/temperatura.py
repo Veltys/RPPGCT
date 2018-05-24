@@ -5,37 +5,39 @@
 # Title         : temperatura.py
 # Description   : Sistema indicador led de la temperatura del procesador en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
 # Author        : Veltys
-# Date          : 30-11-2017
-# Version       : 2.2.1
+# Date          : 24-05-2018
+# Version       : 2.2.2
 # Usage         : python3 temperatura.py
 # Notes         : Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual simplemente apaga todos los leds hasta que esta misma señal sea recibida de nuevo
 
 
-DEBUG = False
-DEBUG_REMOTO = False
+DEBUG           = False
+DEBUG_REMOTO    = False
 
 
 import errno                                                                    # Códigos de error
+import os                                                                       # Funcionalidades varias del sistema operativo
 import sys                                                                      # Funcionalidades varias del sistema
 
+import comun                                                                    # Funciones comunes a varios sistemas
+
+import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
+
+if DEBUG_REMOTO:
+    import pydevd                                                               # Depuración remota
+
+from time import sleep                                                          # Para hacer pausas
+from shlex import split                                                         # Manejo de cadenas
+from subprocess import check_output                                             # Llamadas a programas externos, recuperando su respuesta
+
 try:
-    from config import temperatura_config as config                            # Configuración
+    from config import temperatura_config as config                             # Configuración
 
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
 
-from time import sleep                                                          # Para hacer pausas
-from shlex import split                                                         # Manejo de cadenas
-from subprocess import check_output                                             # Llamadas a programas externos, recuperando su respuesta
-import comun                                                                    # Funciones comunes a varios sistemas
-import os                                                                       # Funcionalidades varias del sistema operativo
-
-if DEBUG_REMOTO:
-    import pydevd                                                               # Depuración remota
-
-import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 class temperatura(comun.app):
     def __init__(self, config, nombre):

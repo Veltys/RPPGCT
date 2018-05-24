@@ -16,6 +16,7 @@ import os                                                                       
 if os.name == 'nt':
     from tempfile import gettempdir                                             # Obtención del directorio temporal
 
+
 class bloqueo(object):
     def __init__(self,nombre):
         self._bloqueado = False

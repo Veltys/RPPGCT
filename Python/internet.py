@@ -6,15 +6,18 @@
 # Description       : Módulo auxiliar para la comprobación de si hay o no Internet
 # Original author   : linuxitux
 # Author            : Veltys
-# Date              : 02-07-2017
-# Version           : 2.0.3
+# Date              : 24-05-2018
+# Version           : 2.0.4
 # Usage             : python3 internet.py o from internet import hay_internet
 # Notes             : Se debe poder generar tráfico ICMP (ping), es decir, no debe ser bloqueado por un cortafuegos
 #                     Este módulo está pensado para ser llamado desde otros módulos y no directamente, aunque si es llamado de esta forma, también hará su trabajo e informará al usuario de si hay conexión a Internet
 
 
 import errno                                                                    # Códigos de error
+import os                                                                       # Funciones del sistema operativo
 import sys                                                                      # Funcionalidades varias del sistema
+
+from subprocess import call                                                     # Llamadas a programas externos
 
 try:
     from config import internet_config as config                                # Configuración
@@ -22,10 +25,6 @@ try:
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
-
-import os                                                                       # Funciones del sistema operativo
-
-from subprocess import call                                                     # Llamadas a programas externos
 
 
 def ping(host):

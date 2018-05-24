@@ -14,12 +14,13 @@
 #                 Se está estudiando, para futuras versiones, la integración con servicios IoT, especuialmente con el "AWS IoT Button" --> http://amzn.eu/dsgsHvv
 
 
-DEBUG = True
-DEBUG_PADRE = False
-DEBUG_REMOTO = True
+DEBUG           = True
+DEBUG_PADRE     = False
+DEBUG_REMOTO    = True
 
 
-salir = False                                                                                                                       # Ya que no es posible matar a un hilo, esta "bandera" global servirá para indicarle a los hilos que deben terminar
+salir           = False                                                                                                                       # Ya que no es posible matar a un hilo, esta "bandera" global servirá para indicarle a los hilos que deben terminar
+semaforo        = Lock()                                                                                                                   # Un semáforo evitará que el padre y los hijos den problemas al acceder a una variable que ambos puedan modificar
 
 
 import errno                                                                                                                        # Códigos de error
@@ -27,12 +28,12 @@ import os                                                                       
 import socket                                                                                                                       # Tratamiento de sockets
 import sys                                                                                                                          # Funcionalidades varias del sistema
 
+import comun                                                                                                                        # Funciones comunes a varios sistemas
+
 if DEBUG_REMOTO:
     import pydevd                                                                                                                   # Depuración remota
 
 import RPi.GPIO as GPIO                                                                                                             # Acceso a los pines GPIO
-
-import comun                                                                                                                        # Funciones comunes a varios sistemas
 
 from subprocess import call                                                                                                         # Lanzamiento de nuevos procesos
 from threading import Lock, Thread                                                                                                  # Capacidades multihilo
@@ -44,9 +45,6 @@ try:
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
-
-
-semaforo = Lock()                                                                                                                   # Un semáforo evitará que el padre y los hijos den problemas al acceder a una variable que ambos puedan modificar
 
 
 class domotica_servidor(comun.app):

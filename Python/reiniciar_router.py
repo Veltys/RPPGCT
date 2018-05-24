@@ -5,38 +5,38 @@
 # Title         : reiniciar_router.py
 # Description   : Sistema que comprueba si hay acceso a Internet. Si no, manda una señal en un puerto GPIO determinado
 # Author        : Veltys
-# Date          : 22-05-2018
-# Version       : 2.2.1
+# Date          : 24-05-2018
+# Version       : 2.2.2
 # Usage         : python3 reiniciar_router.py
 # Notes         : La idea es conectar un relé a este GPIO y al mismo la alimentación del sistema de acceso a Internet
 #                 Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual simplemente apaga todos los leds hasta que esta misma señal sea recibida de nuevo
 
 
-DEBUG = False
-DEBUG_REMOTO = False
+DEBUG           = False
+DEBUG_REMOTO    = False
 
 
 import errno                                                                                # Códigos de error
+import os                                                                                   # Funcionalidades varias del sistema operativo
+import socket                                                                               # Tratamiento de sockets
 import sys                                                                                  # Funcionalidades varias del sistema
 
+import comun                                                                                # Funciones comunes a varios sistemas
+
+if DEBUG_REMOTO:
+    import pydevd                                                                           # Depuración remota
+
+from time import sleep                                                                      # Gestión de pausas
+
 try:
-    from config import reiniciar_router_config as config                                      # Configuración
+    from config import reiniciar_router_config as config                                    # Configuración
 
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
 
 from internet import hay_internet                                                           # Módulo propio de comprobación de Internet
-from time import sleep                                                                      # Gestión de pausas
-import comun                                                                                # Funciones comunes a varios sistemas
-import os                                                                                   # Funcionalidades varias del sistema operativo
-
-if DEBUG_REMOTO:
-    import pydevd                                                                           # Depuración remota
-
-import socket                                                                               # Tratamiento de sockets
-
 
 
 class reiniciar_router(comun.app):
