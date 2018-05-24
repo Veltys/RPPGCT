@@ -348,7 +348,7 @@ class domotica_servidor_hijos(comun.app):
                         with semaforo:                                                                                              # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
                             GPIO.output(self._GPIOS[1][0], not(GPIO.input(self._GPIOS[1][0])))                                      # Se conmuta la salida del puerto GPIO
 
-                        if self._LLAMADAS[1] == True:
+                        if self._LLAMADAS[1] == True:                                                                               # Si se ha programado una llamada, ejecutar
                             self.cargar_y_ejecutar(self._LLAMADAS[0])
 
                         self._GPIOS[0][2] = not(self._GPIOS[0][2])                                                                  # Así se diferencia de las bajadas
@@ -362,10 +362,10 @@ class domotica_servidor_hijos(comun.app):
                                 GPIO.output(self._GPIOS[1][0], not(GPIO.input(self._GPIOS[1][0])))                                  # Se conmuta la salida del puerto GPIO
 
                         else:                                                                                                       # En caso contrario (botón), no es necesaria una acción
-                            self.cargar_y_ejecutar(self._LLAMADAS[0])
-
-                        if self._LLAMADAS[2] == True:
                             pass
+
+                        if self._LLAMADAS[2] == True:                                                                               # Si se ha programado una llamada, ejecutar
+                            self.cargar_y_ejecutar(self._LLAMADAS[0])
 
                         self._GPIOS[0][2] = not(self._GPIOS[0][2])                                                                  # Se prepara la próxima activación para una subida
 
