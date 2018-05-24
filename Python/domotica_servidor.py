@@ -5,8 +5,8 @@
 # Title         : domotica_servidor.py
 # Description   : Parte servidor del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 06-03-2018
-# Version       : 1.1.2
+# Date          : 24-05-2018
+# Version       : 2.0.0
 # Usage         : python3 domotica_servidor.py
 # Notes         : Parte servidor del sistema en el que se gestionarán pares de puertos GPIO
 #                 Las entradas impares en la variable de configuración asociada GPIOS corresponderán a los relés que se gestionarán
@@ -19,32 +19,34 @@ DEBUG_PADRE = False
 DEBUG_REMOTO = False
 
 
-salir = False                                                                   # Ya que no es posible matar a un hilo, esta "bandera" global servirá para indicarle a los hilos que deben terminar
+salir = False                                                                                                                       # Ya que no es posible matar a un hilo, esta "bandera" global servirá para indicarle a los hilos que deben terminar
 
 
-import errno                                                                    # Códigos de error
-import sys                                                                      # Funcionalidades varias del sistema
-import os                                                                       # Funcionalidades varias del sistema operativo
+import errno                                                                                                                        # Códigos de error
+import os                                                                                                                           # Funcionalidades varias del sistema operativo
+import socket                                                                                                                       # Tratamiento de sockets
+import sys                                                                                                                          # Funcionalidades varias del sistema
+
+if DEBUG_REMOTO:
+    import pydevd                                                                                                                   # Depuración remota
+
+import RPi.GPIO as GPIO                                                                                                             # Acceso a los pines GPIO
+
+import comun                                                                                                                        # Funciones comunes a varios sistemas
+
+from subprocess import Call                                                                                                         # Lanzamiento de nuevos procesos
+from threading import Lock, Thread                                                                                                  # Capacidades multihilo
+from time import sleep                                                                                                              # Para hacer pausas
 
 try:
-    from config import domotica_servidor_config as config                       # Configuración
+    from config import domotica_servidor_config as config                                                                           # Configuración
 
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
 
-from threading import Lock, Thread                                              # Capacidades multihilo
-from time import sleep                                                          # Para hacer pausas
-import comun                                                                    # Funciones comunes a varios sistemas
 
-if DEBUG_REMOTO:
-    import pydevd                                                               # Depuración remota
-
-import socket                                                                   # Tratamiento de sockets
-import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
-
-
-semaforo = Lock()                                                               # Un semáforo evitará que el padre y los hijos den problemas al acceder a una variable que ambos puedan modificar
+semaforo = Lock()                                                                                                                   # Un semáforo evitará que el padre y los hijos den problemas al acceder a una variable que ambos puedan modificar
 
 
 class domotica_servidor(comun.app):
@@ -186,7 +188,7 @@ class domotica_servidor(comun.app):
                 if self._config.GPIOS[i][0] == puerto:                                                                              # ... si hay una coincidencia con el puerto pedido
                     return i                                                                                                        # De haberla, se retornará el orden en el que se encuentra
 
-        return -1                                                                                                                    # Si se llega aquí, será que no hay coincidencias, por lo cual, se indicará también
+        return -1                                                                                                                   # Si se llega aquí, será que no hay coincidencias, por lo cual, se indicará también
 
 
     def cerrar(self):
@@ -225,7 +227,7 @@ class domotica_servidor(comun.app):
             puerto = self.buscar_puerto_GPIO(puerto)
 
         if puerto != -1:
-            return self._config.GPIOS[puerto][3]
+            return self._config.GPIOS[puerto][4]
 
         else:
             return False
@@ -302,7 +304,7 @@ class domotica_servidor_hijos(comun.app):
             - Carga la configuración
         '''
 
-        # super().__init__()                                                    # La llamada al constructor de la clase padre está comentada a propósito
+        # super().__init__()                                                                                                        # La llamada al constructor de la clase padre está comentada a propósito
 
         self._config = config
         self._bloqueo = False
@@ -314,6 +316,8 @@ class domotica_servidor_hijos(comun.app):
         self._GPIOS = list()
         self._GPIOS.append(self._config.GPIOS[self._id_hijo * 2])
         self._GPIOS.append(self._config.GPIOS[self._id_hijo * 2 + 1])
+
+        self._LLAMADAS = self._config.LLAMADAS[self._id_hijo]
 
         if DEBUG:
             print('Hijo  #', self._id_hijo, "\tMi configuración es ", self._GPIOS, sep = '')
@@ -344,11 +348,24 @@ class domotica_servidor_hijos(comun.app):
                         with semaforo:                                                                                              # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
                             GPIO.output(self._GPIOS[1][0], not(GPIO.input(self._GPIOS[1][0])))                                      # Se conmuta la salida del puerto GPIO
 
+                        if self._LLAMADAS[1] == True:
+                            self.cargar_y_ejecutar(self._LLAMADAS[0])
+
                         self._GPIOS[0][2] = not(self._GPIOS[0][2])                                                                  # Así se diferencia de las bajadas
 
                     elif self._GPIOS[0][2]:                                                                                         # Si es una bajada
                         if DEBUG:
                             print('Hijo  #', self._id_hijo, "\tSe ha disparado el evento de bajada esperado en el puerto GPIO", self._GPIOS[0][0], sep = '')
+
+                        if self._GPIOS[0][3] == self._config.SONDA:                                                                 # Si estamos ante una sonda, cada evento deberá conmutar siempre
+                            with semaforo:                                                                                          # Para realizar la conmutación es necesaria un semáforo o podría haber problemas
+                                GPIO.output(self._GPIOS[1][0], not(GPIO.input(self._GPIOS[1][0])))                                  # Se conmuta la salida del puerto GPIO
+
+                        else:                                                                                                       # En caso contrario (botón), no es necesaria una acción
+                            self.cargar_y_ejecutar(self._LLAMADAS[0])
+
+                        if self._LLAMADAS[2] == True:
+                            pass
 
                         self._GPIOS[0][2] = not(self._GPIOS[0][2])                                                                  # Se prepara la próxima activación para una subida
 
@@ -361,6 +378,10 @@ class domotica_servidor_hijos(comun.app):
             return
 
 
+    def cargar_y_ejecutar(archivo):
+        proceso = Call('python3 ' + archivo, shell = True)
+
+
     def cerrar(self):
         if DEBUG:
             print('Hijo  #', self._id_hijo, "\tDisparado el evento de cierre", sep = '')
@@ -369,7 +390,7 @@ class domotica_servidor_hijos(comun.app):
 
 
     def __del__(self):
-        # super().__del__()                                                                         # La llamada al constructor de la clase padre está comentada a propósito
+        # super().__del__()                                                                                                         # La llamada al constructor de la clase padre está comentada a propósito
         pass
 
 
