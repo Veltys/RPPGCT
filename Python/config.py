@@ -57,7 +57,7 @@ class dht11_config(config_global):
     GPIOS           = [(25, False, False, config_global.SONDA, 'Sonda DHT11 de pruebas'  ),
                       ]
 
-    LIMITE          = 10
+    LIMITE          = 20
 
     PAUSA           = 0.5
 
