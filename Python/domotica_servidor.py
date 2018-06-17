@@ -42,10 +42,6 @@ from time import sleep                                                          
 try:
     from config import domotica_servidor_config as config                                                                           # Configuración
 
-except ImportError:
-    print('Error: Archivo de configuración no encontrado', file = sys.stderr)
-    sys.exit(errno.ENOENT)
-
 
 class domotica_servidor(comun.app):
     def __init__(self, config, nombre):
@@ -92,7 +88,7 @@ class domotica_servidor(comun.app):
                     self._hijos[i].start()
 
             while True:
-                sc, dir = self._socket.accept()
+                sc, _ = self._socket.accept()
                 comando = sc.recv(1024)
                 comando = comando.decode('utf_8')
                 comando = comando.lower()
@@ -123,7 +119,7 @@ class domotica_servidor(comun.app):
                         (funcion, params) = comando.split(' ', 1)
 
                         try:
-                            respuesta = eval('self.' + funcion + '(' + params + ')')
+                            respuesta = literal_eval('self.' + funcion + '(' + params + ')')
 
                         except AttributeError:
                             if DEBUG:
@@ -247,6 +243,7 @@ class domotica_servidor(comun.app):
             return False
 
 
+    # TODO: Mejora de calidad
     def estado(self, puerto, modo = False):
         if modo == False:
             puerto = self.buscar_puerto_GPIO(puerto)
@@ -398,7 +395,7 @@ class domotica_servidor_hijos(comun.app):
         pass
 
 
-def main(argv = sys.argv):
+def main(argv):
     if DEBUG_REMOTO:
         pydevd.settrace(config.IP_DEP_REMOTA)
 

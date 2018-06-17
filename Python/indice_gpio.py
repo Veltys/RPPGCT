@@ -24,18 +24,18 @@ except ImportError:
     sys.exit(errno.ENOENT)
 
 
-def main(argv = sys.argv):
+def main(argv):
     clases = inspect.getmembers(sys.modules['config'], inspect.isclass)
 
     gpios_bcm_normales = [4, 13, 16, 17, 22, 23, 24, 25, 27]
     gpios_bcm_normales_libres = gpios_bcm_normales[:]
     gpios_bcm_extendidos = [5, 6, 12, 19, 20, 21, 26]
-    gpios_bcm_extendidos_libres = gpios_bcm_extendidos[:] 
+    gpios_bcm_extendidos_libres = gpios_bcm_extendidos[:]
     gpios_bcm_especiales = [2, 3, 7, 8, 9, 10, 11, 14, 15, 18]
     gpios_bcm_especiales_libres = gpios_bcm_especiales[:]
     gpios = gpios_bcm_normales + gpios_bcm_extendidos + gpios_bcm_especiales
 
-    for nombre, clase in clases:
+    for _, clase in clases:
         if hasattr(clase, 'GPIOS'):
             for gpio in clase.GPIOS:
                 if gpio[0] in gpios_bcm_normales_libres:

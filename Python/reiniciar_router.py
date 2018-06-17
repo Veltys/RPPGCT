@@ -83,7 +83,7 @@ class reiniciar_router(comun.app):
         super().__del__()
 
 
-def main(argv = sys.argv):
+def main(argv):
     if DEBUG_REMOTO:
         pydevd.settrace(config.IP_DEP_REMOTA)
 

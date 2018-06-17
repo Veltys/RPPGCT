@@ -16,7 +16,7 @@ import os                                                                       
 from time import strftime                                                                   # Formato de fecha y hora
 
 
-class config_global:                                                                        # Configuración común
+class config_global(object):                                                                # Configuración común
     IP_DEP_REMOTA   = '192.168.0.4'                                                         # IP del servidor de depuración
 
     RELE            = 0

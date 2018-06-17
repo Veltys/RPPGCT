@@ -51,24 +51,23 @@ class dht11:                                                                    
     _sensor = 0
 
     def __init__(self, sensor):
-        config.GPIOS[sensor]
-
         self._sensor = sensor
 
 
-    def _bits_a_bytes(self, bits):
+    @abstractmethod                                                             # Método abstracto
+    def _bits_a_bytes(bits):
         byte = 0
         bytess = []
 
-        for i in range(0, len(bits)):
+        for i, bit in enumerate(bits):
             byte = byte << 1
-            if (bits[i]):
+            if bit:
                 byte = byte | 1
 
             else:
                 byte = byte | 0
 
-            if ((i + 1) % 8 == 0):
+            if (i + 1) % 8 == 0:
                 bytess.append(byte)
 
                 byte = 0
@@ -76,13 +75,12 @@ class dht11:                                                                    
         return bytess
 
 
-    def _calcular_bits(self, longitudes):
+    @abstractmethod                                                             # Método abstracto
+    def _calcular_bits(longitudes):
         mas_corta = 1000
         mas_larga = 0
 
-        for i in range(0, len(longitudes)):
-            longitud = longitudes[i]
-
+        for longitud in longitudes:
             if longitud < mas_corta:
                 mas_corta = longitud
 
@@ -94,10 +92,10 @@ class dht11:                                                                    
 
         bits = []
 
-        for i in range(0, len(longitudes)):
+        for longitud in longitudes:
             bit = False
 
-            if longitudes[i] > media:
+            if longitud > media:
                 bit = True
 
             bits.append(bit)
@@ -105,7 +103,8 @@ class dht11:                                                                    
         return bits
 
 
-    def _calcular_checksum(self, bytess):
+    @abstractmethod                                                             # Método abstracto
+    def _calcular_checksum(bytess):
         return bytess[0] + bytess[1] + bytess[2] + bytess[3] & 255
 
 
@@ -115,18 +114,18 @@ class dht11:                                                                    
         sleep(pausa)
 
 
-    def _procesar_datos(self, datos):
+    @abstractmethod                                                             # Método abstracto
+    def _procesar_datos(datos):
         estado = STATE_INIT_PULL_DOWN
 
         longitudes = []                                                         # Contendrá las longitudes de los periodos de subida
         longitud_actual = 0                                                     # Contendrá la longitud del periodo previo
 
-        for i in range(len(datos)):
-            actual = datos[i]
+        for dato in datos:
             longitud_actual += 1
 
             if estado == STATE_INIT_PULL_DOWN:
-                if actual == GPIO.LOW:                                          # Tenemos la bajada inicial
+                if dato == GPIO.LOW:                                            # Tenemos la bajada inicial
                     estado = STATE_INIT_PULL_UP
 
                     continue
@@ -135,7 +134,7 @@ class dht11:                                                                    
                     continue
 
             if estado == STATE_INIT_PULL_UP:
-                if actual == GPIO.HIGH:                                         # Tenemos la subida inicial
+                if dato == GPIO.HIGH:                                           # Tenemos la subida inicial
                     estado = STATE_DATA_FIRST_PULL_DOWN
 
                     continue
@@ -144,7 +143,7 @@ class dht11:                                                                    
                     continue
 
             if estado == STATE_DATA_FIRST_PULL_DOWN:
-                if actual == GPIO.LOW:                                          # Tenemos la bajada inicial, lo siguiente será una subida
+                if dato == GPIO.LOW:                                            # Tenemos la bajada inicial, lo siguiente será una subida
                     estado = STATE_DATA_PULL_UP
 
                     continue
@@ -153,7 +152,7 @@ class dht11:                                                                    
                     continue
 
             if estado == STATE_DATA_PULL_UP:
-                if actual == GPIO.HIGH:                                         # Subida, la longitud de ésta estará determinada en función de si viene un 0 o un 1
+                if dato == GPIO.HIGH:                                           # Subida, la longitud de ésta estará determinada en función de si viene un 0 o un 1
                     longitud_actual = 0
 
                     estado = STATE_DATA_PULL_DOWN
@@ -164,7 +163,7 @@ class dht11:                                                                    
                     continue
 
             if estado == STATE_DATA_PULL_DOWN:
-                if actual == GPIO.LOW:                                          # Bajada, almacenaremos la longitud del periodo previo de subida
+                if dato == GPIO.LOW:                                            # Bajada, almacenaremos la longitud del periodo previo de subida
                     longitudes.append(longitud_actual)
 
                     estado = STATE_DATA_PULL_UP
@@ -260,38 +259,38 @@ def procesar_argumentos(argumentos):
     res = []
 
     if len(argumentos) == 1:
-        for i in range(4):
+        for _ in range(4):
             res.append(True)
-        
+
     else:
         if any('-i' in s for s in argumentos):
             res.append(True)
-    
+
         else:
             res.append(False)
-    
+
         if any('-t' in s for s in argumentos):
             res.append(True)
-    
+
         else:
             res.append(False)
-    
+
         if any('-m' in s for s in argumentos):
             res.append(True)
-    
+
         else:
             res.append(False)
-    
+
         if any('-u' in s for s in argumentos):
             res.append(True)
-    
+
         else:
             res.append(False)
 
     return res
 
 
-def main(argv = sys.argv):
+def main(argv):
     if DEBUG_REMOTO:
         pydevd.settrace(config.IP_DEP_REMOTA)
 
@@ -302,17 +301,17 @@ def main(argv = sys.argv):
 
         GPIO.setmode(GPIO.BCM)                                                  # Establecemos el sistema de numeración BCM
         GPIO.setwarnings(DEBUG)                                                 # De esta forma alertará de los problemas sólo cuando se esté depurando
-    
+
         for i in range(len(config.GPIOS)):
             try:
                 sensor = dht11(i)
-    
+
             except IndexError:
                 print('Sensor', i, '-> No válido')
-    
+
             else:
                 resultado = sensor.leer()
-    
+
                 j = 0
 
                 if not DEBUG_SENSOR:
@@ -331,7 +330,7 @@ def main(argv = sys.argv):
                         resultado = sensor.leer()
 
                         j = j + 1
-    
+
                 if DEBUG_SENSOR or resultado.valido():
                     if argumentos[0]:                                           # Información del sensor
                         print('Sensor', i, '-> ', end = '')
@@ -370,9 +369,9 @@ def main(argv = sys.argv):
 
                 else:
                     print('Sensor', i, '-> Imposible obtener un resultado válido en', config.LIMITE, 'intentos')
-    
+
                 del sensor
-    
+
             GPIO.cleanup()                                                      # Devolvemos los pines a su estado inicial
 
     else:
