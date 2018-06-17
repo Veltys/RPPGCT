@@ -61,11 +61,11 @@ class temperatura(comun.app):
                     elif temperatura < self._config.TEMPERATURAS[1]:            # Temperatura por debajo del valor medio
                         for i in range(4):
                             leds[i].ChangeDutyCycle(self._config.COLORES[1][i] * 100)
-                        
+
                     elif temperatura < self._config.TEMPERATURAS[2]:            # Temperatura por debajo del valor máximo
                         for i in range(4):
                             leds[i].ChangeDutyCycle(self._config.COLORES[2][i] * 100)
-                        
+
                     else:                                                       # Temperatura por encima del valor máximo
                         for i in range(4):
                             leds[i].ChangeDutyCycle(self._config.COLORES[3][i] * 100)
@@ -80,7 +80,7 @@ class temperatura(comun.app):
         super().__del__()
 
 
-def main(argv = sys.argv):
+def main(argv):
     if DEBUG_REMOTO:
         pydevd.settrace(config.IP_DEP_REMOTA)
 

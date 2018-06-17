@@ -11,7 +11,7 @@
 # Notes         : A título ilustrativo, a se ofrece una configuración por defecto (la mía, para ser exactos)
 
 
-class config_global:                                                            # Configuración común
+class config_global(object):                                                    # Configuración común
     IP_DEP_REMOTA   = '0.0.0.0'                                                 # IP del servidor de depuración
 
 

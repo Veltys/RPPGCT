@@ -278,7 +278,7 @@ class domotica_cliente(comun.app):
         pass
 
 
-def main(argv = sys.argv):
+def main(argv):
     if DEBUG_REMOTO:
         pydevd.settrace(config.IP_DEP_REMOTA)
 

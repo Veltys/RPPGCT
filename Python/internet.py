@@ -48,7 +48,7 @@ def hay_internet():
     return internet
 
 
-def main(argv = sys.argv):
+def main(argv):
     if hay_internet():
         print('¡Hay Internet! =D')
     else:

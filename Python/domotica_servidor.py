@@ -19,32 +19,35 @@ DEBUG_PADRE = False
 DEBUG_REMOTO = False
 
 
-salir = False                                                                   # Ya que no es posible matar a un hilo, esta "bandera" global servirá para indicarle a los hilos que deben terminar
+salir           = False                                                                                                             # Ya que no es posible matar a un hilo, esta "bandera" global servirá para indicarle a los hilos que deben terminar
+semaforo        = Lock()                                                                                                            # Un semáforo evitará que el padre y los hijos den problemas al acceder a una variable que ambos puedan modificar
 
 
-import errno                                                                    # Códigos de error
-import sys                                                                      # Funcionalidades varias del sistema
-import os                                                                       # Funcionalidades varias del sistema operativo
+import errno                                                                                                                        # Códigos de error
+import sys                                                                                                                          # Funcionalidades varias del sistema
+import socket                                                                                                                       # Tratamiento de sockets
+import os                                                                                                                           # Funcionalidades varias del sistema operativo
+
+import comun                                                                                                                        # Funciones comunes a varios sistemas
+
+if DEBUG_REMOTO:
+    import pydevd                                                                                                                   # Depuración remota
+
+import RPi.GPIO as GPIO                                                                                                             # Acceso a los pines GPIO
+
+from ast import literal_eval                                                                                                        # Función "eval" más segura
+from subprocess import call                                                                                                         # Lanzamiento de nuevos procesos
+from threading import Lock, Thread                                                                                                  # Capacidades multihilo
+from time import sleep                                                                                                              # Para hacer pausas
+
+import comun                                                                                                                        # Funciones comunes a varios sistemas
 
 try:
-    from config import domotica_servidor_config as config                       # Configuración
+    from config import domotica_servidor_config as config                                                                           # Configuración
 
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
-
-from threading import Lock, Thread                                              # Capacidades multihilo
-from time import sleep                                                          # Para hacer pausas
-import comun                                                                    # Funciones comunes a varios sistemas
-
-if DEBUG_REMOTO:
-    import pydevd                                                               # Depuración remota
-
-import socket                                                                   # Tratamiento de sockets
-import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
-
-
-semaforo = Lock()                                                               # Un semáforo evitará que el padre y los hijos den problemas al acceder a una variable que ambos puedan modificar
 
 
 class domotica_servidor(comun.app):
@@ -92,7 +95,7 @@ class domotica_servidor(comun.app):
                     self._hijos[i].start()
 
             while True:
-                sc, dir = self._socket.accept()
+                sc, _ = self._socket.accept()
                 comando = sc.recv(1024)
                 comando = comando.decode('utf_8')
                 comando = comando.lower()
@@ -123,7 +126,7 @@ class domotica_servidor(comun.app):
                         (funcion, params) = comando.split(' ', 1)
 
                         try:
-                            respuesta = eval('self.' + funcion + '(' + params + ')')
+                            respuesta = literal_eval('self.' + funcion + '(' + params + ')')
 
                         except AttributeError:
                             if DEBUG:
@@ -247,6 +250,7 @@ class domotica_servidor(comun.app):
             return False
 
 
+    # TODO: Mejora de calidad
     def estado(self, puerto, modo = False):
         if modo == False:
             puerto = self.buscar_puerto_GPIO(puerto)
@@ -373,7 +377,7 @@ class domotica_servidor_hijos(comun.app):
         pass
 
 
-def main(argv = sys.argv):
+def main(argv):
     if DEBUG_REMOTO:
         pydevd.settrace(config.IP_DEP_REMOTA)
 

@@ -58,12 +58,6 @@ class reiniciar_router(comun.app):
 
             while True:
                 if hay_internet():                                                          # Si hay Internet, simplemente se esperará para hacer la próxima comprobación
-                    if self._conectar('conectar ' + self._config.servidor, False):
-                        for GPIO in self._config.GPIO:
-                            self._enviar_y_recibir('apagar ' + str(GPIO[0]))
-
-                        self._desconectar()
-
                     sleep(self._config.PAUSA * 60)
 
                 else:                                                                       # En caso contrario, se mandará la orden de apagado durante el tiempo mínimo establecido y después se restablecerá
@@ -89,7 +83,7 @@ class reiniciar_router(comun.app):
         super().__del__()
 
 
-def main(argv = sys.argv):
+def main(argv):
     if DEBUG_REMOTO:
         pydevd.settrace(config.IP_DEP_REMOTA)
 

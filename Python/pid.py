@@ -44,10 +44,10 @@ class bloqueo(object):
     def comprobar(self):
         if os.name == 'posix':
             return not(os.path.isfile('/var/lock/' + self._nombre[0:-3] + '.lock'))
-    
+
         elif os.name == 'nt':
             return not(os.path.isfile(gettempdir() + '\\' + self._nombre[0:-3] + '.lock'))
-    
+
         else:
             return False
 

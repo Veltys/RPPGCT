@@ -1,8 +1,10 @@
-﻿﻿﻿# RPPGCT
-Raspberry Pi Python GPIO Control Tools
+﻿# RPPGCT
+Raspberry Pi Python GPIO Control Tools [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2b1a7d458bb14ebd8b9e9efcd0579391)](https://www.codacy.com/app/veltys/RPPGCT?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Veltys/RPPGCT&amp;utm_campaign=Badge_Grade)
+
 
 ## Descripción
 Colección de utilidades varias para el control GPIO en Python
+
 
 ## Sistemas
 - **cpu.py**: Sistema indicador led de la carga de CPU en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
@@ -13,6 +15,7 @@ Colección de utilidades varias para el control GPIO en Python
 - **pid.py**: Módulo auxiliar para ciertas funciones de bloqueo y de PIDs.
 - **reiniciar_router.py**: Sistema que comprueba si hay acceso a Internet. Si no, manda una señal en un puerto GPIO determinado. La idea es conectar un relé a este GPIO y al mismo la alimentación del sistema de acceso a Internet.
 - **temperaturas.py**: Sistema indicador led de la temperatura del procesador en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
+
 
 ## Historial de versiones
 - 0.1.0:
@@ -162,6 +165,9 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.7.1:
     - Implementados varios parámetros para variar la salida en **dht11.py**.
     - Añadida otra licencia en la sección de *Otras licencias* en **README.md**.
+- 0.7.2:
+	- Mejoras en la calidad del código
+
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
@@ -175,6 +181,7 @@ Colección de utilidades varias para el control GPIO en Python
 * A *Barlan*, por [la entrada sobre sockets en Python 3.4 en el foro de *underc0de.org*](https://underc0de.org/foro/python/(mini-guia)-sockets-en-python-(3-4)/), la cual me ha permitido adaptar mis conocimientos en C / C++ en este campo en **domotica_cliente.py** y **domotica_servidor.py**.
 * A *Pherkad*, por [la sección de "Control del acceso a los recursos. Bloqueos" en la web *python-para-impacientes.blogspot.com.es*](http://python-para-impacientes.blogspot.com.es/2016/12/threading-programacion-con-hilos-y-ii.html), la cual me ha evitado dolores de cabeza variados en **domotica_servidor.py**.
 * A *szazo*, por [su implementación de la lectura de la sonda de temperatura DHT11 en Python](https://github.com/szazo/DHT11_Python), la cuál he utilizado (adaptado) en mi **dht11.py**.
+
 
 ## Por hacer (*TODO*)
 - [x] Crear una rama (*branch*) de *testing*.
@@ -195,6 +202,7 @@ Colección de utilidades varias para el control GPIO en Python
 - [ ] Hacer un cliente en Django, que permita una gestión más visual del sistema.
 - [ ] Rehacer **dht11.py** de manera que pueda ser configurado para leer individualmente cada sensor
 - [ ] ¡Mucho más!
+
 
 ## F. A. Q. (*Frequently Asked Questions*) o P. F. (Preguntas Frecuentes)
 Desengañémosnos, nadie en su sano juicio preguntaría estas cosas, pero al menos nos sirve a los que las redactamos para aclarar algunas dudas que, creemos, el resto del mundo (mundial) podría tener.
@@ -218,13 +226,11 @@ Desengañémosnos, nadie en su sano juicio preguntaría estas cosas, pero al men
 - Algo de [lógica combinacional](https://es.aliexpress.com/store/product/Free-Shipping-10PCS-SN74HC00-HC00-74HC00-74HC00N-DIP14-NAND-gate-IC/614856_670739753.html)
 - Y un toque de [lógica secuencial](https://es.aliexpress.com/store/product/20Pcs-CD4060BE-CD4060-4060-Ripple-Carry-Binary-Counter-IC-DIP-16-pin-Low-Power/612195_32629607788.html)
 
-
 :point_right: Con todo ese cóctel de cosas, podemos tener algo decente. Prometo subir alguna foto del montaje.
 
 :exclamation: Exención de responsabilidad: Esta respuesta no es con fines publicitarios de **Amazon**, ni de ninguna otra web. Simplemente he listado la mayoría de los componentes que he comprado y dónde pueden ser encontrados.
 
 :point_left: Las puertas NAND y los contadores son para propósitos de pruebas y experimentos. Aún no he realizado nada con ellos que esté relacionado con este proyecto, pero preveo hacerlo.
-
 
 :question: Lo que tú digas, ¿pero cómo lo conecto o cómo se pone en marcha el hardware?
 
@@ -243,7 +249,6 @@ Desengañémosnos, nadie en su sano juicio preguntaría estas cosas, pero al men
 - **pid.py**: Este módulo proporciona actualmente utilidades para evitar más de una instancia de ejecucución a los sistemas que lo requieran. En un futuro pienso ampliar sus funcionalidades. 
 - **reiniciar_router.py**: Este sistema conmuta un relé que controla la alimentación de un módem - router 3G. Personlamente, me ha pasado el perder la conectividad a Internet de un sistema remoto y, por ello, no tener forma de acceder al mismo. La idea es que este sistema comprueba si hay internet (gracias a **internet.py**) y, de no haberlo, reinicie el módem - router... *por las bravas*, aunque en este caso, dicho aparato lo soporta sin problemas.   
 - **temperaturas.py**: Este sistema está pensado para algo relacionado con **cpu.py**. Solamente que éste no enciende más de un led simultáneamente. Mi idea es conectar cada uno de los puertos GPIO a un led RGB y el cuarto a un led de alarma. Posteriormente, la alarma será también conectada a un relé que activará un ventilador (ya que si se activa la alarma es que la Raspberry Pi *tiene calor*). Aquí es donde seguramente necesitaré las puertas NAND.
-
 
 :question: ¿Cuándo será lanzada la versión 1.0?
 
