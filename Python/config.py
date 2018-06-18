@@ -11,7 +11,7 @@
 # Notes         : A título ilustrativo, a se ofrece una configuración por defecto (la mía, para ser exactos)
 
 
-class config_global:                                                            # Configuración común
+class config_global(object):                                                    # Configuración común
     IP_DEP_REMOTA   = '0.0.0.0'                                                 # IP del servidor de depuración
 
 
@@ -35,7 +35,7 @@ class dht11_config(config_global):
     GPIOS           = [(25,               'Sonda DHT11 de pruebas'  ),
                       ]
 
-    LIMITE          = 10
+    LIMITE          = 20
 
     PAUSA           = 0.5
 

@@ -17,7 +17,15 @@ DEBUG_REMOTO = False
 
 
 import errno                                                                    # Códigos de error
+import os                                                                       # Funcionalidades varias del sistema operativo
 import sys                                                                      # Funcionalidades varias del sistema
+
+if DEBUG_REMOTO:
+    import pydevd                                                               # Depuración remota
+
+import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
+
+import comun                                                                    # Funciones comunes a varios sistemas
 
 try:
     from config import temperatura_config as config                            # Configuración
@@ -29,13 +37,6 @@ except ImportError:
 from time import sleep                                                          # Para hacer pausas
 from shlex import split                                                         # Manejo de cadenas
 from subprocess import check_output                                             # Llamadas a programas externos, recuperando su respuesta
-import comun                                                                    # Funciones comunes a varios sistemas
-import os                                                                       # Funcionalidades varias del sistema operativo
-
-if DEBUG_REMOTO:
-    import pydevd                                                               # Depuración remota
-
-import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 class temperatura(comun.app):
     def __init__(self, config, nombre):
@@ -61,11 +62,11 @@ class temperatura(comun.app):
                     elif temperatura < self._config.TEMPERATURAS[1]:            # Temperatura por debajo del valor medio
                         for i in range(4):
                             leds[i].ChangeDutyCycle(self._config.COLORES[1][i] * 100)
-                        
+
                     elif temperatura < self._config.TEMPERATURAS[2]:            # Temperatura por debajo del valor máximo
                         for i in range(4):
                             leds[i].ChangeDutyCycle(self._config.COLORES[2][i] * 100)
-                        
+
                     else:                                                       # Temperatura por encima del valor máximo
                         for i in range(4):
                             leds[i].ChangeDutyCycle(self._config.COLORES[3][i] * 100)
@@ -80,7 +81,7 @@ class temperatura(comun.app):
         super().__del__()
 
 
-def main(argv = sys.argv):
+def main(argv):
     if DEBUG_REMOTO:
         pydevd.settrace(config.IP_DEP_REMOTA)
 

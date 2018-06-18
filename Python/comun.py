@@ -8,26 +8,29 @@
 # Date          : 06-03-2018
 # Version       : 0.3.1
 # Usage         : import comun | from comun import <clase>
-# Notes         : 
+# Notes         : ...
 
 
 DEBUG = False
 
 
-from abc import ABCMeta, abstractmethod                                         # Clases abstractas
-from pid import bloqueo                                                         # Módulo propio para bloquear la ejecución de más de una instancia
-from time import sleep                                                          # Para hacer pausas
 import errno                                                                    # Códigos de error
 import os                                                                       # Funcionalidades varias del sistema operativo
 import signal                                                                   # Manejo de señales
-import sys                                                                      # Funcionalidades varias del sistema
-import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 import socket                                                                   # Tratamiento de sockets
+import sys                                                                      # Funcionalidades varias del sistema
+
+import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
+
+from abc import ABCMeta, abstractmethod                                         # Clases abstractas
+from time import sleep                                                          # Para hacer pausas
+
+from pid import bloqueo                                                         # Módulo propio para bloquear la ejecución de más de una instancia
 
 
 class app(object):
     # Clase abstracta que contiene todos los métodos comunes para una app de este sistema
- 
+
     __metaclass__       = ABCMeta
     _config             = []
     _bloqueo            = False
@@ -168,12 +171,12 @@ class app(object):
     def apagado(self):
         ''' Activador / desactivador del "modo apagado":
             - Conmuta el "modo apagado"
-            - "Apaga" todos los puertos GPIO 
+            - "Apaga" todos los puertos GPIO
         '''
 
         self._modo_apagado = not(self._modo_apagado)
 
-        for gpio, modo, activacion in self._config.GPIOS:
+        for gpio, _, activacion, _ in self._config.GPIOS:
             GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
 
 
@@ -212,15 +215,15 @@ class app(object):
                             if DEBUG:
                                 print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", self._config.GPIOS[i][0], 'como entrada', sep = '')
 
-                            GPIO.setup(self._config.GPIOS[i][0], GPIO.IN, pull_up_down = GPIO.PUD_DOWN) 
+                            GPIO.setup(self._config.GPIOS[i][0], GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
                             self._config.GPIOS[i] = list(self._config.GPIOS[i]) # En el caso de tener un pin GPIO de entrada, se necesitará transformar en lista la tupla, ya que es posible que haga falta modificar su contenido
 
                 return 0
-    
+
             else:
                 print('Error: No se puede bloquear ' + self._bloqueo.nombre(), file = sys.stderr)
                 return errno.EACCES
-    
+
         else:
             print('Error: Ya se ha iniciado una instancia de ' + self._bloqueo.nombre(), file = sys.stderr)
             return errno.EEXIST
@@ -307,7 +310,7 @@ class app(object):
             pass
 
         else:
-            for gpio, modo, activacion in self._config.GPIOS:
+            for gpio, _, activacion, _ in self._config.GPIOS:
                 GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)
 
             sleep(self._config.PAUSA)
