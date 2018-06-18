@@ -119,7 +119,7 @@ class domotica_servidor(comun.app):
                         (funcion, params) = comando.split(' ', 1)
 
                         try:
-                            respuesta = literal_eval('self.' + funcion + '(' + params + ')')
+                            respuesta = eval('self.' + funcion + '(' + params + ')')
 
                         except AttributeError:
                             if DEBUG:

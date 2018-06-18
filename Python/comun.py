@@ -244,7 +244,7 @@ class app(object):
 
         else:
             for senyal, funcion in self._config.senyales.items():
-                signal.signal(literal_eval('signal.' + senyal), literal_eval('self._' + funcion))
+                signal.signal(eval('signal.' + senyal), eval('self._' + funcion))
 
 
     @abstractmethod
