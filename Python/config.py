@@ -36,7 +36,7 @@ class aviso_electricidad_config(config_global):
     USUARIO         = ''
 
 
-class cpu_config(config_global):                                                            # Configuración del sistema de CPU
+''' class cpu_config(config_global):                                                        # Configuración del sistema de CPU
     GPIOS           = [(26, True,  True , config_global.LED  , 'Verde'                   ), # GPIOS contiene quíntuplas de datos en formato lista:
                        (19, True,  True , config_global.LED  , 'Amarillo'                ), # el primer elemento será el número (BCM) de puerto GPIO a manipular,
                        (13, True,  True , config_global.LED  , 'Naranja'                 ), # el segundo, el modo (True para salida, False para entrada)
@@ -50,7 +50,7 @@ class cpu_config(config_global):                                                
                        'SIGUSR1': 'sig_test',
                        'SIGUSR2': 'sig_apagado',
                       }
-
+'''
 
 
 class dht11_config(config_global):
@@ -68,22 +68,22 @@ class domotica_cliente_config(config_global):
 
 
 class domotica_servidor_config(domotica_cliente_config):
-    GPIOS           = [(22, False, False, config_global.BOTON, 'Botón reinicio router'   ), # En este caso, los puertos GPIO serán dados por pares:
-                       ( 4, True,  False, config_global.RELE , 'Relé reinicio router'    ), # Las entradas impares orresponderán a los relés que se gestionarán
+    GPIOS           = [# (22, False, False, config_global.BOTON, 'Botón reinicio router'   ), # En este caso, los puertos GPIO serán dados por pares:
+                       # ( 4, True,  False, config_global.RELE , 'Relé reinicio router'    ), # Las entradas impares orresponderán a los relés que se gestionarán
 
-                       (24, False, False, config_global.BOTON, 'Botón reinicio switch'   ), # Las pares, a los pulsadores o equivalentes que irán asociados a dichos relés, para su conmutación
-                       (23, True,  False, config_global.RELE , 'Relé reinicio switch'    ),
+                       # (24, False, False, config_global.BOTON, 'Botón reinicio switch'   ), # Las pares, a los pulsadores o equivalentes que irán asociados a dichos relés, para su conmutación
+                       # (23, True,  False, config_global.RELE , 'Relé reinicio switch'    ),
 
-                       (17, False, False, config_global.BOTON, 'Botón reinicio cámara'   ),
-                       (27, True,  False, config_global.RELE , 'Relé reinicio cámara'    ),
+                       # (17, False, False, config_global.BOTON, 'Botón reinicio cámara'   ),
+                       # (27, True,  False, config_global.RELE , 'Relé reinicio cámara'    ),
 
                        (13, False, False, config_global.SONDA, 'Indicador electricidad'  ),
                        (16, True,  False, config_global.RELE , 'Relé activación router'  ),
                       ]
 
-    LLAMADAS        = [(None,                    False, False),
-                       (None,                    False, False),
-                       (None,                    False, False),
+    LLAMADAS        = [# (None,                    False, False),
+                       # (None,                    False, False),
+                       # (None,                    False, False),
                        ('aviso_electricidad.py', False, True ),
                       ]
 
@@ -111,7 +111,7 @@ class internet_config(config_global):
                       ]
 
 
-class reiniciar_router_config(domotica_cliente_config):
+''' class reiniciar_router_config(domotica_cliente_config):
     PAUSA           = 15
 
     GPIO            = [domotica_servidor_config.GPIOS[1],
@@ -121,10 +121,10 @@ class reiniciar_router_config(domotica_cliente_config):
     senyales        = {'SIGTERM': 'sig_cerrar',
                        'SIGUSR1': 'sig_test',
                       }
+'''
 
 
-
-class temperatura_config(config_global):
+''' class temperatura_config(config_global):
     COLORES         = [(0.0, 0.0, 1.0, 0.0),                                                # COLORES contiene una matriz de 4 x 4 que, por columnas, representa cada led y, por filas, la etapa de temperatura
                        (0.0, 1.0, 0.0, 0.0),
                        (1.0, 0.6, 0.0, 0.0),
@@ -147,5 +147,4 @@ class temperatura_config(config_global):
                        'SIGUSR1': 'sig_test',
                        'SIGUSR2': 'sig_apagado',
                       }
-
-
+'''
