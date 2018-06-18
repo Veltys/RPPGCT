@@ -69,7 +69,7 @@ class domotica_cliente_config(config_global):
 
 class domotica_servidor_config(domotica_cliente_config):
     GPIOS           = [# (22, False, False, config_global.BOTON, 'Botón reinicio router'   ), # En este caso, los puertos GPIO serán dados por pares:
-                       # ( 4, True,  False, config_global.RELE , 'Relé reinicio router'    ), # Las entradas impares orresponderán a los relés que se gestionarán
+                       # ( 4, True,  False, config_global.RELE , 'Relé reinicio router'    ), # Las entradas impares corresponderán a los relés que se gestionarán
 
                        # (24, False, False, config_global.BOTON, 'Botón reinicio switch'   ), # Las pares, a los pulsadores o equivalentes que irán asociados a dichos relés, para su conmutación
                        # (23, True,  False, config_global.RELE , 'Relé reinicio switch'    ),
