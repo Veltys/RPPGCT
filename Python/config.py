@@ -37,12 +37,12 @@ class aviso_electricidad_config(config_global):
 
 
 class cpu_config(config_global):                                                            # Configuración del sistema de CPU
-    GPIOS           = [(26, True,  True , config_global.LED  , 'Verde'                   ), # GPIOS contiene ternas de datos en formato lista:
+    GPIOS           = [(26, True,  True , config_global.LED  , 'Verde'                   ), # GPIOS contiene quíntuplas de datos en formato lista:
                        (19, True,  True , config_global.LED  , 'Amarillo'                ), # el primer elemento será el número (BCM) de puerto GPIO a manipular,
                        (13, True,  True , config_global.LED  , 'Naranja'                 ), # el segundo, el modo (True para salida, False para entrada)
                        ( 6, True,  True , config_global.LED  , 'Rojo'                    ), # el tercero, la activación si es de salida (True si es activo a alto nivel o False si es a bajo nivel) o el estado si es de entrada (True si está bajado y False subido)
-                       ( 5, True,  True , config_global.LED  , 'Alarma'                  ), # y el cuarto, una muy breve descripción de su función
-                      ]
+                       ( 5, True,  True , config_global.LED  , 'Alarma'                  ), # el cuarto, el tipo de elemento que es
+                      ]                                                                     # y el quinto, una muy breve descripción de su función
 
     PAUSA           = 10                                                                    # PAUSA contiene el tiempo que el bucle estará parado
 
