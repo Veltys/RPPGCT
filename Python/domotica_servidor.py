@@ -34,7 +34,6 @@ import RPi.GPIO as GPIO                                                         
 
 import comun                                                                                                                        # Funciones comunes a varios sistemas
 
-from subprocess import call                                                                                                         # Lanzamiento de nuevos procesos
 from threading import Lock, Thread                                                                                                  # Capacidades multihilo
 from time import sleep                                                                                                              # Para hacer pausas
 
