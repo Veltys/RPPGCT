@@ -28,6 +28,7 @@ STATE_DATA_FIRST_PULL_DOWN = 3
 STATE_DATA_PULL_UP = 4
 STATE_DATA_PULL_DOWN = 5
 
+
 import errno                                                                    # Códigos de error
 import sys                                                                      # Funcionalidades varias del sistema
 
@@ -44,13 +45,6 @@ try:
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
-
-if DEBUG_REMOTO:
-    import pydevd                                                               # Depuración remota
-
-from time import sleep                                                          # Para hacer pausas
-
-import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
 
 class dht11:                                                                    # Clase de gestión del sensor DHT11 para Raspberry Pi

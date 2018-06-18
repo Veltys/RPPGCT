@@ -14,31 +14,29 @@
 #                 Se está estudiando, para futuras versiones, la integración con servicios IoT, especuialmente con el "AWS IoT Button" --> http://amzn.eu/dsgsHvv
 
 
-DEBUG = False
-DEBUG_PADRE = False
-DEBUG_REMOTO = False
+DEBUG           = False
+DEBUG_PADRE     = False
+DEBUG_REMOTO    = False
 
 
 salir           = False                                                                                                             # Ya que no es posible matar a un hilo, esta "bandera" global servirá para indicarle a los hilos que deben terminar
 
 
 import errno                                                                                                                        # Códigos de error
+import os                                                                                                                           # Funcionalidades varias del sistema operativo
 import sys                                                                                                                          # Funcionalidades varias del sistema
 import socket                                                                                                                       # Tratamiento de sockets
-import os                                                                                                                           # Funcionalidades varias del sistema operativo
-
-import comun                                                                                                                        # Funciones comunes a varios sistemas
 
 if DEBUG_REMOTO:
     import pydevd                                                                                                                   # Depuración remota
 
 import RPi.GPIO as GPIO                                                                                                             # Acceso a los pines GPIO
 
+import comun                                                                                                                        # Funciones comunes a varios sistemas
+
 from subprocess import call                                                                                                         # Lanzamiento de nuevos procesos
 from threading import Lock, Thread                                                                                                  # Capacidades multihilo
 from time import sleep                                                                                                              # Para hacer pausas
-
-import comun                                                                                                                        # Funciones comunes a varios sistemas
 
 try:
     from config import domotica_servidor_config as config                                                                           # Configuración

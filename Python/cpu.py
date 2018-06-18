@@ -17,16 +17,17 @@ DEBUG_REMOTO = False
 
 
 import errno                                                                    # Códigos de error
+import os                                                                       # Funcionalidades varias del sistema operativo
 import sys                                                                      # Funcionalidades varias del sistema
 
-try:
-    from config import cpu_config as config                                       # Configuración
+if DEBUG_REMOTO:
+    import pydevd                                                               # Depuración remota
 
-except ImportError:
-    print('Error: Archivo de configuración no encontrado', file = sys.stderr)
-    sys.exit(errno.ENOENT)
+import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
-import os                                                                       # Funcionalidades varias del sistema operativo
+import comun                                                                    # Funciones comunes a varios sistemas
+
+from time import sleep                                                          # Para hacer pausas
 
 try:
     from psutil import cpu_percent                                              # Obtención del porcentaje de uso de la CPU
@@ -35,13 +36,12 @@ except ImportError:
     print('Error: Paquete "psutil" no encontrado' + os.linesep + 'Puede instalarlo con la orden "[sudo] pip3 install psutil"', file = sys.stderr)
     sys.exit(errno.ENOENT)
 
-from time import sleep                                                          # Para hacer pausas
-import comun                                                                    # Funciones comunes a varios sistemas
+try:
+    from config import cpu_config as config                                       # Configuración
 
-if DEBUG_REMOTO:
-    import pydevd                                                               # Depuración remota
-
-import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
+except ImportError:
+    print('Error: Archivo de configuración no encontrado', file = sys.stderr)
+    sys.exit(errno.ENOENT)
 
 
 class cpu(comun.app):

@@ -14,15 +14,18 @@
 DEBUG = False
 
 
-from abc import ABCMeta, abstractmethod                                         # Clases abstractas
-from pid import bloqueo                                                         # Módulo propio para bloquear la ejecución de más de una instancia
-from time import sleep                                                          # Para hacer pausas
 import errno                                                                    # Códigos de error
 import os                                                                       # Funcionalidades varias del sistema operativo
 import signal                                                                   # Manejo de señales
-import sys                                                                      # Funcionalidades varias del sistema
-import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 import socket                                                                   # Tratamiento de sockets
+import sys                                                                      # Funcionalidades varias del sistema
+
+import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
+
+from abc import ABCMeta, abstractmethod                                         # Clases abstractas
+from time import sleep                                                          # Para hacer pausas
+
+from pid import bloqueo                                                         # Módulo propio para bloquear la ejecución de más de una instancia
 
 
 class app(object):

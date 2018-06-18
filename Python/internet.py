@@ -14,7 +14,10 @@
 
 
 import errno                                                                    # Códigos de error
+import os                                                                       # Funciones del sistema operativo
 import sys                                                                      # Funcionalidades varias del sistema
+
+from subprocess import call                                                     # Llamadas a programas externos
 
 try:
     from config import internet_config as config                                # Configuración
@@ -22,10 +25,6 @@ try:
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
-
-import os                                                                       # Funciones del sistema operativo
-
-from subprocess import call                                                     # Llamadas a programas externos
 
 
 def ping(host):

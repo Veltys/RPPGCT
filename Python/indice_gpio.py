@@ -12,6 +12,8 @@
 
 
 import errno                                                                    # Códigos de error
+import inspect                                                                  # Metaprogramación
+import os                                                                       # Funcionalidades varias del sistema operativo
 import sys                                                                      # Funcionalidades varias del sistema
 
 try:
@@ -20,9 +22,6 @@ try:
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
-
-import inspect                                                                  # Metaprogramación
-import os                                                                       # Funcionalidades varias del sistema operativo
 
 
 def main(argv):

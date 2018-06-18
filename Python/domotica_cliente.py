@@ -16,7 +16,13 @@ DEBUG_REMOTO = False
 
 
 import errno                                                                                # Códigos de error
+import socket                                                                               # Tratamiento de sockets
 import sys                                                                                  # Funcionalidades varias del sistema
+
+if DEBUG_REMOTO:
+    import pydevd                                                                           # Depuración remota
+
+import comun                                                                                # Funciones comunes a varios sistemas
 
 try:
     from config import domotica_cliente_config as config                                    # Configuración
@@ -24,13 +30,6 @@ try:
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
-
-import comun                                                                                # Funciones comunes a varios sistemas
-
-if DEBUG_REMOTO:
-    import pydevd                                                                           # Depuración remota
-
-import socket                                                                               # Tratamiento de sockets
 
 
 class domotica_cliente(comun.app):
