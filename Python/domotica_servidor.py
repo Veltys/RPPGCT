@@ -122,7 +122,7 @@ class domotica_servidor(comun.app):
                       or (comando != 'hola'         and comando[:4] == 'hola'       and comando[4] == ' ' and comando[ 5:] != '') \
                       or (comando != 'pulsar'       and comando[:6] == 'pulsar'     and comando[6] == ' ' and comando[ 7:] != '') \
                     :
-                        (funcion, params) = comando.split(' ', 1)
+                        funcion, params = comando.split(' ', 1)
 
                         try:
                             respuesta = eval('self.' + funcion + '(' + params + ')')
