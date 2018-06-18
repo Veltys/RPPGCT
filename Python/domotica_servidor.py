@@ -24,15 +24,15 @@ salir           = False                                                         
 
 import errno                                                                                                                        # Códigos de error
 import os                                                                                                                           # Funcionalidades varias del sistema operativo
-import socket                                                                                                                       # Tratamiento de sockets
 import sys                                                                                                                          # Funcionalidades varias del sistema
-
-import comun                                                                                                                        # Funciones comunes a varios sistemas
+import socket                                                                                                                       # Tratamiento de sockets
 
 if DEBUG_REMOTO:
     import pydevd                                                                                                                   # Depuración remota
 
 import RPi.GPIO as GPIO                                                                                                             # Acceso a los pines GPIO
+
+import comun                                                                                                                        # Funciones comunes a varios sistemas
 
 from subprocess import call                                                                                                         # Lanzamiento de nuevos procesos
 from threading import Lock, Thread                                                                                                  # Capacidades multihilo

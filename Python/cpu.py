@@ -20,27 +20,27 @@ import errno                                                                    
 import os                                                                       # Funcionalidades varias del sistema operativo
 import sys                                                                      # Funcionalidades varias del sistema
 
-import comun                                                                    # Funciones comunes a varios sistemas
-
 if DEBUG_REMOTO:
     import pydevd                                                               # Depuración remota
 
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
+import comun                                                                    # Funciones comunes a varios sistemas
+
 from time import sleep                                                          # Para hacer pausas
-
-try:
-    from config import cpu_config as config                                     # Configuración
-
-except ImportError:
-    print('Error: Archivo de configuración no encontrado', file = sys.stderr)
-    sys.exit(errno.ENOENT)
 
 try:
     from psutil import cpu_percent                                              # Obtención del porcentaje de uso de la CPU
 
 except ImportError:
     print('Error: Paquete "psutil" no encontrado' + os.linesep + 'Puede instalarlo con la orden "[sudo] pip3 install psutil"', file = sys.stderr)
+    sys.exit(errno.ENOENT)
+
+try:
+    from config import cpu_config as config                                       # Configuración
+
+except ImportError:
+    print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
 
 

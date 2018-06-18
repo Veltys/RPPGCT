@@ -20,12 +20,12 @@ import errno                                                                    
 import os                                                                       # Funcionalidades varias del sistema operativo
 import sys                                                                      # Funcionalidades varias del sistema
 
-import comun                                                                    # Funciones comunes a varios sistemas
+if DEBUG_REMOTO:
+    import pydevd                                                               # Depuración remota
 
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
-if DEBUG_REMOTO:
-    import pydevd                                                               # Depuración remota
+import comun                                                                    # Funciones comunes a varios sistemas
 
 from time import sleep                                                          # Para hacer pausas
 from shlex import split                                                         # Manejo de cadenas
