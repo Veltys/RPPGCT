@@ -35,7 +35,6 @@ if DEBUG_REMOTO:
 
 import RPi.GPIO as GPIO                                                                                                             # Acceso a los pines GPIO
 
-from ast import literal_eval                                                                                                        # Función "eval" más segura
 from subprocess import call                                                                                                         # Lanzamiento de nuevos procesos
 from threading import Lock, Thread                                                                                                  # Capacidades multihilo
 from time import sleep                                                                                                              # Para hacer pausas
@@ -126,7 +125,7 @@ class domotica_servidor(comun.app):
                         (funcion, params) = comando.split(' ', 1)
 
                         try:
-                            respuesta = literal_eval('self.' + funcion + '(' + params + ')')
+                            respuesta = eval('self.' + funcion + '(' + params + ')')
 
                         except AttributeError:
                             if DEBUG:

@@ -23,7 +23,6 @@ import signal                                                                   
 import sys                                                                      # Funcionalidades varias del sistema
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 import socket                                                                   # Tratamiento de sockets
-from ast import literal_eval                                                    # Función "eval" más segura
 
 
 class app(object):
@@ -242,7 +241,7 @@ class app(object):
 
         else:
             for senyal, funcion in self._config.senyales.items():
-                signal.signal(literal_eval('signal.' + senyal), literal_eval('self._' + funcion))
+                signal.signal(eval('signal.' + senyal), eval('self._' + funcion))
 
 
     @abstractmethod
