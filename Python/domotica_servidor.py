@@ -19,8 +19,7 @@ DEBUG_PADRE     = False
 DEBUG_REMOTO    = True
 
 
-salir           = False                                                                                                                       # Ya que no es posible matar a un hilo, esta "bandera" global servirá para indicarle a los hilos que deben terminar
-semaforo        = Lock()                                                                                                                   # Un semáforo evitará que el padre y los hijos den problemas al acceder a una variable que ambos puedan modificar
+salir           = False                                                                                                             # Ya que no es posible matar a un hilo, esta "bandera" global servirá para indicarle a los hilos que deben terminar
 
 
 import errno                                                                                                                        # Códigos de error
@@ -41,6 +40,10 @@ from time import sleep                                                          
 
 try:
     from config import domotica_servidor_config as config                                                                           # Configuración
+
+
+
+semaforo        = Lock()                                                                                                            # Un semáforo evitará que el padre y los hijos den problemas al acceder a una variable que ambos puedan modificar
 
 
 class domotica_servidor(comun.app):
