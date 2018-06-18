@@ -36,7 +36,6 @@ if DEBUG_REMOTO:
 
 import RPi.GPIO as GPIO                                                         # Acceso a los pines GPIO
 
-from abc import abstractmethod                                                  # Clases abstractas
 from time import sleep                                                          # Para hacer pausas
 
 try:
@@ -61,7 +60,7 @@ class dht11:                                                                    
         self._sensor = sensor
 
 
-    @abstractmethod                                                             # Método abstracto
+    @staticmethod                                                               # Método estático
     def _bits_a_bytes(bits):
         byte = 0
         bytess = []
@@ -82,7 +81,7 @@ class dht11:                                                                    
         return bytess
 
 
-    @abstractmethod                                                             # Método abstracto
+    @staticmethod                                                               # Método estático
     def _calcular_bits(longitudes):
         mas_corta = 1000
         mas_larga = 0
@@ -110,7 +109,7 @@ class dht11:                                                                    
         return bits
 
 
-    @abstractmethod                                                             # Método abstracto
+    @staticmethod                                                               # Método estático
     def _calcular_checksum(bytess):
         return bytess[0] + bytess[1] + bytess[2] + bytess[3] & 255
 
@@ -121,7 +120,7 @@ class dht11:                                                                    
         sleep(pausa)
 
 
-    @abstractmethod                                                             # Método abstracto
+    @staticmethod                                                               # Método estático
     def _procesar_datos(datos):
         estado = STATE_INIT_PULL_DOWN
 
