@@ -110,7 +110,7 @@ class domotica_servidor(comun.app):
                         if DEBUG:
                             print('Padre #', os.getpid(), "\tVoy a mandarle el mensaje: ", mensaje, sep = '')
 
-                    # conmutar, pulsar, encender, apagar
+                    # apagar, conmutar, describir, encender, estado, hola, pulsar
                     elif (comando != 'apagar'       and comando[:6] == 'apagar'     and comando[6] == ' ' and comando[ 7:] != '') \
                       or (comando != 'conmutar'     and comando[:8] == 'conmutar'   and comando[8] == ' ' and comando[ 9:] != '') \
                       or (comando != 'describir'    and comando[:9] == 'describir'  and comando[9] == ' ' and comando[10:] != '') \
