@@ -213,7 +213,7 @@ class domotica_cliente(comun.app):
                     self.__mostrar_ayuda()
 
                 # conectar & listar & estado
-                elif comando != 'conectar' and comando[0:8] == 'conectar' and comando[8] == ' ' and comando[9:] != '':
+                elif comando == 'conectar':
 
                     if self._conectar(True):
                         if self.__listar():
