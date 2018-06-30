@@ -11,12 +11,13 @@
 
 directorio='/opt/RPPGCT'
 
-scripts[0]='cpu'
-scripts[1]='dht11'
-scripts[2]='domotica_cliente'
-scripts[3]='domotica_servidor'
-scripts[4]='reiniciar_router'
-scripts[5]='temperatura'
+scripts[0]='aviso_electricidad'
+scripts[1]='cpu'
+scripts[2]='dht11'
+scripts[3]='domotica_cliente'
+scripts[4]='domotica_servidor'
+scripts[5]='reiniciar_router'
+scripts[6]='temperatura'
 
 arrancables[0]='cpu'
 arrancables[1]='domotica_servidor'
