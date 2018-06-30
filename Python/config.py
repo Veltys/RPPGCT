@@ -29,7 +29,7 @@ class aviso_electricidad_config(config_global):
     ASUNTO          = '<NOMBRE_SISTEMA>: informe especial'
     CONTRASENYA     = ''
     CORREO          = 'Informe especial de <NOMBRE_SISTEMA>, generado el ' + str(strftime("%c")) + os.linesep + os.linesep \
-                    + 'Ha habido un corte de luz en la red eléctrica de <NOMBRE_SISTEMA> y se ha activado la batería.'
+                    +'Ha habido un corte en la red eléctrica de <NOMBRE_SISTEMA> y se ha activado la batería.'
     DE              = ''
     PARA            = ''
     SERVIDOR        = ''
