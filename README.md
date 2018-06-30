@@ -178,7 +178,8 @@ Colección de utilidades varias para el control GPIO en Python
 	  - Homogeneizado de **README.md**.
     - Añadido **aviso_electricidad.py** a la lista de scripts en **config.sh**
 - 0.8.2:
-	- Independizado el código encargado de mandar correos electrónicos.
+	  - Independizado el código encargado de mandar correos electrónicos.
+	  - Homogeneizado de **README.md**.
 
 
 ## Agradecimientos, fuentes consultadas y otros créditos
