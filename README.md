@@ -8,12 +8,13 @@ Colección de utilidades varias para el control GPIO en Python
 
 ## Sistemas
 - **aviso_electricidad.py**: Sistema avisador de corte de luz.
+- **correo_electronico.py**: Módulo auxiliar de envío de correos electrónicos.
 - **cpu.py**: Sistema indicador led de la carga de CPU en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
 - **dht11.py**: Sistema de lectura de sondas de temperatura DHT11.
 - **domotica_cliente.py**: Cliente del sistema gestor de domótica.
 - **domotica_servidor.py**: Servidor del sistema gestor de domótica.
 - **indice_gpio.py**: Sistema indicador de los puertos GPIO que quedan libres.
-- **internet.py**: Módulo auxiliar para la comprobación de si hay o no Internet.
+- **internet.py**: Módulo auxiliar de comprobación de conectividad a Internet.
 - **pid.py**: Módulo auxiliar para ciertas funciones de bloqueo y de PIDs.
 - **reiniciar_router.py**: Sistema que comprueba si hay acceso a Internet. Si no, manda una señal en un puerto GPIO determinado. La idea es conectar un relé a este GPIO y al mismo la alimentación del sistema de acceso a Internet.
 - **temperaturas.py**: Sistema indicador led de la temperatura del procesador en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
@@ -168,11 +169,14 @@ Colección de utilidades varias para el control GPIO en Python
     - Implementados varios parámetros para variar la salida en **dht11.py**.
     - Añadida otra licencia en la sección de *Otras licencias* en **README.md**.
 - 0.7.2:
-	- Mejoras en la calidad del código
+	  - Mejoras en la calidad del código
 - 0.8.0:
-	- Añadida la posibilidad de invocar código al dispararse eventos en puertos GPIO en **domotica_servidor.py**.
-	- Eliminada la posibilidad de conectar a un servidor que no sea el local en **comun.py** y adecuado el código a la nueva conexión en **config.py**, **domotica_cliente.py** y **reiniciar_router.py**.
-	- Eliminado código innecesario en **reiniciar_router.py**.
+	  - Añadida la posibilidad de invocar código al dispararse eventos en puertos GPIO en **domotica_servidor.py**.
+	  - Eliminada la posibilidad de conectar a un servidor que no sea el local en **comun.py** y adecuado el código a la nueva conexión en **config.py**, **domotica_cliente.py** y **reiniciar_router.py**.
+	  - Eliminado código innecesario en **reiniciar_router.py**.
+- 0.8.1:
+	  - Homogeneizado de **README.md**.
+    - Añadido **aviso_electricidad.py** a la lista de scripts en **config.sh**
 
 
 ## Agradecimientos, fuentes consultadas y otros créditos
