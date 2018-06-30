@@ -41,6 +41,9 @@ from time import sleep                                                          
 try:
     from config import domotica_servidor_config as config                                                                           # Configuración
 
+except ImportError:
+    print('Error: Archivo de configuración no encontrado', file = sys.stderr)
+    sys.exit(errno.ENOENT)
 
 
 semaforo        = Lock()                                                                                                            # Un semáforo evitará que el padre y los hijos den problemas al acceder a una variable que ambos puedan modificar
