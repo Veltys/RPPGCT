@@ -32,10 +32,8 @@ except ImportError:
 from email.mime.text import MIMEText                                                        # Codificación MIME
 from smtplib import SMTP                                                                    # Envío de e-mails vía SMTP
 
-from internet import hay_internet                                                           # Módulo propio de comprobación de Internet
 
-
-def main(argv = sys.argv):
+def main(argv):
     if DEBUG_REMOTO:
         pydevd.settrace(config.IP_DEP_REMOTA)
 

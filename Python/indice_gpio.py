@@ -13,7 +13,6 @@
 
 import errno                                                                    # Códigos de error
 import inspect                                                                  # Metaprogramación
-import os                                                                       # Funcionalidades varias del sistema operativo
 import sys                                                                      # Funcionalidades varias del sistema
 
 try:
