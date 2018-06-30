@@ -5,13 +5,13 @@
 # Title         : comun.py
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
-# Date          : 06-03-2018
-# Version       : 0.3.1
+# Date          : 24-05-2018
+# Version       : 0.4.1
 # Usage         : import comun | from comun import <clase>
 # Notes         : ...
 
 
-DEBUG = False
+DEBUG           = False
 
 
 import errno                                                                    # Códigos de error
@@ -53,8 +53,8 @@ class app(object):
         self.asignar_senyales()
 
 
-    def _conectar(self, comando, salida = True):
-        ''' Realiza una conexión contra un servidor dado en el parámetro "comando"
+    def _conectar(self, salida = True):
+        ''' Realiza una conexión contra el servidor local
             - Comprueba el estado de la conexión
                 - Si es == 0 (no hay una conexión activa), intenta conectar
                     - Si no puede conectar por algún motivo, informa del error (si procede) y retorna "False"
@@ -64,18 +64,18 @@ class app(object):
 
         if self._estado == 0:
             if salida:
-                print('Info: Conectando a ' + comando[9:])
+                print('Info: Conectando al servidor')
 
             try:
-                self._socket.connect((comando[9:], self._config.puerto))
+                self._socket.connect(('localhost', self._config.puerto))
 
             except TimeoutError:
-                print('Error: Tiempo de espera agotado al conectar a ' + comando[9:], file = sys.stderr)
+                print('Error: Tiempo de espera agotado al conectar al servidor', file = sys.stderr)
 
                 return False
 
             except ConnectionRefusedError:
-                print('Error: Imposible conectar a ' + comando[9:], file = sys.stderr)
+                print('Error: Imposible conectar al servidor', file = sys.stderr)
 
                 return False
 
@@ -84,7 +84,7 @@ class app(object):
 
             else:
                 if salida:
-                    print('Ok: Conectado a ' + comando[9:])
+                    print('Ok: Conectado al servidor')
 
                 self._estado = 1
 
@@ -107,7 +107,7 @@ class app(object):
                     return False
 
         else:
-            print('Error: Imposible conectar a ' + comando[9:] + ', ya hay una conexión activa', file = sys.stderr)
+            print('Error: Imposible conectar al servidor, ya hay una conexión activa', file = sys.stderr)
 
             return False
 
@@ -176,7 +176,7 @@ class app(object):
 
         self._modo_apagado = not(self._modo_apagado)
 
-        for gpio, _, activacion, _ in self._config.GPIOS:
+        for gpio, _, activacion, _, _ in self._config.GPIOS:
             GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
 
 
@@ -310,7 +310,7 @@ class app(object):
             pass
 
         else:
-            for gpio, _, activacion, _ in self._config.GPIOS:
+            for gpio, _, activacion, _, _ in self._config.GPIOS:
                 GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)
 
             sleep(self._config.PAUSA)

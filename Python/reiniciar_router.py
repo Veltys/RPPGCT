@@ -5,16 +5,16 @@
 # Title         : reiniciar_router.py
 # Description   : Sistema que comprueba si hay acceso a Internet. Si no, manda una señal en un puerto GPIO determinado
 # Author        : Veltys
-# Date          : 30-11-2017
-# Version       : 2.2.0
+# Date          : 24-05-2018
+# Version       : 2.2.2
 # Usage         : python3 reiniciar_router.py
 # Notes         : La idea es conectar un relé a este GPIO y al mismo la alimentación del sistema de acceso a Internet
 #                 Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual simplemente apaga todos los leds hasta que esta misma señal sea recibida de nuevo
 
 
-DEBUG        = False
-DEBUG_REMOTO = False
+DEBUG           = False
+DEBUG_REMOTO    = False
 
 
 import errno                                                                                # Códigos de error
@@ -48,7 +48,7 @@ class reiniciar_router(comun.app):
 
     def bucle(self):
         try:
-            if self._conectar('conectar ' + self._config.servidor, False):
+            if self._conectar(False):
                 for GPIO in self._config.GPIO:
                     self._enviar_y_recibir('apagar ' + str(GPIO[0]))
 
@@ -61,7 +61,7 @@ class reiniciar_router(comun.app):
                     sleep(self._config.PAUSA * 60)
 
                 else:                                                                       # En caso contrario, se mandará la orden de apagado durante el tiempo mínimo establecido y después se restablecerá
-                    if self._conectar('conectar ' + self._config.servidor, False):
+                    if self._conectar(False):
                         for GPIO in self._config.GPIO:
                             self._enviar_y_recibir('encender ' + str(GPIO[0]))
 

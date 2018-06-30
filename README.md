@@ -1,5 +1,5 @@
 ﻿# RPPGCT
-Raspberry Pi Python GPIO Control Tools [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2b1a7d458bb14ebd8b9e9efcd0579391)](https://www.codacy.com/app/veltys/RPPGCT?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Veltys/RPPGCT&amp;utm_campaign=Badge_Grade)
+Raspberry Pi Python GPIO Control Tools [![Codacy Badge](https://api.codacy.com/project/badge/Grade/78a8d6604cad48329f0b6800b91b36b1)](https://www.codacy.com/app/veltys/RPPGCT?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Veltys/RPPGCT&amp;utm_campaign=Badge_Grade)
 
 
 ## Descripción
@@ -7,6 +7,7 @@ Colección de utilidades varias para el control GPIO en Python
 
 
 ## Sistemas
+- **aviso_electricidad.py**: Sistema avisador de corte de luz.
 - **cpu.py**: Sistema indicador led de la carga de CPU en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
 - **dht11.py**: Sistema de lectura de sondas de temperatura DHT11.
 - **domotica_cliente.py**: Cliente del sistema gestor de domótica.
@@ -168,6 +169,10 @@ Colección de utilidades varias para el control GPIO en Python
     - Añadida otra licencia en la sección de *Otras licencias* en **README.md**.
 - 0.7.2:
 	- Mejoras en la calidad del código
+- 0.8.0:
+	- Añadida la posibilidad de invocar código al dispararse eventos en puertos GPIO en **domotica_servidor.py**.
+	- Eliminada la posibilidad de conectar a un servidor que no sea el local en **comun.py** y adecuado el código a la nueva conexión en **config.py**, **domotica_cliente.py** y **reiniciar_router.py**.
+	- Eliminado código innecesario en **reiniciar_router.py**.
 
 
 ## Agradecimientos, fuentes consultadas y otros créditos

@@ -6,27 +6,27 @@
 # Description       : Módulo auxiliar para la gestión de la sonda de temperatura DHT11
 # Author            : Veltys
 # Original author   : szazo
-# Date              : 03-05-2018
-# Version           : 1.0.1
+# Date              : 24-05-2018
+# Version           : 1.0.2
 # Usage             : python3 dht11.py o from dht11 import
 # Notes             : Este módulo está pensado para ser llamado desde otros módulos o no directamente; si es llamado directamente, hará su trabajo e informará por pantalla de los valores del sensor
 
 
-DEBUG = False
-DEBUG_REMOTO = False
-DEBUG_SENSOR = False
-LONGITUD_DATOS = 40                                                             # 4 bytes de datos + 1 byte de comprobación = 5 * 8 = 40
+DEBUG                       = False
+DEBUG_REMOTO                = False
+DEBUG_SENSOR                = False
+LONGITUD_DATOS              = 40                                                # 4 bytes de datos + 1 byte de comprobación = 5 * 8 = 40
 
-ERR_NO_ERROR = 0
-ERR_MISSING_DATA = 1
-ERR_CRC = 2
+ERR_NO_ERROR                = 0
+ERR_MISSING_DATA            = 1
+ERR_CRC                     = 2
 
 
-STATE_INIT_PULL_DOWN = 1
-STATE_INIT_PULL_UP = 2
-STATE_DATA_FIRST_PULL_DOWN = 3
-STATE_DATA_PULL_UP = 4
-STATE_DATA_PULL_DOWN = 5
+STATE_INIT_PULL_DOWN        = 1
+STATE_INIT_PULL_UP          = 2
+STATE_DATA_FIRST_PULL_DOWN  = 3
+STATE_DATA_PULL_UP          = 4
+STATE_DATA_PULL_DOWN        = 5
 
 
 import errno                                                                    # Códigos de error
