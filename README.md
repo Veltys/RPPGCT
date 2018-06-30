@@ -1,5 +1,5 @@
 ﻿# RPPGCT
-Raspberry Pi Python GPIO Control Tools [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2b1a7d458bb14ebd8b9e9efcd0579391)](https://www.codacy.com/app/veltys/RPPGCT?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Veltys/RPPGCT&amp;utm_campaign=Badge_Grade)
+Raspberry Pi Python GPIO Control Tools [![Codacy Badge](https://api.codacy.com/project/badge/Grade/78a8d6604cad48329f0b6800b91b36b1)](https://www.codacy.com/app/veltys/RPPGCT?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Veltys/RPPGCT&amp;utm_campaign=Badge_Grade)
 
 
 ## Descripción
