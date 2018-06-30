@@ -5,14 +5,14 @@
 # Title         : domotica_cliente.py
 # Description   : Parte cliente del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 06-03-2018
-# Version       : 1.1.3
+# Date          : 24-05-2018
+# Version       : 1.1.5
 # Usage         : python3 domotica_cliente.py [commands]
 # Notes         : Parte cliente del sistema en el que se gestionarán pares de puertos GPIO
 
 
-DEBUG = False
-DEBUG_REMOTO = False
+DEBUG           = False
+DEBUG_REMOTO    = False
 
 
 import errno                                                                                # Códigos de error
@@ -213,9 +213,9 @@ class domotica_cliente(comun.app):
                     self.__mostrar_ayuda()
 
                 # conectar & listar & estado
-                elif comando != 'conectar' and comando[0:8] == 'conectar' and comando[8] == ' ' and comando[9:] != '':
+                elif comando == 'conectar':
 
-                    if self._conectar(comando, True):
+                    if self._conectar(True):
                         if self.__listar():
                             self.__mostrar_lista()
 
