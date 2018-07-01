@@ -25,12 +25,14 @@ class config_global(object):                                                    
     SONDA           = 2
 
 
-class aviso_electricidad_config(config_global):
+class aviso_electricidad_config(config_global):                                             # Configuración del sistema de aviso en caso de corte de electricidad
     ASUNTO          = '<NOMBRE_SISTEMA>: informe especial'
     CORREO          = 'Informe especial de <NOMBRE_SISTEMA>, generado el ' + str(strftime("%c")) + os.linesep + os.linesep \
                     +'Ha habido un corte en la red eléctrica de <NOMBRE_SISTEMA> y se ha activado la batería.'
     DE              = ''
     PARA            = ''
+    PAUSA           = 10
+    REINTENTOS      = 10
 
 
 class correo_electronico_config(config_global):                                             # Configuración del sistema de correo electrónico
