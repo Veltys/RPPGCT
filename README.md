@@ -177,6 +177,8 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.8.1:
 	  - Homogeneizado de **README.md**.
     - Añadido **aviso_electricidad.py** a la lista de scripts en **config.sh**
+- 0.8.2:
+	- Independizado el código encargado de mandar correos electrónicos.
 
 
 ## Agradecimientos, fuentes consultadas y otros créditos
@@ -207,7 +209,7 @@ Colección de utilidades varias para el control GPIO en Python
 - [x] Implementar comandos por parámetros en **domotica_cliente.py**.
 - [ ] Implementar comandos por archivo en **domotica_cliente.py**.
 - [x] Integrar el control de relés en un archivo separado.
-- [ ]~~Añadir control de versiones en la instalación.~~
+- [ ] ~~Añadir control de versiones en la instalación.~~
 - [ ] ~~Hacer que **actualizador.sh** sea "inteligente" y actualice en función de la versión.~~
 - [ ] Hacer un cliente en Django, que permita una gestión más visual del sistema.
 - [ ] Rehacer **dht11.py** de manera que pueda ser configurado para leer individualmente cada sensor

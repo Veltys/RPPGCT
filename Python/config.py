@@ -27,11 +27,14 @@ class config_global(object):                                                    
 
 class aviso_electricidad_config(config_global):
     ASUNTO          = '<NOMBRE_SISTEMA>: informe especial'
-    CONTRASENYA     = ''
     CORREO          = 'Informe especial de <NOMBRE_SISTEMA>, generado el ' + str(strftime("%c")) + os.linesep + os.linesep \
                     +'Ha habido un corte en la red eléctrica de <NOMBRE_SISTEMA> y se ha activado la batería.'
     DE              = ''
     PARA            = ''
+
+
+class correo_electronico_config(config_global):                                             # Configuración del sistema de correo electrónico
+    CONTRASENYA     = ''
     SERVIDOR        = ''
     USUARIO         = ''
 
