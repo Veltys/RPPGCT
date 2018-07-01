@@ -22,6 +22,10 @@ import sys                                                                      
 if DEBUG_REMOTO:
     import pydevd                                                                           # Depuración remota
 
+from email.mime.text import MIMEText                                                        # Codificación MIME
+from smtplib import SMTP, SMTPAuthenticationError                                           # Envío de e-mails vía SMTP y excepciones del envío
+from socket import gaierror                                                                 # Excepciones del socket
+
 try:
     from config import correo_electronico_config as config                                  # Configuración
 
@@ -29,13 +33,8 @@ except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
 
-from email.mime.text import MIMEText                                                        # Codificación MIME
-from smtplib import SMTP                                                                    # Envío de e-mails vía SMTP
-
 
 def mandar_correo(de, para, asunto, correo):
-    res = False
-
     if DEBUG_REMOTO:
         pydevd.settrace(config.IP_DEP_REMOTA)
 
@@ -48,17 +47,28 @@ def mandar_correo(de, para, asunto, correo):
         s = SMTP(host = config.SERVIDOR)
         s.starttls(context = ssl.create_default_context())
         s.login(config.USUARIO, config.CONTRASENYA)
-        s.send_message(mensaje)                                                                 # TODO: Probar los distintos fallos
-        s.quit()
 
-    except SMTPException:
+    except ConnectionRefusedError:
+        res = False
+
+    except gaierror:
+        res = False
+
+    except SMTPAuthenticationError:
         res = False
 
     else:
+        s.send_message(mensaje)
+
         res = True
 
     finally:
-        pass
+        try:
+            if s:
+                s.quit()
+
+        except UnboundLocalError:
+            pass
 
     return res
 
