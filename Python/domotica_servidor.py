@@ -381,7 +381,7 @@ class domotica_servidor_hijos(comun.app):
 
     @staticmethod                                                                                                                   # Método estático
     def cargar_y_ejecutar(archivo):
-        proceso = call('python3 ' + archivo, shell = True)
+        proceso = call('python3 ' + os.path.dirname(os.path.abspath(__file__)) + '/' + archivo, shell = True)
 
         if proceso == 0:
             return True
