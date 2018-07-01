@@ -34,6 +34,8 @@ from smtplib import SMTP                                                        
 
 
 def mandar_correo(de, para, asunto, correo):
+    res = False
+
     if DEBUG_REMOTO:
         pydevd.settrace(config.IP_DEP_REMOTA)
 
@@ -42,12 +44,21 @@ def mandar_correo(de, para, asunto, correo):
     mensaje['From']     = de
     mensaje['To']       = para
 
-    s = SMTP(host = config.SERVIDOR)
-    s.starttls(context = ssl.create_default_context())
-    s.login(config.USUARIO, config.CONTRASENYA)
-    s.send_message(mensaje)                                                                 # TODO: Probar los distintos fallos
-    s.quit()
+    try:
+        s = SMTP(host = config.SERVIDOR)
+        s.starttls(context = ssl.create_default_context())
+        s.login(config.USUARIO, config.CONTRASENYA)
+        s.send_message(mensaje)                                                                 # TODO: Probar los distintos fallos
+        s.quit()
 
-    return True
+    except SMTPException:
+        res = False
 
+    else:
+        res = True
+
+    finally:
+        pass
+
+    return res
 
