@@ -12,7 +12,6 @@
 
 
 import errno                                                                                # Códigos de error
-import ssl                                                                                  # Seguridad
 import sys                                                                                  # Funcionalidades varias del sistema
 
 from time import sleep                                                                      # Para hacer pausas
