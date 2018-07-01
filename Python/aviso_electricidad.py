@@ -15,6 +15,8 @@ import errno                                                                    
 import ssl                                                                                  # Seguridad
 import sys                                                                                  # Funcionalidades varias del sistema
 
+from time import sleep                                                                      # Para hacer pausas
+
 try:
     from config import aviso_electricidad_config as config                                  # Configuración
 
@@ -26,7 +28,25 @@ from correo_electronico import mandar_correo                                    
 
 
 def main(argv):
-    mandar_correo(config.DE, config.PARA, config.ASUNTO, config.CORREO)
+    sleep(config.PAUSA * 6)                                                                 # Pausa inicial para esperar a que se levante la red
+
+    for reintentos in range(config.REINTENTOS):
+        if mandar_correo(config.DE, config.PARA, config.ASUNTO, config.CORREO):
+            print('El correo ha podido ser enviado')
+
+            enviado = True
+
+            break
+
+        else:
+            print('El correo no ha podido ser enviado... reintentando ', reintentos, '/', config.REINTENTOS, 'veces', sep = '')
+
+            enviado = False
+
+            sleep(config.PAUSA)
+
+    if enviado == False:
+        print('Imposible reenviar el correo despues de', config.REINTENTOS, 'intentos')
 
 
 if __name__ == '__main__':
