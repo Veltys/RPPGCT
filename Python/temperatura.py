@@ -5,16 +5,17 @@
 # Title         : temperatura.py
 # Description   : Sistema indicador led de la temperatura del procesador en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
 # Author        : Veltys
-# Date          : 24-05-2018
-# Version       : 2.2.2
+# Date          : 06-07-2018
+# Version       : 2.2.3
 # Usage         : python3 temperatura.py
 # Notes         : Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
-#                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual simplemente apaga todos los leds hasta que esta misma señal sea recibida de nuevo
+#                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual apaga todos los leds hasta que esta misma señal sea recibida de nuevo
 
 
+CMD_COMANDO     = '/opt/vc/bin/vcgencmd'
+CMD_PARAMETROS  = 'measure_temp'
 DEBUG           = False
 DEBUG_REMOTO    = False
-
 
 import errno                                                                    # Códigos de error
 import os                                                                       # Funcionalidades varias del sistema operativo
@@ -28,7 +29,6 @@ import RPi.GPIO as GPIO                                                         
 import comun                                                                    # Funciones comunes a varios sistemas
 
 from time import sleep                                                          # Para hacer pausas
-from shlex import split                                                         # Manejo de cadenas
 from subprocess import check_output                                             # Llamadas a programas externos, recuperando su respuesta
 
 try:
@@ -40,45 +40,62 @@ except ImportError:
 
 
 class temperatura(comun.app):
+    ''' Clase del servidor del sistema indicador led de la temperatura del procesador en tiempo real
+    '''
+
     def __init__(self, config, nombre):
+        ''' Constructor de la clase:
+            - Llama al constructor de la clase padre
+        '''
+
         super().__init__(config, nombre)
 
+
     def bucle(self):
+        ''' Realiza en bucle las tareas asignadas a este sistema
+        '''
+
         try:
-            leds = []
+            leds = []                                                                       # Se inicializa la lista de leds
 
-            for i in range(4):
-                leds.append(GPIO.PWM(self._config.GPIOS[i][0], self._config.FRECUENCIA))
-                leds[i].start(0)
+            for led in self._config.GPIOS:                                                  # Se recorre la lista de puertos GPIO
+                leds.append(GPIO.PWM(led[0], self._config.FRECUENCIA))                      #     Se reconfigura cada puerto GPIO en modo PWM y se añade a la lista de leds
 
-            while True:
-                if not(self._modo_apagado):
-                    temperatura = check_output(split('/opt/vc/bin/vcgencmd measure_temp'))
-                    temperatura = float(temperatura[5:-3])
+                leds[-1].start(0)                                                           #     Se inicializa el led a 0 (porcentaje de su ciclo de trabajo que estará encendido)
 
-                    if temperatura < self._config.TEMPERATURAS[0]:              # Temperatura por debajo del valor mínimo
-                        for i in range(4):
-                            leds[i].ChangeDutyCycle(self._config.COLORES[0][i] * 100)
+            while True:                                                                     # Se ejecutará siempre, ya que las condiciones de parada son externas
+                if not(self._modo_apagado):                                                 #     Si no se ha activado el "modo apagado"
+                    temperatura = check_output(CMD_COMANDO, CMD_PARAMETROS)                 #         Se lee la temperatura de la CPU
+                    temperatura = float(temperatura[5:-3])                                  #         Se convierte a un valor numérico
 
-                    elif temperatura < self._config.TEMPERATURAS[1]:            # Temperatura por debajo del valor medio
-                        for i in range(4):
-                            leds[i].ChangeDutyCycle(self._config.COLORES[1][i] * 100)
+                    if temperatura < self._config.TEMPERATURAS[0]:                          #         Se comprueba si está por debajo del valor mínimo
+                        j = 0                                                               #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
 
-                    elif temperatura < self._config.TEMPERATURAS[2]:            # Temperatura por debajo del valor máximo
-                        for i in range(4):
-                            leds[i].ChangeDutyCycle(self._config.COLORES[2][i] * 100)
+                    elif temperatura < self._config.TEMPERATURAS[1]:                        #         Se comprueba si está por debajo del valor medio
+                        j = 1                                                               #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
 
-                    else:                                                       # Temperatura por encima del valor máximo
-                        for i in range(4):
-                            leds[i].ChangeDutyCycle(self._config.COLORES[3][i] * 100)
+                    elif temperatura < self._config.TEMPERATURAS[2]:                        #         Se comprueba si está por debajo del valor máximo
+                        j = 2                                                               #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
 
-                sleep(self._config.PAUSA)
+                    else:                                                                   #         Está igual o por encima del valor máximo
+                        j = 3                                                               #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
+
+                    for led in leds:                                                        #         Se recorre la lista de leds
+                        led.ChangeDutyCycle(self._config.COLORES[j][i] * 100)               #             Se cambia el ciclo de ejecución en función de la cordenada anteriormente asignada
+
+
+                sleep(self._config.PAUSA)                                                   #     Pausa hasta la nueva comprobación
 
         except KeyboardInterrupt:
             self.cerrar()
             return
 
+
     def __del__(self):
+        ''' Destructor de la clase:
+            - Llama al Destructor de la clase padre
+        '''
+
         super().__del__()
 
 

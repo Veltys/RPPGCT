@@ -28,7 +28,7 @@ class config_global(object):                                                    
 class aviso_electricidad_config(config_global):                                             # Configuración del sistema de aviso en caso de corte de electricidad
     ASUNTO          = '<NOMBRE_SISTEMA>: informe especial'
     CORREO          = 'Informe especial de <NOMBRE_SISTEMA>, generado el ' + str(strftime("%c")) + os.linesep + os.linesep \
-                    +'Ha habido un corte en la red eléctrica de <NOMBRE_SISTEMA> y se ha activado la batería.'
+                    + 'Ha habido un corte en la red eléctrica de <NOMBRE_SISTEMA> y se ha activado la batería.'
     DE              = ''
     PARA            = ''
     PAUSA           = 10
@@ -59,7 +59,7 @@ class cpu_config(config_global):                                                
                       }
 
 
-class dht11_config(config_global):
+class dht11_config(config_global):                                                          # Configuración del sistema de sondas DHT11
     GPIOS           = [
                         (25, False, False, config_global.SONDA, 'Sonda DHT11 de pruebas' ),
                       ]
@@ -104,7 +104,7 @@ class domotica_servidor_config(domotica_cliente_config):
                       }
 
 
-class internet_config(config_global):
+class internet_config(config_global):                                                       # Configuración del sistema de comprobación de conectividad a Internet
     HOSTS           = [                                                                     # HOSTS contiene los servidores a los cuales se les hará ping para comprobar si hay internet
                         'google.es'                ,
                         '2001:4860:4860::8888'     ,
@@ -119,7 +119,7 @@ class internet_config(config_global):
                       ]
 
 
-class reiniciar_router_config(domotica_cliente_config):
+class reiniciar_router_config(domotica_cliente_config):                                     # Configuración del sistema de reinicio de router en caso de pérdida de conectividad
     PAUSA           = 15
 
     GPIO            = [
@@ -133,7 +133,7 @@ class reiniciar_router_config(domotica_cliente_config):
                       }
 
 
-class temperatura_config(config_global):
+class temperatura_config(config_global):                                                    # Configuración del sistema de temperaturas
     COLORES         = [                                                                     # COLORES contiene una matriz de 4 x 4 que, por columnas, representa cada led y, por filas, la etapa de temperatura
                         (0.0, 0.0, 1.0, 0.0),
                         (0.0, 1.0, 0.0, 0.0),

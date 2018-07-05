@@ -6,7 +6,7 @@
 # Description   : Sistema de envío de correos electrónicos
 # Author        : Veltys
 # Date          : 01-07-2018
-# Version       : 1.0.0
+# Version       : 1.0.1
 # Usage         : from correo_electronico import mandar_correo
 # Notes         :
 
@@ -38,37 +38,37 @@ def mandar_correo(de, para, asunto, correo):
     if DEBUG_REMOTO:
         pydevd.settrace(config.IP_DEP_REMOTA)
 
-    mensaje             = MIMEText(correo)
+    mensaje             = MIMEText(correo)                                                  # Creación de un mensaje de correo en formato MIME
     mensaje['Subject']  = asunto
     mensaje['From']     = de
     mensaje['To']       = para
 
-    try:
-        s = SMTP(host = config.SERVIDOR)
-        s.starttls(context = ssl.create_default_context())
-        s.login(config.USUARIO, config.CONTRASENYA)
+    try:                                                                                    # Bloque try
+        s = SMTP(host = config.SERVIDOR)                                                    #     Conexión al servidor SMTP
+        s.starttls(context = ssl.create_default_context())                                  #     Contexto SSL de seguridad
+        s.login(config.USUARIO, config.CONTRASENYA)                                         #     Inicio de sesión
 
-    except ConnectionRefusedError:
+    except ConnectionRefusedError:                                                          # Rechazo de conexión por parte del servidor
         res = False
 
-    except gaierror:
+    except gaierror:                                                                        # Fallo de conectividad a Internet
         res = False
 
-    except SMTPAuthenticationError:
+    except SMTPAuthenticationError:                                                         # Fallo de autenticación contra el servidor
         res = False
 
-    else:
-        s.send_message(mensaje)
+    else:                                                                                   # Si no hay excepciones
+        s.send_message(mensaje)                                                             #     Envío del mensaje
 
         res = True
 
     finally:
-        try:
-            if s:
-                s.quit()
+        try:                                                                                # Bloque try
+            if s:                                                                           #     Si el objeto existe y es válido
+                s.quit()                                                                    #         Cierre de la sesión SMTP
 
-        except UnboundLocalError:
-            pass
+        except UnboundLocalError:                                                           # Si el objeto no existe
+            pass                                                                            #     No es necesaria ninguna operación adicional
 
     return res
 

@@ -5,9 +5,9 @@
 # Title         : domotica_cliente.py
 # Description   : Parte cliente del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 24-05-2018
-# Version       : 1.1.5
-# Usage         : python3 domotica_cliente.py [commands]
+# Date          : 03-07-2018
+# Version       : 1.1.6
+# Usage         : python3 domotica_cliente.py [commandos]
 # Notes         : Parte cliente del sistema en el que se gestionarán pares de puertos GPIO
 
 
@@ -15,17 +15,17 @@ DEBUG           = False
 DEBUG_REMOTO    = False
 
 
-import errno                                                                                # Códigos de error
-import socket                                                                               # Tratamiento de sockets
-import sys                                                                                  # Funcionalidades varias del sistema
+import errno                                                                                    # Códigos de error
+import socket                                                                                   # Tratamiento de sockets
+import sys                                                                                      # Funcionalidades varias del sistema
 
 if DEBUG_REMOTO:
-    import pydevd                                                                           # Depuración remota
+    import pydevd                                                                               # Depuración remota
 
-import comun                                                                                # Funciones comunes a varios sistemas
+import comun                                                                                    # Funciones comunes a varios sistemas
 
 try:
-    from config import domotica_cliente_config as config                                    # Configuración
+    from config import domotica_cliente_config as config                                        # Configuración
 
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
@@ -33,10 +33,16 @@ except ImportError:
 
 
 class domotica_cliente(comun.app):
-    _argumentos = []
-
+    ''' Clase del cliente del sistema gestor de domótica
+    '''
 
     def __init__(self, config, argumentos):
+        ''' Constructor de la clase:
+            - Llama al constructor de la clase padre
+            - Recoge los argumentos
+            - Inicializa el socket
+        '''
+
         super().__init__(config, False)
 
         self._argumentos = argumentos
@@ -44,6 +50,12 @@ class domotica_cliente(comun.app):
 
 
     def __comando(self):
+        ''' Petición de comando:
+            - Si aún hay argumentos, toma el siguiente como comando
+            - Si no, lo pide al usuario
+            - Lo normaliza y lo retorna
+        '''
+
         if len(self._argumentos) == 1:
             comando = input('Introduzca un comando: ')
 
@@ -57,76 +69,103 @@ class domotica_cliente(comun.app):
 
 
     def __describir(self, comando):
-        if self._estado >= 2:
-            mensaje = self._enviar_y_recibir(comando, False)
+        ''' Descripción de puerto GPIO:
+            - Si el estado de la conexión es el adecuado, solicita al servidor la descripción del puerto dado, la normaliza y la devuelve
+            - Si no o en caso de fallo, devuelve una cadena vacía
+        '''
 
-            if mensaje == False:
-                return ''
+        if self._estado >= 2:                                                                   # Si el estado de la conexión es el adecuado
+            mensaje = self._enviar_y_recibir(comando, True)                                     #     Se manda el comando y se recibe el mensaje
 
-            elif mensaje[0:4].lower() == 'info':
-                return mensaje[6:]
+            if mensaje != False and mensaje[0:4] == 'info':                                     # Si se ha recibido un mensaje y es válido
+                return mensaje[6:]                                                              #     Devolver la parte relevante del mensaje
 
-            else:
-                return ''
+            else:                                                                               # En caso contrario
+                return ''                                                                       #     Devolver una cadena vacía
 
-        else:
-            return ''
+        else:                                                                                   # En caso contrario
+            return ''                                                                           #     Devolver una cadena vacía
 
 
     def __estado(self, comando):
-        if self._estado >= 2:
-            mensaje = self._enviar_y_recibir(comando)
+        ''' Estado de puerto GPIO:
+            - Si el estado de la conexión es el adecuado, solicita al servidor el estado del puerto dado, la normaliza y la devuelve
+            - Si no o en caso de fallo, devuelve una cadena vacía
+        '''
 
-            if mensaje == False:
-                return -1
+        if self._estado >= 2:                                                                   # Si el estado de la conexión es el adecuado
+            mensaje = self._enviar_y_recibir(comando, True)                                     #     Se manda el comando y se recibe el mensaje
 
-            elif mensaje[0:4] == 'info' and (int(mensaje[6:]) == 0 or int(mensaje[6:]) == 1):
-                return mensaje[6:]
+            if mensaje != False:                                                                #     Si se ha recibido un mensaje
+                estado = int(mensaje[6:])                                                       #         Se preprocesa una parte
 
-            else:
-                return -1
+                if mensaje[0:4] == 'info' and estado == 0 or estado == 1:                       #         Si el mensaje es válido
+                    return estado                                                               #             Se devuelve la parte preprocesada
 
-        else:
-            return -1
+                else:                                                                           #         Si no
+                    return -1                                                                   #             Se devuelve -1
+
+            else:                                                                               #     Si no
+                return -1                                                                       #         Se devuelve -1
+
+        else:                                                                                   # Si no
+            return -1                                                                           #     Se devuelve -1
 
 
     def __listar(self):
-        if self._estado >= 1:
-            self._lista_GPIOS = self._enviar_y_recibir('listar')
+        ''' Listado de puertos GPIO:
+            - Si el estado de la conexión es el adecuado:
+                - Solicita al servidor la lista de puertos
+                - la normaliza
+                - la almacena en la variable de clase
+                - Devuelve True
+            - Si no o en caso de fallo:
+                - Devuelve True
+        '''
 
-            if self._lista_GPIOS == False:
-                print('Error: Imposible solicitar una lista de puertos GPIO, el servidor no responde', file = sys.stderr)
+        if self._estado >= 1:                                                                   # Si el estado de la conexión es el adecuado
+            self._lista_GPIOS = self._enviar_y_recibir('listar')                                #     Se manda el comando y se almacena el mensaje
 
-                return False
+            if self._lista_GPIOS != False:                                                      #     Si se ha recibido un mensaje
+                self._lista_GPIOS = self._lista_GPIOS[6:-1]                                     #         Éste es procesado
+                self._lista_GPIOS = self._lista_GPIOS.split(' ')                                #         Y convertido en una lista
 
-            else:
-                self._lista_GPIOS = self._lista_GPIOS[6:-1]
-                self._lista_GPIOS = self._lista_GPIOS.split(' ')
+                if self._comprobar_lista_GPIOS():                                               #         Si es válido
+                    self._estado = 2                                                            #             El estado es actualizado
 
-                if self._comprobar_lista_GPIOS():
-                    self._estado = 2
+                    # TODO: Optimizar
+                    for i in range(len(self._lista_GPIOS)):                                     #             Se recorre la lista
+                        aux = self._lista_GPIOS[i]                                              #                 Se pone a salvo
+                        self._lista_GPIOS[i] = list()                                           #                 Se sustituye por una lista vacía
+                        self._lista_GPIOS[i].append(aux)                                        #                 Se añade el elemento salvado a la lista
+                        self._lista_GPIOS[i].append(self.__estado('estado ' + aux))             #                 Se añade su estado
+                        self._lista_GPIOS[i].append(self.__describir('describir ' + aux))       #                 Se añade su descripción
 
-                    for i in range(len(self._lista_GPIOS)):
-                        aux = self._lista_GPIOS[i]
-                        self._lista_GPIOS[i] = list()
-                        self._lista_GPIOS[i].append(aux)
-                        self._lista_GPIOS[i].append(self.__estado('estado ' + aux))
-                        self._lista_GPIOS[i].append(self.__describir('describir ' + aux))
+                    return True                                                                 #             Se devuelve True
 
-                return True
+            else:                                                                               #     Si no
+                print('Error: Sin lista de puertos GPIO, el servidor no responde', file = sys.stderr)
+                print('Error: Imposible solicitar una lista de puertos GPIO, el servidor no responde')
 
-        else:
-            print('Error: Imposible solicitar una lista de puertos GPIO, no ' + self.estado(self._estado + 1), file = sys.stderr)
+                return False                                                                    #         Se devuelve False
 
-            return False
+        else:                                                                                   # Si no
+            print('Error: Sin lista de puertos GPIO, estado de conexión inadecuado', file = sys.stderr)
+            print('Error: Imposible solicitar una lista de puertos GPIO, no ' + self.estado(self._estado + 1))
+
+            return False                                                                        # Se devuelve False
 
 
     def __mostrar_ayuda(self):
+        ''' Muestra la ayuda de cada comando
+        '''
+
         print('Comandos disponibles para la versión del protocolo ' , self._VERSION_PROTOCOLO  , ':', sep = '')
 
         if(self._estado == 0)            : print('Nota: después de conectar a un servidor, es posible que la lista de comandos se reduzca, si el protocolo a emplear es más antiguo respecto a la versión anteriormente citada')
-        if self._VERSION_PROTOCOLO >= 1.0: print("\tconectar <host>:\t\tConecta con un servidor")
+        if self._VERSION_PROTOCOLO >= 1.0: print("\tconectar:\t\tConecta con el servidor")
         if self._VERSION_PROTOCOLO >= 1.0: print("\tlistar:\t\t\t\tMuestra la lista de puertos GPIO disponibles")
+        if self._VERSION_PROTOCOLO >= 1.0: print("\tdesconectar:\t\tDesconecta del servidor")
         if self._VERSION_PROTOCOLO >= 1.1: print("\tdescribir <puerto>:\t\tMuestra el uso que el servidor le está dando al puerto GPIO especificado")
         if self._VERSION_PROTOCOLO >= 1.0: print("\testado <puerto>:\t\tMuestra el estado del puerto GPIO especificado")
         if self._VERSION_PROTOCOLO >= 1.0: print("\tconmutar <puerto>:\t\tInvierte el estado del puerto GPIO especificado")
@@ -137,136 +176,161 @@ class domotica_cliente(comun.app):
 
 
     def __mostrar_lista(self):
-        if self._estado >= 2:
+        ''' Muestra la lista de puertos GPIO almacenada:
+            - Si el estado de la conexión es el adecuado:
+                - Muestra dicha lista
+                - Devuelve True
+            - Si no:
+                - Informa de ello
+                - Devuelve false
+        '''
+
+        if self._estado >= 2:                                                                   # Si el estado de la conexión es el adecuado
             print('Ok: Puertos GPIO que están disponibles:')
 
-            for puerto, estado, descipcion in self._lista_GPIOS:
+            for puerto, estado, descipcion in self._lista_GPIOS:                                #     Recorre la lista de puertos, imprimiendo su información
                 print("\t", 'Puerto GPIO', puerto, "\tEstado: ", ('activo' if estado == 1 else 'inactivo'), "\tDescripción: \"", descipcion, '"', sep = '')
 
             return True
 
-        else:
-            print('Error: No hay ninguna lista de puertos GPIO cargada', file = sys.stderr)
+        else:                                                                                   # Si no
+            print('Error: Sin lista de puertos GPIO', file = sys.stderr)                        #     Informa de ello
+            print('Error: No hay ninguna lista de puertos GPIO cargada')
 
             return False
 
 
     def __mostrar_estado(self, puerto, estado):
-        if self._estado >= 2:
-            if int(estado) == 0 or int(estado) == 1:
+        ''' Muestra el estado de un puerto GPIO dado:
+            - Si el estado de la conexión es el adecuado:
+                - Si el estado de dicho puerto es válido
+                    - Muestra el estado de dicho puerto
+                    - Devuelve True
+            - En caso de estado de conexión no adecuado o estado de puerto no válido:
+                - Informa de ello
+                - Devuelve False
+        '''
+
+        if self._estado >= 2:                                                                   # Si el estado de la conexión es el adecuado
+            if int(estado) == 0 or int(estado) == 1:                                            #     Si el estado del puerto es válido, se informa del mismo
                 print('Ok: Puerto GPIO' + puerto + ' --> Estado: ' + ('activo' if estado == 1 else 'inactivo'), sep = '')
 
                 return True
 
-            else:
-                print('Error: El número de puerto GPIO no es válido', file = sys.stderr)
+            else:                                                                               #     Si no
+                print('Error: Número de puerto GPIO no válido', file = sys.stderr)              #         Informa de ello
+                print('Error: El número de puerto GPIO no es válido')
 
                 return False
 
-        else:
-            print('Error: No hay ninguna lista de puertos GPIO cargada', file = sys.stderr)
+        else:                                                                                   # Si no
+            print('Error: Sin lista de puertos GPIO', file = sys.stderr)                        #     Informa de ello
+            print('Error: No hay ninguna lista de puertos GPIO cargada')
 
             return False
 
 
     def __varios(self, comando):
-        if self._estado >= 2:
-            mensaje = self._enviar_y_recibir(comando)
+        ''' Método "comodín" para enviar y procesar la respuesta de los comandos apagar, conmutar, encender y pulsar
+        '''
 
-            if mensaje == False:
-                print('Error: Imposible interaccionar con el puerto GPIO solicitado, el servidor no responde', file = sys.stderr)
+        if self._estado >= 2:                                                                   # Si el estado de la conexión es el adecuado
+            mensaje = self._enviar_y_recibir(comando)                                           #     Envía el comando y recibe el mensaje
 
-            elif mensaje[:2] == 'ok':
+            if mensaje == False:                                                                #     Si el envío del mensaje da error
+                print('Error: Servidor no responde', file = sys.stderr)                         #         Se informa de ello
+                print('Error: Imposible interaccionar con el puerto GPIO solicitado, el servidor no responde')
+
+            elif mensaje[:2] == 'ok':                                                           #     Si el servidor devuelve un Ok, se informa de ello
                 print('Correcto: El servidor informa de que el comando "' + comando + '" ha sido ' + mensaje[4:], sep = '')
 
-            elif mensaje[:4] == 'info' and (int(mensaje[5:]) == 0 or int(mensaje[5:]) == 1):
+            elif mensaje[:4] == 'info' and (int(mensaje[5:]) == 0 or int(mensaje[5:]) == 1):    #     Si el servidor devuelve un Info, se informa de ello
                 print('Correcto: El servidor informa de que el estado del puerto "GPIO' + comando[7:] + '" es ' + mensaje[5:], sep = '')
 
-            else:
+            else:                                                                               #     Si el servidor devuelve otra respuesta, se informa de ello
                 print('Aviso: El servidor informa de que el comando "' + comando + '" es ' + mensaje[5:], sep = '')
 
-        elif self._estado == 1:
-            print('Aviso: El comando "' + comando + '" no ha sido ejecutado porque no' + self.estado(self._estado + 1), sep = '')
-
-        else:
-            print('Error: Imposible interaccionar con el puerto GPIO solicitado, no ' + self.estado(self._estado + 1), file = sys.stderr)
+        else:                                                                                   # Si no, se informa de ello
+            print('Error: Comando "' + comando + '" no ejecutado, estado de conexión inadecuado', file = sys.stderr)
+            print('Error: El comando "' + comando + '" no ha sido ejecutado porque no' + self.estado(self._estado + 1))
 
 
     def _comprobar_lista_GPIOS(self):
-        try:
-            self._lista_GPIOS
+        ''' Método para la comprobación de la existencia de una lista de puertos GPIO
+        '''
 
-        except AttributeError:
-            return False
+        try:                                                                                    # Bloque try
+            self._lista_GPIOS                                                                   #     Intento de acceso
 
-        else:
-            return True
+        except AttributeError:                                                                  #     Si no existe
+            return False                                                                        #         Se devuelve False
+
+        else:                                                                                   #     Si sí
+            return True                                                                         #         Se devuelve True
 
 
     def bucle(self):
+        ''' Realiza en bucle las tareas asignadas a este sistema
+        '''
+
         try:
-            comando = self.__comando()
+            comando = self.__comando()                                                          # Antes incluso de la ejecución en bucle, se pedirá un comando
 
-            while comando != 'salir':
-                # ayuda
-                if comando == 'ayuda':
-                    self.__mostrar_ayuda()
+            while comando != 'salir':                                                           # Mientras que el comando introducido no sea "salir" (condición de parada)
+                if comando == 'ayuda':                                                          #     Si el comando es "ayuda"
+                    self.__mostrar_ayuda()                                                      #         Se muestra la ayuda
 
-                # conectar & listar & estado
-                elif comando == 'conectar':
-
-                    if self._conectar(True):
-                        if self.__listar():
-                            self.__mostrar_lista()
+                elif comando == 'conectar':                                                     #     Si el comando es "conectar" (implica "listar" y "estado" para cada puerto)
+                    if self._conectar(True):                                                    #         Se procede a la conexión y se comprueba si ha tenido éxito
+                        if self.__listar():                                                     #             Se procede al listado y se comprueba si ha tenido éxito
+                            self.__mostrar_lista()                                              #                 Se muestra dicho listado
 
 
-                # conmutar, pulsar, encender, apagar
+                #                                                                               #     Si el comando es "apagar", "conmutar", "encender" o "pulsar" y está bien formado
                 elif (self._VERSION_PROTOCOLO >= 1.0 and comando != 'apagar'    and comando[0:6] == 'apagar'    and comando[6] == ' ' and comando[ 7:] != '') \
                   or (self._VERSION_PROTOCOLO >= 1.0 and comando != 'conmutar'  and comando[0:8] == 'conmutar'  and comando[8] == ' ' and comando[ 9:] != '') \
                   or (self._VERSION_PROTOCOLO >= 1.0 and comando != 'encender'  and comando[0:8] == 'encender'  and comando[8] == ' ' and comando[ 9:] != '') \
                   or (self._VERSION_PROTOCOLO >= 1.0 and comando != 'pulsar'    and comando[0:6] == 'pulsar'    and comando[6] == ' ' and comando[ 7:] != '') \
                 :
-                    self.__varios(comando)
+                    self.__varios(comando)                                                      #         Se ejecuta
 
-                # describir
+                #                                                                               #     Si el comando es "describir" y está bien formado
                 elif  self._VERSION_PROTOCOLO >= 1.1 and comando != 'describir' and comando[0:9] == 'describir' and comando[9] == ' ' and comando[10:] != '':
-                    self.__describir(comando)
+                    self.__describir(comando)                                                   #         Se ejecuta
 
-                # listar
-                elif comando == 'listar':
-                    if self.__listar():
-                        self.__mostrar_lista()
+                elif comando == 'listar':                                                       #     Si el comando es "listar"
+                    if self.__listar():                                                         #         Se procede al listado y si es válido
+                        self.__mostrar_lista()                                                  #             Se muestra
 
-                # estado
+                #                                                                               #     Si el comando es "estado" y está bien formado
                 elif comando != 'estado' and comando[0:6] == 'estado' and comando[6] == ' ' and comando[7:] != '':
-                    self.__mostrar_estado(comando[7:], self.__estado(comando))
+                    self.__mostrar_estado(comando[7:], self.__estado(comando))                  #         Se muestra el estado
 
-                # conmutar, pulsar, encender, apagar o estado pero sin parámetros
+                #                                                                               #     Si el comando es "apagar", "conmutar", "describir", "encender", "estado" o "pulsar" pero mal formado
                 elif comando == 'apagar'    \
-                  or comando == 'conectar'  \
                   or comando == 'conmutar'  \
                   or comando == 'describir' \
                   or comando == 'encender'  \
                   or comando == 'estado'    \
                   or comando == 'pulsar'    \
-                  :
-                    print('Error: El comando "' + comando + '" requiere uno o más parámetros. Por favor, inténtelo de nuevo.', file = sys.stderr)
+                :
+                    print('Error: Comando "' + comando + '" incorrecto', file = sys.stderr)     #         Se informa del error
+                    print('Error: El comando "' + comando + '" requiere uno o más parámetros. Por favor, inténtelo de nuevo.')
 
-                # desconectar
-                elif comando == 'desconectar':
-                    self._desconectar()
+                elif comando == 'desconectar':                                                  #     Si el comando es "desconectar"
+                    self._desconectar()                                                         #         Se desconecta
 
-                    print('Correcto: Todas las conexiones abiertas han sido cerradas')
+                    print('Correcto: Todas las conexiones abiertas han sido cerradas')          #         Y se informa de ello
 
-                else:
-                    print('Error: El comando "' + comando + '" no ha sido reconocido. Por favor, inténtelo de nuevo.', file = sys.stderr)
+                else:                                                                           #     Si es otro comando
+                    print('Error: Comando "' + comando + '" no reconocido', file = sys.stderr)  #         Se informa de que es desconocido
+                    print('Error: El comando "' + comando + '" no ha sido reconocido. Por favor, inténtelo de nuevo.')
 
-                print()                                                         # Llamar a print() sin argumentos introduce una nueva línea
+                print()                                                                         # Llamar a print() sin argumentos introduce una nueva línea
                 comando = self.__comando()
 
-            # salir                                                             # La salida propiamente dicha será ejecutada en la siguiente vuelta del bucle
-            if comando == 'salir':
-                self.cerrar()
+            if comando == 'salir':                                                              #     Si el comando es "salir" (la salida propiamente dicha será ejecutada en la siguiente vuelta del bucle)
+                self.cerrar()                                                                   #         Se lleva a cabo el cierre
 
         except KeyboardInterrupt:
             self.cerrar()
@@ -274,7 +338,11 @@ class domotica_cliente(comun.app):
 
 
     def __del__(self):
-        pass
+        ''' Destructor de la clase:
+            - Llama al Destructor de la clase padre
+        '''
+
+        super().__del__()
 
 
 def main(argv):

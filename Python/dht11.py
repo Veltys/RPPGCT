@@ -6,8 +6,8 @@
 # Description       : Módulo auxiliar para la gestión de la sonda de temperatura DHT11
 # Author            : Veltys
 # Original author   : szazo
-# Date              : 24-05-2018
-# Version           : 1.0.2
+# Date              : 01-07-2018
+# Version           : 1.0.3
 # Usage             : python3 dht11.py o from dht11 import
 # Notes             : Este módulo está pensado para ser llamado desde otros módulos o no directamente; si es llamado directamente, hará su trabajo e informará por pantalla de los valores del sensor
 
@@ -48,8 +48,6 @@ except ImportError:
 
 
 class dht11:                                                                    # Clase de gestión del sensor DHT11 para Raspberry Pi
-    _sensor = 0
-
     def __init__(self, sensor):
         self._sensor = sensor
 
@@ -372,7 +370,7 @@ def main(argv):
 
                 del sensor
 
-            GPIO.cleanup()                                                      # Devolvemos los pines a su estado inicial
+            GPIO.cleanup()                                                      # Se liberan los pines GPIO
 
     else:
         print('Uso:', argv[0], '''[opciones]
