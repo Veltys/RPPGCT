@@ -5,7 +5,7 @@
 # Title         : comun.py
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
-# Date          : 01-07-2018
+# Date          : 06-07-2018
 # Version       : 0.4.2
 # Usage         : import comun | from comun import <clase>
 # Notes         : ...
@@ -54,7 +54,7 @@ class app(object):
 
         self._bloqueo           = bloqueo(nombre) if not(nombre == False) else False    # No siempre va a ser necesario realizar un bloqueo
         self._config            = config
-        self._estado_cpnexion   = 0
+        self._estado_conexion   = estados_conexion.DESCONECTADO
         self._modo_apagado      = False
         self._socket            = False
 
