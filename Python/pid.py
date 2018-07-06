@@ -5,10 +5,10 @@
 # Title         : pid.py
 # Description   : Módulo auxiliar para ciertas funciones de bloqueo y de PIDs
 # Author        : Veltys
-# Date          : 04-07-2018
-# Version       : 0.2.3
+# Date          : 06-07-2018
+# Version       : 1.0.0
 # Usage         : import pid | from pid import <clase>
-# Notes         : TODO: Trabajar con PIDs, aún no es necesario y no está implementado
+# Notes         : ...
 
 
 import os                                                                                   # Funciones del sistema operativo
@@ -17,7 +17,26 @@ if os.name == 'nt':
     from tempfile import gettempdir                                                         # Obtención del directorio temporal
 
 
-class bloqueo(object):
+class _comun_pid(object):
+    ''' Clase que contiene todos los métodos comunes de este sistema
+    '''
+
+    def nombre(self, nombre = False):
+        ''' Función "sobrecargada" gracias al parámetro "nombre"
+            - Para "nombre" == "False"
+                - Actúa como observador de la variable "_nombre" de la clase
+            - Para "nombre" != "False"
+                - Actúa como modificador de la variable "_nombre" de la clase
+        '''
+
+        if nombre == False:
+            return self._nombre
+
+        else:
+            self._nombre = nombre
+
+
+class bloqueo(_comun_pid):
     ''' Clase que contiene todos los métodos necesarios para llevar a cabo un (des)bloqueo
     '''
 
@@ -89,16 +108,69 @@ class bloqueo(object):
             self._bloqueado = False                                                         #     Sea como fuere, se actualiza la variable interna de información de bloqueo
 
 
-    def nombre(self, nombre = False):
-        ''' Función "sobrecargada" gracias al parámetro "nombre"
-            - Para "nombre" == "False"
-                - Actúa como observador de la variable "_nombre" de la clase
-            - Para "nombre" != "False"
-                - Actúa como modificador de la variable "_nombre" de la clase
+class pid(_comun_pid):
+    ''' Clase que contiene todos los métodos necesarios para (des)activar el acceso externo sencillo por pid
+    '''
+
+    def __init__(self, nombre):
+        ''' Constructor de la clase:
+            - Inicializa las variables
         '''
 
-        if nombre == False:
-            return self._nombre
+        self._activado  = False
+        self._pid       = os.getpid()
+        self._nombre    = nombre
 
-        else:
-            self._nombre = nombre
+
+    def activar(self):
+        ''' Activa el acceso externo sencillo por pid
+        '''
+
+        archivo = False                                                                     # Precarga de la variable archivo para evitar un posterior fallo
+
+        try:                                                                                # Bloque try
+            if os.name == 'posix':                                                          #     Si se trata de un sistema POSIX
+                archivo = open('/var/run/' + self._nombre[0:-3] + '.pid', 'w+')             #         Se abre un archivo de pid en el directorio /var/run
+
+                archivo.write(self._pid)                                                    #         Se escribe el pid en el archivo
+
+            else:                                                                           #     En cualquier otro caso y ante la duda, no es posible realizar un bloqueo
+                res = False                                                                 #         Por lo cual se genera el resultado del error
+
+        except IOError:                                                                     # Si no hay permiso de escritura u otro error de entrada / salida
+            res = False                                                                     #     Se genera el resultado de error
+
+        else:                                                                               # Si no ha habido fallos
+            if archivo:                                                                     #     Si se ha podido realizar la apertura
+                archivo.close()                                                             #         Se cierra el archivo (sólo interesa su creación, con eso es bastante)
+
+                self._activado = True                                                       #         Se actualiza la variable interna de información de activación
+
+                res = True                                                                  #         Se genera el resultado de éxito
+
+        return res                                                                          # Se devuelve el resultado previamente generado
+
+
+    def comprobar(self):
+        ''' Comprueba si hay ya un archivo pid previo
+        '''
+
+        if os.name == 'posix':                                                              # Si se trata de un sistema POSIX
+            return not(os.path.isfile('/var/run/' + self._nombre[0:-3] + '.pid'))           #     Se retorna la comprobación correspondiente a dicho sistema
+
+        else:                                                                               # En cualquier otro caso y ante la duda, no es posible realizar un bloqueo
+            return False                                                                    #     Se retorna directamente False, porque no está contemplado el bloqueo en este caso
+
+
+    def desactivar(self):
+        ''' Desactiva el acceso externo sencillo por pid en el caso de que esté activado
+        '''
+
+        if self._activado:                                                                  # Si el hipotético acceso externo sencillo se ha activado en este sistema
+            if self.comprobar():                                                            #     Si efectivamente se comprueba que el acceso externo sencillo se ha llevado a cabo
+                if os.name == 'posix':                                                      #         Si se trata de un sistema POSIX
+                    os.remove('/var/run/' + self._nombre[0:-3] + '.pid')                    #             Se elimina el archivo de bloqueo
+
+            self._activado = False                                                         #     Sea como fuere, se actualiza la variable interna de información de activación
+
+
