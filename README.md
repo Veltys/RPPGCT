@@ -139,7 +139,7 @@ Colección de utilidades varias para el control GPIO en Python
     - Arreglado fallo en **desinstalador.sh**.
 - 0.5.4:
     - Arreglo estético en **config_sample.py**.
-    - Eliminados *imports* no necesarios en **domotica_cliente.py**
+    - Eliminados *imports* no necesarios en **domotica_cliente.py**.
     - Arreglada sangría de *imports* en **domotica_cliente.py**, **indice_gpio.py**, **internet.py**, **reiniciar_router.py** y **temperatura.py**.
     - Implementado el comando de ayuda en **domotica_cliente.py**.
 - 0.6.0:
@@ -169,17 +169,24 @@ Colección de utilidades varias para el control GPIO en Python
     - Implementados varios parámetros para variar la salida en **dht11.py**.
     - Añadida otra licencia en la sección de *Otras licencias* en **README.md**.
 - 0.7.2:
-    - Mejoras en la calidad del código
+    - Mejoras en la calidad del código.
 - 0.8.0:
     - Añadida la posibilidad de invocar código al dispararse eventos en puertos GPIO en **domotica_servidor.py**.
     - Eliminada la posibilidad de conectar a un servidor que no sea el local en **comun.py** y adecuado el código a la nueva conexión en **config.py**, **domotica_cliente.py** y **reiniciar_router.py**.
     - Eliminado código innecesario en **reiniciar_router.py**.
 - 0.8.1:
     - Homogeneizado de **README.md**.
-    - Añadido **aviso_electricidad.py** a la lista de scripts en **config.sh**
+    - Añadido **aviso_electricidad.py** a la lista de scripts en **config.sh**.
 - 0.8.2:
     - Independizado el código encargado de mandar correos electrónicos.
     - Homogeneizado de **README.md**.
+- 0.8.3:
+    - Mejoras en la documentación.
+    - Optimizaciones varias.
+    - Mejoras en la calidad del código.
+    - Añadido el acceso externo sencillo por pid en **pid.py**.
+    - Homogeneizado de **README.md**.
+
 
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
