@@ -21,6 +21,14 @@ class _comun_pid(object):
     ''' Clase que contiene todos los métodos comunes de este sistema
     '''
 
+    def __init__(self, nombre):
+        ''' Constructor de la clase:
+            - Inicializa las variables
+        '''
+
+        self._nombre = nombre
+
+
     def nombre(self, nombre = False):
         ''' Función "sobrecargada" gracias al parámetro "nombre"
             - Para "nombre" == "False"
@@ -42,11 +50,13 @@ class bloqueo(_comun_pid):
 
     def __init__(self, nombre):
         ''' Constructor de la clase:
+            - Llama al constructor de la clase padre
             - Inicializa las variables
         '''
 
+        super().__init__(config, nombre)
+
         self._bloqueado = False
-        self._nombre    = nombre
 
 
     def bloquear(self):
@@ -114,12 +124,14 @@ class pid(_comun_pid):
 
     def __init__(self, nombre):
         ''' Constructor de la clase:
+            - Llama al constructor de la clase padre
             - Inicializa las variables
         '''
 
+        super().__init__(config, nombre)
+
         self._activado  = False
         self._pid       = os.getpid()
-        self._nombre    = nombre
 
 
     def activar(self):

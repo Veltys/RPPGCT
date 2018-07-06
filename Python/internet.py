@@ -32,9 +32,9 @@ def ping(host):
     '''
 
     if sys.platform.startswith('win'):                                          # Si la plataforma en la que nos hallamos es Windows
-        ret = call(['ping', '-n', '3', '-w', '5000', host], stdout=open(os.devnull, 'w'), stderr=open(os.devnull, 'w'))
+        ret = call(['ping', '-n', '3', '-w', '5000', host], stdout = open(os.devnull, 'w'), stderr = open(os.devnull, 'w'))
     else:                                                                       # En caso contrario, se asume UNIX (o POSIX)
-        ret = call(['ping', '-c', '3', '-W', '5', host], stdout=open(os.devnull, 'w'), stderr=open(os.devnull, 'w'))
+        ret = call(['ping', '-c', '3', '-W', '5', host], stdout = open(os.devnull, 'w'), stderr = open(os.devnull, 'w'))
 
     return ret == 0                                                             # Se evalúa si el resultado es el esperado y se devuelve éste
 
