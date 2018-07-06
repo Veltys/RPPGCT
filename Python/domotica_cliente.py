@@ -74,7 +74,7 @@ class domotica_cliente(comun.app):
             - Si no o en caso de fallo, devuelve una cadena vacía
         '''
 
-        if self._estado >= 2:                                                                   # Si el estado de la conexión es el adecuado
+        if self.estado_conexion >= comun.estados_conexion.LISTA_CARGADA:                        # Si el estado de la conexión es el adecuado
             mensaje = self._enviar_y_recibir(comando, True)                                     #     Se manda el comando y se recibe el mensaje
 
             if mensaje != False and mensaje[0:4] == 'info':                                     # Si se ha recibido un mensaje y es válido
@@ -93,7 +93,7 @@ class domotica_cliente(comun.app):
             - Si no o en caso de fallo, devuelve una cadena vacía
         '''
 
-        if self._estado >= 2:                                                                   # Si el estado de la conexión es el adecuado
+        if self.estado_conexion >= comun.estados_conexion.LISTA_CARGADA:                        # Si el estado de la conexión es el adecuado
             mensaje = self._enviar_y_recibir(comando, True)                                     #     Se manda el comando y se recibe el mensaje
 
             if mensaje != False:                                                                #     Si se ha recibido un mensaje
@@ -123,7 +123,7 @@ class domotica_cliente(comun.app):
                 - Devuelve True
         '''
 
-        if self._estado >= 1:                                                                   # Si el estado de la conexión es el adecuado
+        if self.estado_conexion >= comun.estados_conexion.CONECTADO:                            # Si el estado de la conexión es el adecuado
             self._lista_GPIOS = self._enviar_y_recibir('listar')                                #     Se manda el comando y se almacena el mensaje
 
             if self._lista_GPIOS != False:                                                      #     Si se ha recibido un mensaje
@@ -131,7 +131,7 @@ class domotica_cliente(comun.app):
                 self._lista_GPIOS = self._lista_GPIOS.split(' ')                                #         Y convertido en una lista
 
                 if self._comprobar_lista_GPIOS():                                               #         Si es válido
-                    self._estado = 2                                                            #             El estado es actualizado
+                    self._estado_conexion = comun.estados_conexion.LISTA_CARGADA                #             El estado de la conexión es actualizado
 
                     # TODO: Optimizar
                     for i in range(len(self._lista_GPIOS)):                                     #             Se recorre la lista
@@ -140,6 +140,8 @@ class domotica_cliente(comun.app):
                         self._lista_GPIOS[i].append(aux)                                        #                 Se añade el elemento salvado a la lista
                         self._lista_GPIOS[i].append(self.__estado('estado ' + aux))             #                 Se añade su estado
                         self._lista_GPIOS[i].append(self.__describir('describir ' + aux))       #                 Se añade su descripción
+
+                    self._estado_conexion = comun.estados_conexion.LISTA_EXTENDIDA              #             El estado de la conexión es actualizado de nuevo
 
                     return True                                                                 #             Se devuelve True
 
@@ -151,7 +153,7 @@ class domotica_cliente(comun.app):
 
         else:                                                                                   # Si no
             print('Error: Sin lista de puertos GPIO, estado de conexión inadecuado', file = sys.stderr)
-            print('Error: Imposible solicitar una lista de puertos GPIO, no ' + self.estado(self._estado + 1))
+            print('Error: Imposible solicitar una lista de puertos GPIO, no ' + self.estado_conexion_lenguaje_natural(self.estado_conexion() + 1))
 
             return False                                                                        # Se devuelve False
 
@@ -185,7 +187,7 @@ class domotica_cliente(comun.app):
                 - Devuelve false
         '''
 
-        if self._estado >= 2:                                                                   # Si el estado de la conexión es el adecuado
+        if self.estado_conexion >= comun.estados_conexion.LISTA_EXTENDIDA:                      # Si el estado de la conexión es el adecuado
             print('Ok: Puertos GPIO que están disponibles:')
 
             for puerto, estado, descipcion in self._lista_GPIOS:                                #     Recorre la lista de puertos, imprimiendo su información
@@ -211,7 +213,7 @@ class domotica_cliente(comun.app):
                 - Devuelve False
         '''
 
-        if self._estado >= 2:                                                                   # Si el estado de la conexión es el adecuado
+        if self.estado_conexion >= comun.estados_conexion.LISTA_EXTENDIDA:                      # Si el estado de la conexión es el adecuado
             if int(estado) == 0 or int(estado) == 1:                                            #     Si el estado del puerto es válido, se informa del mismo
                 print('Ok: Puerto GPIO' + puerto + ' --> Estado: ' + ('activo' if estado == 1 else 'inactivo'), sep = '')
 
@@ -234,7 +236,7 @@ class domotica_cliente(comun.app):
         ''' Método "comodín" para enviar y procesar la respuesta de los comandos apagar, conmutar, encender y pulsar
         '''
 
-        if self._estado >= 2:                                                                   # Si el estado de la conexión es el adecuado
+        if self.estado_conexion >= comun.estados_conexion.LISTA_CARGADA:                        # Si el estado de la conexión es el adecuado
             mensaje = self._enviar_y_recibir(comando)                                           #     Envía el comando y recibe el mensaje
 
             if mensaje == False:                                                                #     Si el envío del mensaje da error
@@ -252,7 +254,7 @@ class domotica_cliente(comun.app):
 
         else:                                                                                   # Si no, se informa de ello
             print('Error: Comando "' + comando + '" no ejecutado, estado de conexión inadecuado', file = sys.stderr)
-            print('Error: El comando "' + comando + '" no ha sido ejecutado porque no' + self.estado(self._estado + 1))
+            print('Error: El comando "' + comando + '" no ha sido ejecutado porque no' + self.estado_conexion_lenguaje_natural(self.estado_conexion() + 1), sep = '')
 
 
     def _comprobar_lista_GPIOS(self):

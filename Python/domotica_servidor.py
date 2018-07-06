@@ -286,7 +286,6 @@ class domotica_servidor(comun.app):
             return False                                                                                                            #     Se informa del fallo
 
 
-    # TODO: Mejora de calidad
     def estado(self, puerto, puerto_buscado = False):
         ''' Devuelve el estado de un puerto GPIO dado o -1 si hay algún error
         '''

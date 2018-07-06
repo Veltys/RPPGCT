@@ -28,6 +28,14 @@ from time import sleep                                                          
 from pid import bloqueo                                                             # Módulo propio para bloquear la ejecución de más de una instancia
 
 
+@staticclass
+class estados_conexion():
+    DESCONECTADO    = 0
+    CONECTADO       = 1
+    LISTA_CARGADA   = 2
+    LISTA_EXTENDIDA = 3
+
+
 class app(object):
     ''' Clase abstracta que contiene todos los métodos comunes para una app de este sistema
     '''
@@ -44,11 +52,11 @@ class app(object):
             - Asigna señales a sus correspondientes funciones
         '''
 
-        self._bloqueo       = bloqueo(nombre) if not(nombre == False) else False    # No siempre va a ser necesario realizar un bloqueo
-        self._config        = config
-        self._estado        = 0
-        self._modo_apagado  = False
-        self._socket        = False
+        self._bloqueo           = bloqueo(nombre) if not(nombre == False) else False    # No siempre va a ser necesario realizar un bloqueo
+        self._config            = config
+        self._estado_cpnexion   = 0
+        self._modo_apagado      = False
+        self._socket            = False
 
         self.asignar_senyales()
 
@@ -62,9 +70,9 @@ class app(object):
                 - Si no, informa del error (si procede) y retorna "False"
         '''
 
-        if self._estado == 0:
+        if self._estado_conexion == estados_conexion.DESCONECTADO:
             if salida:
-                print('Info: Conectando al servidor')
+                print('Info: Conectando al servidor...')
 
             try:
                 self._socket.connect(('localhost', self._config.puerto))
@@ -86,7 +94,7 @@ class app(object):
                 if salida:
                     print('Ok: Conectado al servidor')
 
-                self._estado = 1
+                self._estado_conexion = estados_conexion.CONECTADO
 
                 mensaje = self._enviar_y_recibir('hola ' + str(self._VERSION_PROTOCOLO))
 
@@ -119,12 +127,12 @@ class app(object):
             - Si no, no hace nada
         '''
 
-        if self._estado >= 1:
+        if self._estado_conexion >= estados_conexion.CONECTADO:
             self._socket.sendall('desconectar'.encode('utf-8'))
             self._socket.close()
             self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-            self._estado = 0
+            self._estado_conexion = estados_conexion.DESCONECTADO
 
 
     def _enviar_y_recibir(self, comando, normalizar = True):
@@ -279,29 +287,40 @@ class app(object):
             self._bloqueo.desbloquear()
 
 
-    def estado(self, estado = False):
+    def estado_conexion(self, estado = False):
         ''' Función "sobrecargada" gracias al parámetro "estado"
             - Para "estado" == "False"
-                - Actúa como pseudo-observador de la variable "_estado" de la clase
+                - Actúa como observador de la variable "_estado_conexion" de la clase
             - Para "estado" != "False"
-                - Actúa como modificador de la variable "_estado" de la clase
+                - Actúa como modificador de la variable "_estado_conexion" de la clase
         '''
 
         if estado == False:
-            if self._estado == 0:
-                return 'no hay una conexión activa'
-
-            elif self._estado == 1:
-                return 'hay una conexión activa'
-
-            elif self._estado == 2:
-                return 'hay una lista de puertos GPIO cargada'
-
-            else:
-                return 'el estado es desconocido'
+            return self._estado_conexion
 
         else:
-            self._estado = estado
+            self._estado_conexion = estado
+
+
+    @staticmethod                                                               # Método estático
+    def estado_conexion_lenguaje_natural(estado):
+        ''' Observador en lenguaje natural de un estado de conexión dado
+        '''
+
+        if estado == 0:
+            return 'no hay una conexión activa'
+
+        elif estado == 1:
+            return 'hay una conexión activa'
+
+        elif estado == 2:
+            return 'hay una lista de puertos GPIO cargada'
+
+        elif estado == 3:
+            return 'hay una lista extendida de puertos GPIO cargada'
+
+        else:
+            return 'el estado es desconocido'
 
 
     def test(self):
