@@ -54,7 +54,7 @@ class bloqueo(_comun_pid):
             - Inicializa las variables
         '''
 
-        super().__init__(config, nombre)
+        super().__init__(nombre)
 
         self._bloqueado = False
 
@@ -128,7 +128,7 @@ class pid(_comun_pid):
             - Inicializa las variables
         '''
 
-        super().__init__(config, nombre)
+        super().__init__(nombre)
 
         self._activado  = False
         self._pid       = os.getpid()
