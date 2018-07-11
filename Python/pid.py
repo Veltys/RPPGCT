@@ -5,7 +5,7 @@
 # Title         : pid.py
 # Description   : Módulo auxiliar para ciertas funciones de bloqueo y de PIDs
 # Author        : Veltys
-# Date          : 06-07-2018
+# Date          : 12-07-2018
 # Version       : 1.0.0
 # Usage         : import pid | from pid import <clase>
 # Notes         : ...
@@ -183,6 +183,6 @@ class pid(_comun_pid):
                 if os.name == 'posix':                                                      #         Si se trata de un sistema POSIX
                     os.remove('/var/run/' + self._nombre[0:-3] + '.pid')                    #             Se elimina el archivo de bloqueo
 
-            self._activado = False                                                         #     Sea como fuere, se actualiza la variable interna de información de activación
+            self._activado = False                                                          #     Sea como fuere, se actualiza la variable interna de información de activación
 
 

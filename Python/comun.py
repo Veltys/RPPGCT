@@ -5,7 +5,7 @@
 # Title         : comun.py
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
-# Date          : 06-07-2018
+# Date          : 12-07-2018
 # Version       : 0.4.2
 # Usage         : import comun | from comun import <clase>
 # Notes         : ...
@@ -14,18 +14,18 @@
 DEBUG           = False
 
 
-import errno                                                                        # Códigos de error
-import os                                                                           # Funcionalidades varias del sistema operativo
-import signal                                                                       # Manejo de señales
-import socket                                                                       # Tratamiento de sockets
-import sys                                                                          # Funcionalidades varias del sistema
+import errno                                                                            # Códigos de error
+import os                                                                               # Funcionalidades varias del sistema operativo
+import signal                                                                           # Manejo de señales
+import socket                                                                           # Tratamiento de sockets
+import sys                                                                              # Funcionalidades varias del sistema
 
-import RPi.GPIO as GPIO                                                             # Acceso a los pines GPIO
+import RPi.GPIO as GPIO                                                                 # Acceso a los pines GPIO
 
-from abc import ABCMeta, abstractmethod                                             # Clases abstractas
-from time import sleep                                                              # Para hacer pausas
+from abc import ABCMeta, abstractmethod                                                 # Clases abstractas
+from time import sleep                                                                  # Para hacer pausas
 
-from pid import bloqueo                                                             # Módulo propio para bloquear la ejecución de más de una instancia
+from pid import bloqueo                                                                 # Módulo propio para bloquear la ejecución de más de una instancia
 
 
 class estados_conexion():
@@ -97,21 +97,21 @@ class app(object):
 
                 mensaje = self._enviar_y_recibir('hola ' + str(self._VERSION_PROTOCOLO))
 
-                if mensaje == False:                                                # Si hay algún fallo al conectar con el servidor
-                    return False                                                    #     Se informa del fallo
+                if mensaje == False:                                                    # Si hay algún fallo al conectar con el servidor
+                    return False                                                        #     Se informa del fallo
 
-                elif(mensaje[:2] == 'ok'):                                          # Si el servidor devuelve un "ok" (significa que la versión del protocolo del servidor es la misma)
-                    return True                                                     #     Se informa del éxito
+                elif(mensaje[:2] == 'ok'):                                              # Si el servidor devuelve un "ok" (significa que la versión del protocolo del servidor es la misma)
+                    return True                                                         #     Se informa del éxito
 
-                elif(mensaje[:4] == 'info'):                                        # Si el servidor devuelve un "info" (significa que el servidor usa una versión distinta)
-                    self._VERSION_PROTOCOLO = float(mensaje[5:])                    #     Se informa del éxito
+                elif(mensaje[:4] == 'info'):                                            # Si el servidor devuelve un "info" (significa que el servidor usa una versión distinta)
+                    self._VERSION_PROTOCOLO = float(mensaje[5:])                        #     Se informa del éxito
 
                     return True
 
-                else:                                                               # Si el servidor devuelve otra cosa (el protocolo es incompatible, ha sucedido algún problema, el servidor no responde, etc.)
-                    self._desconectar()                                             #     Se desconecta
+                else:                                                                   # Si el servidor devuelve otra cosa (el protocolo es incompatible, ha sucedido algún problema, el servidor no responde, etc.)
+                    self._desconectar()                                                 #     Se desconecta
 
-                    return False                                                    #     Se informa del fallo
+                    return False                                                        #     Se informa del fallo
 
         else:
             print('Error: Imposible conectar al servidor, ya hay una conexión activa', file = sys.stderr)
@@ -207,11 +207,11 @@ class app(object):
                     pass
 
                 else:
-                    GPIO.setmode(GPIO.BCM)                                          # Establecemos el sistema de numeración BCM
+                    GPIO.setmode(GPIO.BCM)                                              # Establecemos el sistema de numeración BCM
 
-                    GPIO.setwarnings(DEBUG)                                         # De esta forma alertará de los problemas sólo cuando se esté depurando
+                    GPIO.setwarnings(DEBUG)                                             # De esta forma alertará de los problemas sólo cuando se esté depurando
 
-                    for i in range(len(self._config.GPIOS)):                        # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
+                    for i in range(len(self._config.GPIOS)):                            # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
                         if DEBUG:
                             print('Proceso  #', os.getpid(), "\tPreparando el puerto GPIO", self._config.GPIOS[i][0], sep = '')
 
@@ -226,7 +226,7 @@ class app(object):
                                 print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", self._config.GPIOS[i][0], 'como entrada', sep = '')
 
                             GPIO.setup(self._config.GPIOS[i][0], GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
-                            self._config.GPIOS[i] = list(self._config.GPIOS[i])     # En el caso de tener un pin GPIO de entrada, se necesitará transformar en lista la tupla, ya que es posible que haga falta modificar su contenido
+                            self._config.GPIOS[i] = list(self._config.GPIOS[i])         # En el caso de tener un pin GPIO de entrada, se necesitará transformar en lista la tupla, ya que es posible que haga falta modificar su contenido
 
                 return 0
 
@@ -257,7 +257,7 @@ class app(object):
                 signal.signal(eval('signal.' + senyal), eval('self._' + funcion))
 
 
-    @abstractmethod                                                                 # Método abstracto
+    @abstractmethod                                                                     # Método abstracto
     def bucle(self):
         ''' Función abstracta que será especificada en el sistema que la incluya
         '''
@@ -280,7 +280,7 @@ class app(object):
             pass
 
         else:
-            GPIO.cleanup()                                                          # Se liberan los pines GPIO
+            GPIO.cleanup()                                                              # Se liberan los pines GPIO
 
         if not(self._bloqueo == False):
             self._bloqueo.desbloquear()
@@ -301,7 +301,7 @@ class app(object):
             self._estado_conexion = estado
 
 
-    @staticmethod                                                               # Método estático
+    @staticmethod                                                                   # Método estático
     def estado_conexion_lenguaje_natural(estado):
         ''' Observador en lenguaje natural de un estado de conexión dado
         '''
