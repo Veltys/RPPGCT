@@ -198,7 +198,7 @@ class app(object):
             - Configura los puertos GPIO
         '''
 
-        if self._bloqueo == False or self._bloqueo.comprobar():
+        if self._bloqueo == False or not(self._bloqueo.comprobar()):
             if self._bloqueo == False or self._bloqueo.bloquear():
                 try:
                     self._config.GPIOS

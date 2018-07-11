@@ -94,10 +94,10 @@ class bloqueo(_comun_pid):
         '''
 
         if os.name == 'posix':                                                              # Si se trata de un sistema POSIX
-            return not(os.path.isfile('/var/lock/' + self._nombre[0:-3] + '.lock'))         #     Se retorna la comprobación correspondiente a dicho sistema
+            return os.path.isfile('/var/lock/' + self._nombre[0:-3] + '.lock')              #     Se retorna la comprobación correspondiente a dicho sistema
 
         elif os.name == 'nt':                                                               # Si se trata de un sistema con nucleo NT
-            return not(os.path.isfile(gettempdir() + '\\' + self._nombre[0:-3] + '.lock'))  #     Se retorna la comprobación correspondiente a dicho sistema
+            return os.path.isfile(gettempdir() + '\\' + self._nombre[0:-3] + '.lock')       #     Se retorna la comprobación correspondiente a dicho sistema
 
         else:                                                                               # En cualquier otro caso y ante la duda, no es posible realizar un bloqueo
             return False                                                                    #     Se retorna directamente False, porque no está contemplado el bloqueo en este caso
