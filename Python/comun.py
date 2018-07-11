@@ -28,7 +28,6 @@ from time import sleep                                                          
 from pid import bloqueo                                                             # Módulo propio para bloquear la ejecución de más de una instancia
 
 
-@staticclass
 class estados_conexion():
     DESCONECTADO    = 0
     CONECTADO       = 1
