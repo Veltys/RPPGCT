@@ -446,7 +446,7 @@ class domotica_servidor_hijos(comun.app):
         if DEBUG:
             print('Hijo  #', self._id_hijo, "\tDisparado el evento de cierre", sep = '')
 
-        super().cerrar()                                                                                                            # Llamada al método cerrar() del padre también
+        # super().cerrar()                                                                                                          # La llamada al cierre de la clase padre está desactivada a propósito
 
 
     @staticmethod                                                                                                                   # Método estático
