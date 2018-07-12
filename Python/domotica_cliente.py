@@ -164,7 +164,7 @@ class domotica_cliente(comun.app):
 
         print('Comandos disponibles para la versión del protocolo ' , self._VERSION_PROTOCOLO  , ':', sep = '')
 
-        if(self._estado == 0)            : print('Nota: después de conectar a un servidor, es posible que la lista de comandos se reduzca, si el protocolo a emplear es más antiguo respecto a la versión anteriormente citada')
+        if(self._estado_conexion == 0)   : print('Nota: después de conectar a un servidor, es posible que la lista de comandos se reduzca, si el protocolo a emplear es más antiguo respecto a la versión anteriormente citada')
         if self._VERSION_PROTOCOLO >= 1.0: print("\tconectar:\t\tConecta con el servidor")
         if self._VERSION_PROTOCOLO >= 1.0: print("\tlistar:\t\t\t\tMuestra la lista de puertos GPIO disponibles")
         if self._VERSION_PROTOCOLO >= 1.0: print("\tdesconectar:\t\tDesconecta del servidor")
