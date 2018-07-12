@@ -97,10 +97,14 @@ class domotica_cliente(comun.app):
             mensaje = self._enviar_y_recibir(comando, True)                                     #     Se manda el comando y se recibe el mensaje
 
             if mensaje != False:                                                                #     Si se ha recibido un mensaje
-                estado = int(mensaje[6:])                                                       #         Se preprocesa una parte
+                if mensaje[0:4] == 'info':                                                      #         Si el mensaje es válido
+                    estado = int(mensaje[6:])                                                   #         Se preprocesa una parte
 
-                if mensaje[0:4] == 'info' and estado == 0 or estado == 1:                       #         Si el mensaje es válido
-                    return estado                                                               #             Se devuelve la parte preprocesada
+                    if estado == 0 or estado == 1:                                              #         Si la parte procesada está entre los valores correctos
+                        return estado                                                           #             Se devuelve la parte preprocesada
+
+                    else:                                                                       #         Si no
+                        return -1                                                               #             Se devuelve -1
 
                 else:                                                                           #         Si no
                     return -1                                                                   #             Se devuelve -1
