@@ -60,12 +60,27 @@ class domotica_servidor(comun.app):
             - Se pone a la escucha
         '''
 
+        self._hijos = []                                                                                                        # Preparación de la lista contenedora de hijos
+
         super().__init__(config, nombre)
 
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._socket.bind(('127.0.0.1', self._config.puerto))
-        # self._socket.bind(('::1', self._config.puerto))                                                                                   # TODO: IPv6
-        self._socket.listen(1)                                                                                                              # FIXME: No se preveen muchas conexiones, así que, por ahora, se soportará solamente un cliente
+
+        try:                                                                                                                                # Bloque try
+            self._socket.bind(('127.0.0.1', self._config.puerto))
+
+            # self._socket.bind(('::1', self._config.puerto))                                                                               #     TODO: IPv6
+
+        except OSError:                                                                                                                     # Error del sistema operativo
+            self.cerrar()
+
+            print('Error: Puerto', self._config.puerto, 'en uso', file = sys.stderr)
+            print('Error: Imposible abrir un socket en el puerto', self._config.puerto, ', el puerto ya está en uso')
+
+            sys.exit(errno.EADDRINUSE)                                                                                                      #     Salida del sistema
+
+        else:
+            self._socket.listen(1)                                                                                                          #     FIXME: No se preveen muchas conexiones, así que, por ahora, se soportará solamente un cliente
 
 
     def apagar(self, puerto, puerto_buscado = False):
@@ -97,7 +112,6 @@ class domotica_servidor(comun.app):
                 print('Padre #', os.getpid(), "\tPienso iniciar ", int(len(self._config.GPIOS) / 2), ' hijos', sep = '')
 
             if not(DEBUG_PADRE):
-                self._hijos = list()                                                                                                        # Preparación de la lista contenedora de hijos
                 for i in range(int(len(self._config.GPIOS) / 2)):                                                                           #     Se recorre de dos en dos la lista de puertos GPIO para ir generando los hijos
                     if DEBUG:
                         print('Padre #', os.getpid(), "\tPreparando hijo ", i, sep = '')
@@ -438,6 +452,7 @@ class domotica_servidor_hijos(comun.app):
 
         except KeyboardInterrupt:
             self.cerrar()
+
             return
 
 
