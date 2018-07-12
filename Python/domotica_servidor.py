@@ -192,7 +192,7 @@ class domotica_servidor(comun.app):
                             print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
 
                 # else:                                                                                                             #     Cuando el comando sea "desconectar"
-                    sc.close()                                                                                                      #         Se cerrará el socket y vuelta a empezar
+                sc.close()                                                                                                          #         Se cerrará el socket y vuelta a empezar
 
         except KeyboardInterrupt:
             self.cerrar()
