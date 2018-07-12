@@ -191,7 +191,7 @@ class domotica_cliente(comun.app):
             print('Ok: Puertos GPIO que están disponibles:')
 
             for puerto, estado, descipcion in self._lista_GPIOS:                                #     Recorre la lista de puertos, imprimiendo su información
-                print("\t", 'Puerto GPIO', puerto, "\tEstado: ", ('activo' if estado == 1 else 'inactivo'), "\tDescripción: \"", descipcion, '"', sep = '')
+                print("\t", 'Puerto GPIO', puerto, "\tEstado: ", ("activo\t" if estado == 1 else 'inactivo'), "\tDescripción: \"", descipcion, '"', sep = '')
 
             return True
 
