@@ -142,10 +142,28 @@ class app(object):
         '''
 
         if self._socket != False:
-            self._socket.send(comando.encode('utf-8'))
+            try:                                                                        # Bloque try
+                self._socket.send(comando.encode('utf-8'))                              #     Se manda el mensaje
 
-            mensaje = self._socket.recv(1024)
-            mensaje = mensaje.decode('utf-8')
+            except BrokenPipeError:                                                     # Error de tubería rota
+                comando = 'desconectar'                                                 #     Se precarga el comando de desconexión para que sea ejecutado en la siguiente vuelta
+
+            except ConnectionResetError:                                                # Error de conexión reiniciada
+                comando = 'desconectar'                                                 #     Se precarga el comando de desconexión para que sea ejecutado en la siguiente vuelta
+
+            except OSError:                                                             # Error del sistema operativo
+                comando = 'desconectar'                                                 #     Se precarga el comando de desconexión para que sea ejecutado en la siguiente vuelta
+
+            else:                                                                       # Si todo ha ido bien (nótese la duplicidad de código; ¡gracias, Python, por no implementar la estructura do - while!)
+                try:                                                                    #     Bloque try
+                    mensaje = self._socket.recv(1024)                                   #         Ante un evento, se recibe el contenido
+
+                except ConnectionResetError:                                            #     Error de conexión reiniciada
+                    mensaje = 'desconectar'                                             #         Se precarga el comando de desconexión para que sea ejecutado en la siguiente vuelta
+
+                else:                                                                   #     Si todo ha ido bien
+                    mensaje = mensaje.decode('utf_8')                                   #         Se decodifica el mensaje recibido
+                    mensaje = mensaje.lower()                                           #         Y se normaliza
 
             if normalizar:
                 mensaje = mensaje.lower()
