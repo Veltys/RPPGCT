@@ -244,10 +244,10 @@ class domotica_cliente(comun.app):
                 print('Error: Imposible interaccionar con el puerto GPIO solicitado, el servidor no responde')
 
             elif mensaje[:2] == 'ok':                                                           #     Si el servidor devuelve un Ok, se informa de ello
-                print('Correcto: El servidor informa de que el comando "' + comando + '" ha sido ' + mensaje[4:], sep = '')
+                print('Ok: El servidor informa de que el comando "' + comando + '" ha sido ' + mensaje[4:], sep = '')
 
             elif mensaje[:4] == 'info' and (int(mensaje[5:]) == 0 or int(mensaje[5:]) == 1):    #     Si el servidor devuelve un Info, se informa de ello
-                print('Correcto: El servidor informa de que el estado del puerto "GPIO' + comando[7:] + '" es ' + mensaje[5:], sep = '')
+                print('Ok: El servidor informa de que el estado del puerto "GPIO' + comando[7:] + '" es ' + mensaje[5:], sep = '')
 
             else:                                                                               #     Si el servidor devuelve otra respuesta, se informa de ello
                 print('Aviso: El servidor informa de que el comando "' + comando + '" es ' + mensaje[5:], sep = '')
@@ -322,7 +322,7 @@ class domotica_cliente(comun.app):
                 elif comando == 'desconectar':                                                  #     Si el comando es "desconectar"
                     self._desconectar()                                                         #         Se desconecta
 
-                    print('Correcto: Todas las conexiones abiertas han sido cerradas')          #         Y se informa de ello
+                    print('Ok: Todas las conexiones abiertas han sido cerradas')                #         Y se informa de ello
 
                 else:                                                                           #     Si es otro comando
                     print('Error: Comando "' + comando + '" no reconocido', file = sys.stderr)  #         Se informa de que es desconocido
