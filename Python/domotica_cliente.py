@@ -74,7 +74,7 @@ class domotica_cliente(comun.app):
             - Si no o en caso de fallo, devuelve una cadena vacía
         '''
 
-        if self.estado_conexion >= comun.estados_conexion.LISTA_CARGADA:                        # Si el estado de la conexión es el adecuado
+        if self._estado_conexion >= comun.estados_conexion.LISTA_CARGADA:                       # Si el estado de la conexión es el adecuado
             mensaje = self._enviar_y_recibir(comando, True)                                     #     Se manda el comando y se recibe el mensaje
 
             if mensaje != False and mensaje[0:4] == 'info':                                     # Si se ha recibido un mensaje y es válido
@@ -93,7 +93,7 @@ class domotica_cliente(comun.app):
             - Si no o en caso de fallo, devuelve una cadena vacía
         '''
 
-        if self.estado_conexion >= comun.estados_conexion.LISTA_CARGADA:                        # Si el estado de la conexión es el adecuado
+        if self._estado_conexion >= comun.estados_conexion.LISTA_CARGADA:                       # Si el estado de la conexión es el adecuado
             mensaje = self._enviar_y_recibir(comando, True)                                     #     Se manda el comando y se recibe el mensaje
 
             if mensaje != False:                                                                #     Si se ha recibido un mensaje
@@ -123,7 +123,7 @@ class domotica_cliente(comun.app):
                 - Devuelve True
         '''
 
-        if self.estado_conexion >= comun.estados_conexion.CONECTADO:                            # Si el estado de la conexión es el adecuado
+        if self._estado_conexion >= comun.estados_conexion.CONECTADO:                           # Si el estado de la conexión es el adecuado
             self._lista_GPIOS = self._enviar_y_recibir('listar')                                #     Se manda el comando y se almacena el mensaje
 
             if self._lista_GPIOS != False:                                                      #     Si se ha recibido un mensaje
@@ -187,7 +187,7 @@ class domotica_cliente(comun.app):
                 - Devuelve false
         '''
 
-        if self.estado_conexion >= comun.estados_conexion.LISTA_EXTENDIDA:                      # Si el estado de la conexión es el adecuado
+        if self._estado_conexion >= comun.estados_conexion.LISTA_EXTENDIDA:                     # Si el estado de la conexión es el adecuado
             print('Ok: Puertos GPIO que están disponibles:')
 
             for puerto, estado, descipcion in self._lista_GPIOS:                                #     Recorre la lista de puertos, imprimiendo su información
@@ -213,7 +213,7 @@ class domotica_cliente(comun.app):
                 - Devuelve False
         '''
 
-        if self.estado_conexion >= comun.estados_conexion.LISTA_EXTENDIDA:                      # Si el estado de la conexión es el adecuado
+        if self._estado_conexion >= comun.estados_conexion.LISTA_EXTENDIDA:                     # Si el estado de la conexión es el adecuado
             if int(estado) == 0 or int(estado) == 1:                                            #     Si el estado del puerto es válido, se informa del mismo
                 print('Ok: Puerto GPIO' + puerto + ' --> Estado: ' + ('activo' if estado == 1 else 'inactivo'), sep = '')
 
@@ -236,7 +236,7 @@ class domotica_cliente(comun.app):
         ''' Método "comodín" para enviar y procesar la respuesta de los comandos apagar, conmutar, encender y pulsar
         '''
 
-        if self.estado_conexion >= comun.estados_conexion.LISTA_CARGADA:                        # Si el estado de la conexión es el adecuado
+        if self._estado_conexion >= comun.estados_conexion.LISTA_CARGADA:                       # Si el estado de la conexión es el adecuado
             mensaje = self._enviar_y_recibir(comando)                                           #     Envía el comando y recibe el mensaje
 
             if mensaje == False:                                                                #     Si el envío del mensaje da error
