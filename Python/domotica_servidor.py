@@ -173,6 +173,9 @@ class domotica_servidor(comun.app):
                     except ConnectionResetError:                                                                                    #             Error de conexión reiniciada
                         comando = 'desconectar'                                                                                     #                 Se precarga el comando de desconexión para que sea ejecutado en la siguiente vuelta
 
+                    except OSError:                                                                                                 #             Error del sistema operativo
+                        comando = 'desconectar'                                                                                     #                 Se precarga el comando de desconexión para que sea ejecutado en la siguiente vuelta
+
                     else:                                                                                                           #             Si todo ha ido bien (nótese la duplicidad de código; ¡gracias, Python, por no implementar la estructura do - while!)
                         try:                                                                                                        #             Bloque try
                             comando = sc.recv(1024)                                                                                 #                 Ante un evento, se recibe el contenido
