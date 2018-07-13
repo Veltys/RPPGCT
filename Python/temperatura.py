@@ -24,8 +24,6 @@ import sys                                                                      
 if DEBUG_REMOTO:
     import pydevd                                                                                   # Depuración remota
 
-import RPi.GPIO as GPIO                                                                             # Acceso a los pines GPIO
-
 import comun                                                                                        # Funciones comunes a varios sistemas
 
 from time import sleep                                                                              # Para hacer pausas

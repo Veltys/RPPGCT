@@ -207,7 +207,7 @@ class app(object):
         for gpio, tipo, acceso, activacion, _ in self._config.GPIOS:                    # Se recorre la lista de puertos GPIO
             if tipo == self._config.LED:                                                #     Si se está ante un led
                 GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)                #         Se "apaga" de modo simple
-                
+
             elif tipo == self._config.LED_PWM:                                          #     Si se está ante un led controlado por PWM
                 acceso.ChangeDutyCycle(0)                                               #         Se "apaga" de modo ciclo de trabajo
 
