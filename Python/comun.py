@@ -319,7 +319,7 @@ class app(object):
 
 
     def estado_conexion(self, estado = False):
-        ''' Función "sobrecargada" gracias al parámetro "estado"
+        ''' Método "sobrecargado" gracias al parámetro "estado"
             - Para "estado" == "False"
                 - Actúa como observador de la variable "_estado_conexion" de la clase
             - Para "estado" != "False"
