@@ -56,8 +56,8 @@ class temperatura(comun.app):
         '''
 
         try:
-            for led in self._config.GPIOS:                                                          # Se recorre la lista de puertos GPIO
-                led[1].start(0)                                                                     #     Se inicializa el led a 0 (porcentaje de su ciclo de trabajo que estará encendido)
+            for _, _, acceso, _, _ in self._config.GPIOS:                                           # Se recorre la lista de puertos GPIO
+                acceso.start(0)                                                                     #     Se inicializa el led a 0 (porcentaje de su ciclo de trabajo que estará encendido)
 
             while True:                                                                             # Se ejecutará siempre, ya que las condiciones de parada son externas
                 if not(self._modo_apagado):                                                         #     Si no se ha activado el "modo apagado"
@@ -78,7 +78,7 @@ class temperatura(comun.app):
 
                     # TODO: Optimizar
                     for i in range(len(self._config.GPIOS)):                                        #         Se recorre la lista de leds
-                        self._config.GPIOS[i][1].ChangeDutyCycle(self._config.COLORES[j][i] * 100)  #             Se cambia el ciclo de ejecución en función de la cordenada anteriormente asignada
+                        self._config.GPIOS[i][2].ChangeDutyCycle(self._config.COLORES[j][i] * 100)  #             Se cambia el ciclo de ejecución en función de la cordenada anteriormente asignada
 
                 sleep(self._config.PAUSA)                                                           #     Pausa hasta la nueva comprobación
 
