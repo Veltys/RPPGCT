@@ -5,8 +5,8 @@
 # Title         : domotica_servidor.py
 # Description   : Parte servidor del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 12-07-2018
-# Version       : 2.0.2
+# Date          : 13-07-2018
+# Version       : 2.0.3
 # Usage         : python3 domotica_servidor.py
 # Notes         : Parte servidor del sistema en el que se gestionarán pares de puertos GPIO
 #                 Las entradas impares en la variable de configuración asociada GPIOS corresponderán a los relés que se gestionarán
@@ -94,7 +94,7 @@ class domotica_servidor(comun.app):
 
         if puerto != -1:                                                                                                                    # Si la id del puerto es válida
             with semaforo:                                                                                                                  #     Para realizar la operación es necesario un semáforo o podría haber problemas
-                GPIO.output(self._config.GPIOS[puerto][0], GPIO.LOW if self._config.GPIOS[puerto][2] else GPIO.HIGH)                        #         Se desactiva la salida del puerto GPIO
+                GPIO.output(self._config.GPIOS[puerto][0], GPIO.LOW if self._config.GPIOS[puerto][3] else GPIO.HIGH)                        #         Se desactiva la salida del puerto GPIO
 
             return True                                                                                                                     #     Se informa del éxito
 
@@ -125,6 +125,7 @@ class domotica_servidor(comun.app):
 
             while True:                                                                                                                     # Se ejecutará siempre, ya que las condiciones de parada son externas
                 sc, _ = self._socket.accept()                                                                                               #     Se espera hasta que haya un evento en el socket
+
                 comando = sc.recv(1024)                                                                                                     #     Ante un evento, se recibe el contenido
                 comando = comando.decode('utf_8')                                                                                           #     Se decodifica el mensaje recibido
                 comando = comando.lower()                                                                                                   #     Y se normaliza
@@ -295,7 +296,7 @@ class domotica_servidor(comun.app):
 
         if puerto != -1:                                                                                                                    # Si el puerto es correcto
             with semaforo:                                                                                                                  #     Para realizar la operación es necesario un semáforo o podría haber problemas
-                GPIO.output(self._config.GPIOS[puerto][0], GPIO.HIGH if self._config.GPIOS[puerto][2] else GPIO.LOW)                        #         Se activa la salida del puerto GPIO
+                GPIO.output(self._config.GPIOS[puerto][0], GPIO.HIGH if self._config.GPIOS[puerto][3] else GPIO.LOW)                        #         Se activa la salida del puerto GPIO
 
             return True                                                                                                                     #     Se informa del éxito
 
@@ -310,10 +311,10 @@ class domotica_servidor(comun.app):
         if puerto_buscado == False:                                                                                                         # Si el puerto dado es un número de puerto y no una ID interna
             puerto = self.buscar_puerto_GPIO(puerto)                                                                                        #     Es necesario convertirlo a ID
 
-        if puerto != -1:
-            estado_puerto = GPIO.input(self._config.GPIOS[puerto][0])
+        if puerto != -1:                                                                                                                    # Si el puerto buscado ha sido hallado
+            estado_puerto = GPIO.input(self._config.GPIOS[puerto][0])                                                                       #     Se recoge su estado
 
-            return estado_puerto if self._config.GPIOS[puerto][2] else (estado_puerto + 1) % 2                                              #     Se devuelve su estado
+            return estado_puerto if self._config.GPIOS[puerto][3] else (estado_puerto + 1) % 2                                              #     Y se devuelve
 
         else:                                                                                                                               # Si no
             return -1                                                                                                                       #     Se informa del fallo
@@ -379,12 +380,12 @@ class domotica_servidor_hijos(comun.app):
 
         self._config = config
         self._bloqueo = False
-        self._estado = 0
+        self._estado_conexion = comun.estados_conexion.DESCONECTADO
         self._modo_apagado = False
 
         self._id_hijo = id_hijo
 
-        self._GPIOS = list()
+        self._GPIOS = []
         self._GPIOS.append(self._config.GPIOS[self._id_hijo * 2])
         self._GPIOS.append(self._config.GPIOS[self._id_hijo * 2 + 1])
 
@@ -418,7 +419,7 @@ class domotica_servidor_hijos(comun.app):
                     print('Hijo  #', self._id_hijo, "\tEsperando al puerto GPIO", self._GPIOS[0][0], sep = '')
 
                 if GPIO.event_detected(self._GPIOS[0][0]):                                                                                  #     Se comprueba el puerto que ha sido activado
-                    if not(self._GPIOS[0][2]):                                                                                              #         Si es una subida
+                    if not(self._GPIOS[0][3]):                                                                                              #         Si es una subida
                         if DEBUG:
                             print('Hijo  #', self._id_hijo, "\tSe ha disparado el evento de subida esperado en el puerto GPIO", self._GPIOS[0][0], sep = '')
 
@@ -428,23 +429,23 @@ class domotica_servidor_hijos(comun.app):
                         if self._LLAMADAS[1] == True:                                                                                       #             Si se ha programado una llamada
                             self.cargar_y_ejecutar(self._LLAMADAS[0])                                                                       #                 Se ejecuta
 
-                        self._GPIOS[0][2] = not(self._GPIOS[0][2])                                                                          #             Así se diferencia de las bajadas
+                        self._GPIOS[0][3] = not(self._GPIOS[0][3])                                                                          #             Así se diferencia de las bajadas
 
-                    elif self._GPIOS[0][2]:                                                                                                 #         Si es una bajada
+                    elif self._GPIOS[0][3]:                                                                                                 #         Si es una bajada
                         if DEBUG:
                             print('Hijo  #', self._id_hijo, "\tSe ha disparado el evento de bajada esperado en el puerto GPIO", self._GPIOS[0][0], sep = '')
 
-                        if self._GPIOS[0][3] == self._config.SONDA:                                                                         #             Si se está ante una sonda, cada evento deberá conmutar siempre
+                        if self._GPIOS[0][1] == self._config.SONDA:                                                                         #             Si se está ante una sonda, cada evento deberá conmutar siempre
                             with semaforo:                                                                                                  #                 Para realizar la operación es necesario un semáforo o podría haber problemas
                                 GPIO.output(self._GPIOS[1][0], not(GPIO.input(self._GPIOS[1][0])))                                          #                     Se conmuta la salida del puerto GPIO
 
                         else:                                                                                                               #             En caso contrario (botón)
                             pass                                                                                                            #                 No es necesaria una acción
 
-                        if self._LLAMADAS[2] == True:                                                                                       #             Si se ha programado una llamada
+                        if self._LLAMADAS[3] == True:                                                                                       #             Si se ha programado una llamada
                             self._ejecutar(self._LLAMADAS[0])                                                                               #                 Ejecutar
 
-                        self._GPIOS[0][2] = not(self._GPIOS[0][2])                                                                          #             Se prepara la próxima activación para una subida
+                        self._GPIOS[0][3] = not(self._GPIOS[0][3])                                                                          #             Se prepara la próxima activación para una subida
 
                 sleep(self._config.PAUSA)                                                                                                   #     Pausa programada para evitar la saturación del sistema
 
@@ -463,7 +464,7 @@ class domotica_servidor_hijos(comun.app):
         if DEBUG:
             print('Hijo  #', self._id_hijo, "\tDisparado el evento de cierre", sep = '')
 
-        # super().cerrar()                                                                                                                  # La llamada al cierre de la clase padre está desactivada a propósito
+        # super().cerrar()                                                                                                                  # La llamada al método de cierre de la clase padre está desactivada a propósito
 
 
     @staticmethod                                                                                                                           # Método estático
@@ -505,6 +506,7 @@ def main(argv):
 
 def main_hijos(argv):
     app = domotica_servidor_hijos(argv, config)
+
     err = app.arranque()
 
     if err == 0:

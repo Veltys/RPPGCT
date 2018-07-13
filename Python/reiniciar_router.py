@@ -103,6 +103,7 @@ def main(argv):
         pydevd.settrace(config.IP_DEP_REMOTA)
 
     app = reiniciar_router(config, os.path.basename(argv[0]))
+
     err = app.arranque()
 
     if err == 0:

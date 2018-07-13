@@ -5,8 +5,8 @@
 # Title         : comun.py
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
-# Date          : 12-07-2018
-# Version       : 0.4.2
+# Date          : 13-07-2018
+# Version       : 0.5.0
 # Usage         : import comun | from comun import <clase>
 # Notes         : ...
 
@@ -202,10 +202,14 @@ class app(object):
             - "Apaga" todos los puertos GPIO
         '''
 
-        self._modo_apagado = not(self._modo_apagado)
+        self._modo_apagado = not(self._modo_apagado)                                    # Se comuta el modo apagado
 
-        for gpio, _, activacion, _, _ in self._config.GPIOS:
-            GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)
+        for gpio, tipo, acceso, activacion, _ in self._config.GPIOS:                    # Se recorre la lista de puertos GPIO
+            if tipo == self._config.LED:                                                #     Si se está ante un led
+                GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)                #         Se "apaga" de modo simple
+                
+            elif tipo == self._config.LED_PWM:                                          #     Si se está ante un led controlado por PWM
+                acceso.ChangeDutyCycle(0)                                               #         Se "apaga" de modo ciclo de trabajo
 
 
     def arranque(self):
@@ -229,22 +233,26 @@ class app(object):
 
                     GPIO.setwarnings(DEBUG)                                             # De esta forma alertará de los problemas sólo cuando se esté depurando
 
-                    for i in range(len(self._config.GPIOS)):                            # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
+                    for puerto in self._config.GPIOS:                                   # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
                         if DEBUG:
-                            print('Proceso  #', os.getpid(), "\tPreparando el puerto GPIO", self._config.GPIOS[i][0], sep = '')
+                            print('Proceso  #', os.getpid(), "\tPreparando el puerto GPIO", puerto[0], sep = '')
 
-                        if self._config.GPIOS[i][1]:
+                        if puerto[1] < self._config.BOTON:
                             if DEBUG:
-                                print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", self._config.GPIOS[i][0], ' como salida', sep = '')
+                                print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", puerto[0], ' como salida', sep = '')
 
-                            GPIO.setup(self._config.GPIOS[i][0], GPIO.OUT, initial = GPIO.LOW if self._config.GPIOS[i][2] else GPIO.HIGH)
+                            GPIO.setup(puerto[0], GPIO.OUT, initial = GPIO.LOW if puerto[2] else GPIO.HIGH)
+
+                            if puerto[1] == self._config.LED_PWM:
+                                puerto[2] = GPIO.PWM(puerto[0], self._config.FRECUENCIA)
 
                         else:
                             if DEBUG:
-                                print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", self._config.GPIOS[i][0], 'como entrada', sep = '')
+                                print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", puerto[0], 'como entrada', sep = '')
 
-                            GPIO.setup(self._config.GPIOS[i][0], GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
-                            self._config.GPIOS[i] = list(self._config.GPIOS[i])         # En el caso de tener un pin GPIO de entrada, se necesitará transformar en lista la tupla, ya que es posible que haga falta modificar su contenido
+                            GPIO.setup(puerto[0], GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
+
+                            puerto = list(puerto)                                       # En el caso de tener un pin GPIO de entrada, se necesitará transformar en lista la tupla, ya que es posible que haga falta modificar su contenido
 
                 return 0
 
@@ -291,17 +299,23 @@ class app(object):
 
         self._desconectar()
 
-        try:
-            self._config.GPIOS
+        try:                                                                            # Bloque try
+            self._config.GPIOS                                                          #     Se comprueba la existencia de puertos GPIO
 
-        except AttributeError:
-            pass
+        except AttributeError:                                                          # Si no los hay
+            pass                                                                        #     Sin problema
 
-        else:
-            GPIO.cleanup()                                                              # Se liberan los pines GPIO
+        else:                                                                           # Si sí los hay
+            for _, tipo, acceso, _, _ in self._config.GPIOS:                            #     Se recorren los pines GPIO
+                if tipo == self._config.LED_PWM:                                        #         Si el pin es un led controlado por PWM
+                    acceso.stop()                                                       #             Se le ordena parar
 
-        if not(self._bloqueo == False):
-            self._bloqueo.desbloquear()
+            GPIO.cleanup()                                                              #     Se liberan los pines GPIO
+
+        if not(self._bloqueo == False):                                                 # Si hay un boqueo
+            self._bloqueo.desbloquear()                                                 #     Se desbloquea
+
+        # TODO: PID
 
 
     def estado_conexion(self, estado = False):
@@ -319,7 +333,7 @@ class app(object):
             self._estado_conexion = estado
 
 
-    @staticmethod                                                                   # Método estático
+    @staticmethod                                                                       # Método estático
     def estado_conexion_lenguaje_natural(estado):
         ''' Observador en lenguaje natural de un estado de conexión dado
         '''
@@ -347,23 +361,27 @@ class app(object):
         if DEBUG:
             print('Entrando en modo de pruebas')
 
-        try:
-            self._config.GPIOS
+        try:                                                                            # Bloque try
+            self._config.GPIOS                                                          #     Se comprueba la existencia de puertos GPIO
 
-        except AttributeError:
-            pass
+        except AttributeError:                                                          # Si no los hay
+            pass                                                                        #     Sin problema
 
-        else:
+        else:                                                                           # Si sí los hay
             if DEBUG:
                 print('Encendiendo leds')
 
-            for gpio, _, activacion, _, _ in self._config.GPIOS:
-                GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)
+            for gpio, tipo, acceso, activacion, _ in self._config.GPIOS:                #     Se recorre la lista de puertos GPIO
+                if tipo == self._config.RELE or tipo == self._config.LED:               #         Si se está ante un relé o un led normal
+                    GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)            #             Se "enciende" de modo normal
+
+                elif tipo == self._config.LED_PWM:                                      #         Si se está ante un led controlado por PWM
+                    acceso.ChangeDutyCycle(100)                                         #             Se "enciende" de modo ciclo de trabajo
 
             if DEBUG:
                 print('Esperando', self._config.PAUSA, 'segundos')
 
-            sleep(self._config.PAUSA)
+            sleep(self._config.PAUSA)                                                   #     Se espera la pausa programada
 
             if DEBUG:
                 print('Saliendo del modo de pruebas')
@@ -374,3 +392,5 @@ class app(object):
         '''
 
         pass
+
+
