@@ -344,6 +344,9 @@ class app(object):
         ''' Ejecuta el modo de pruebas
         '''
 
+        if DEBUG:
+            print('Entrando en modo de pruebas')
+
         try:
             self._config.GPIOS
 
@@ -351,10 +354,19 @@ class app(object):
             pass
 
         else:
+            if DEBUG:
+                print('Encendiendo leds')
+
             for gpio, _, activacion, _, _ in self._config.GPIOS:
                 GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)
 
+            if DEBUG:
+                print('Esperando', self._config.PAUSA, 'segundos')
+
             sleep(self._config.PAUSA)
+
+            if DEBUG:
+                print('Saliendo del modo de pruebas')
 
 
     def __del__(self):
