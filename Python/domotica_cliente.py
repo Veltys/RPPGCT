@@ -140,7 +140,7 @@ class domotica_cliente(comun.app):
                     # TODO: Optimizar
                     for i in range(len(self._lista_GPIOS)):                                     #             Se recorre la lista
                         aux = self._lista_GPIOS[i]                                              #                 Se pone a salvo
-                        self._lista_GPIOS[i] = list()                                           #                 Se sustituye por una lista vacía
+                        self._lista_GPIOS[i] = []                                               #                 Se sustituye por una lista vacía
                         self._lista_GPIOS[i].append(aux)                                        #                 Se añade el elemento salvado a la lista
                         self._lista_GPIOS[i].append(self.__estado('estado ' + aux))             #                 Se añade su estado
                         self._lista_GPIOS[i].append(self.__describir('describir ' + aux))       #                 Se añade su descripción
@@ -356,6 +356,7 @@ def main(argv):
         pydevd.settrace(config.IP_DEP_REMOTA)
 
     app = domotica_cliente(config, sys.argv)
+
     err = app.arranque()
 
     if err == 0:
