@@ -255,7 +255,7 @@ class dht11_hijos(comun.app):
         ''' Envío del activador de la sonda y espera de la pausa para posteriormente recibir
         '''
 
-        GPIO.output(config.GPIOS[self._sensor][0], salida)
+        GPIO.output(self._config.GPIOS[self._id_hijo][0], salida)
 
         sleep(pausa)
 
@@ -336,7 +336,7 @@ class dht11_hijos(comun.app):
 
 
         while True:
-            actual = GPIO.input(config.GPIOS[self._sensor][0])
+            actual = GPIO.input(self._config.GPIOS[self._id_hijo][0])
 
             datos.append(actual)
 
