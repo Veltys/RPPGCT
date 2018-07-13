@@ -234,6 +234,8 @@ class app(object):
                     GPIO.setwarnings(DEBUG)                                             # De esta forma alertará de los problemas sólo cuando se esté depurando
 
                     for puerto in self._config.GPIOS:                                   # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
+                        puerto = list(puerto)                                           #     Se necesita transformar en lista la tupla, ya que es posible que haga falta modificar su contenido
+
                         if DEBUG:
                             print('Proceso  #', os.getpid(), "\tPreparando el puerto GPIO", puerto[0], sep = '')
 
@@ -251,8 +253,6 @@ class app(object):
                                 print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", puerto[0], 'como entrada', sep = '')
 
                             GPIO.setup(puerto[0], GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
-
-                            puerto = list(puerto)                                       # En el caso de tener un pin GPIO de entrada, se necesitará transformar en lista la tupla, ya que es posible que haga falta modificar su contenido
 
                 return 0
 
