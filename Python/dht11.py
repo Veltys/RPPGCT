@@ -65,6 +65,130 @@ class dht11(comun.app):
         super().__init__(config, nombre)
 
 
+    def argumentos(self, argumentos = False):
+        ''' Método "sobrecargado" gracias al parámetro "argumentos"
+            - Para "argumentos" == "False"
+                - Actúa como observador de la variable "_estado_conexion" de la clase
+            - Para "argumentos" != "False"
+                - Actúa como modificador de la variable "_estado_conexion" de la clase
+        '''
+
+        if argumentos == False:
+            return self._argumentos
+
+        else:
+            self._argumentos = argumentos
+
+
+    def bucle(self):
+        ''' Realiza (en bucle no en este caso) las tareas asignadas a este sistema
+        '''
+
+        if len(self._argumentos) != 2 or self._argumentos[1] != '-h':
+            argumentos = self.procesar_argumentos(self._argumentos)
+
+            # TODO: Optimizar
+            for i in range(len(self._config.GPIOS)):                                                        # Se recorre de dos en dos la lista de puertos GPIO para ir generando los hijos
+                if DEBUG:
+                    print('Padre #', os.getpid(), "\tPreparando hijo ", i, sep = '')
+
+                self._hijos.append(Thread(target = main_hijos, args = ((i, argumentos, self._config),)))    #     Se prepara cada hijo y se configura
+
+                if DEBUG:
+                    print('Padre #', os.getpid(), "\tArrancando hijo ", i, sep = '')
+
+                self._hijos[i].start()                                                                      #     Se inicia cada hijo
+
+        else:
+            print('Uso:', argumentos[0], '''[opciones]
+    
+    Opciones:
+        -h    Muestra esta pantalla
+        -i    Información / listado de sensores
+        -t    Mostrar la temperatura
+        -m    Mostrar la humedad relativa
+        -u    Mostrar las unidades y no solamente la magnitud
+    
+    Nota: invocar el programa sin parámetros equivale a invocarlo con todos excepto -h (-i -t -m -u)
+''')
+
+        self.cerrar()
+
+
+    def cerrar(self):
+        ''' Realiza las operaciones necesarias para el cierre del sistema
+        '''
+
+        for hijo in self._hijos:                                                                            # Se recorren los hijos
+            hijo.join()                                                                                     #     Para esperar su finalización
+
+        super().cerrar()                                                                                    # Llamada al método cerrar() de la clase padre
+
+
+    @staticmethod                                                                                           # Método estático
+    def procesar_argumentos(argumentos):
+        ''' Procesado de los argumentos
+        '''
+
+        res = []
+
+        if len(argumentos) == 1:
+            for _ in range(4):
+                res.append(True)
+
+        else:
+            if any('-i' in s for s in argumentos):
+                res.append(True)
+
+            else:
+                res.append(False)
+
+            if any('-t' in s for s in argumentos):
+                res.append(True)
+
+            else:
+                res.append(False)
+
+            if any('-m' in s for s in argumentos):
+                res.append(True)
+
+            else:
+                res.append(False)
+
+            if any('-u' in s for s in argumentos):
+                res.append(True)
+
+            else:
+                res.append(False)
+
+        return res
+
+
+class dht11_hijos(comun.app):
+    ''' Clase de los hijos del sistema gestor de sonda de temperatura DHT11
+    '''
+
+    def __init__(self, id_hijo, argumentos, config):
+        ''' Constructor de la clase:
+            - Inicializa variables
+            - Carga la configuración
+        '''
+
+        # super().__init__()                                                                                # La llamada al constructor de la clase padre está desactivada a propósito
+
+        self._argumentos = argumentos
+        self._config = config
+        self._bloqueo = False
+        self._estado_conexion = comun.estados_conexion.DESCONECTADO
+        self._modo_apagado = False
+
+        self._id_hijo = id_hijo
+
+        if DEBUG:
+            print('Hijo  #', self._id_hijo, "\tMi configuración es ", self._GPIOS, sep = '')
+            print('Hijo  #', self._id_hijo, "\tDeberé escuchar en el puerto GPIO", self._GPIOS[0][0] , ' y conmutar el puerto GPIO', self._GPIOS[1][0], sep = '')
+
+
     @staticmethod                                                                                           # Método estático
     def _bits_a_bytes(bits):
         ''' Conversor de bits a bytes
@@ -93,7 +217,7 @@ class dht11(comun.app):
     def _calcular_bits(longitudes):
         ''' Cáculo de bits dada una longitud
         '''
-        
+
         mas_corta = 1000
         mas_larga = 0
 
@@ -229,169 +353,6 @@ class dht11(comun.app):
         return datos
 
 
-    def argumentos(self, argumentos = False):
-        ''' Método "sobrecargado" gracias al parámetro "argumentos"
-            - Para "argumentos" == "False"
-                - Actúa como observador de la variable "_estado_conexion" de la clase
-            - Para "argumentos" != "False"
-                - Actúa como modificador de la variable "_estado_conexion" de la clase
-        '''
-
-        if argumentos == False:
-            return self._argumentos
-
-        else:
-            self._argumentos = argumentos
-
-
-    def bucle(self):
-        ''' Realiza (en bucle no en este caso) las tareas asignadas a este sistema
-        '''
-
-        if len(self._argumentos) != 2 or self._argumentos[1] != '-h':
-            argumentos = self.procesar_argumentos(self._argumentos)
-
-            # TODO: Optimizar
-            for i in range(len(self._config.GPIOS)):                                                        # Se recorre de dos en dos la lista de puertos GPIO para ir generando los hijos
-                if DEBUG:
-                    print('Padre #', os.getpid(), "\tPreparando hijo ", i, sep = '')
-
-                self._hijos.append(Thread(target = main_hijos, args = ((i, argumentos, self._config),)))    #     Se prepara cada hijo y se configura
-
-                if DEBUG:
-                    print('Padre #', os.getpid(), "\tArrancando hijo ", i, sep = '')
-
-                self._hijos[i].start()                                                                      #     Se inicia cada hijo
-
-        else:
-            print('Uso:', argumentos[0], '''[opciones]
-    
-    Opciones:
-        -h    Muestra esta pantalla
-        -i    Información / listado de sensores
-        -t    Mostrar la temperatura
-        -m    Mostrar la humedad relativa
-        -u    Mostrar las unidades y no solamente la magnitud
-    
-    Nota: invocar el programa sin parámetros equivale a invocarlo con todos excepto -h (-i -t -m -u)
-''')
-
-        self.cerrar()
-
-
-    def cerrar(self):
-        ''' Realiza las operaciones necesarias para el cierre del sistema
-        '''
-
-        for hijo in self._hijos:                                                                            # Se recorren los hijos
-            hijo.join()                                                                                     #     Para esperar su finalización
-
-        super().cerrar()                                                                                    # Llamada al método cerrar() de la clase padre
-
-
-    @staticmethod                                                                                           # Método estático
-    def procesar_argumentos(argumentos):
-        ''' Procesado de los argumentos
-        '''
-
-        res = []
-
-        if len(argumentos) == 1:
-            for _ in range(4):
-                res.append(True)
-
-        else:
-            if any('-i' in s for s in argumentos):
-                res.append(True)
-
-            else:
-                res.append(False)
-
-            if any('-t' in s for s in argumentos):
-                res.append(True)
-
-            else:
-                res.append(False)
-
-            if any('-m' in s for s in argumentos):
-                res.append(True)
-
-            else:
-                res.append(False)
-
-            if any('-u' in s for s in argumentos):
-                res.append(True)
-
-            else:
-                res.append(False)
-
-        return res
-
-
-class dht11_hijos(comun.app):
-    ''' Clase de los hijos del sistema gestor de sonda de temperatura DHT11
-    '''
-
-    def __init__(self, id_hijo, argumentos, config):
-        ''' Constructor de la clase:
-            - Inicializa variables
-            - Carga la configuración
-        '''
-
-        # super().__init__()                                                                                # La llamada al constructor de la clase padre está desactivada a propósito
-
-        self._argumentos = argumentos
-        self._config = config
-        self._bloqueo = False
-        self._estado_conexion = comun.estados_conexion.DESCONECTADO
-        self._modo_apagado = False
-
-        self._id_hijo = id_hijo
-
-        self._GPIOS = []
-        self._GPIOS.append(self._config.GPIOS[self._id_hijo * 2])
-        self._GPIOS.append(self._config.GPIOS[self._id_hijo * 2 + 1])
-
-        self._LLAMADAS = self._config.LLAMADAS[self._id_hijo]
-
-        if DEBUG:
-            print('Hijo  #', self._id_hijo, "\tMi configuración es ", self._GPIOS, sep = '')
-            print('Hijo  #', self._id_hijo, "\tDeberé escuchar en el puerto GPIO", self._GPIOS[0][0] , ' y conmutar el puerto GPIO', self._GPIOS[1][0], sep = '')
-
-
-    def leer(self):
-        ''' Lee datos del sensor
-        '''
-
-        GPIO.setup(config.GPIOS[self._sensor][0], GPIO.OUT)                                                 # Modo de escritura
-
-        self._enviar_y_esperar(GPIO.HIGH, 0.05)                                                             # Señal de lectura
-
-        self._enviar_y_esperar(GPIO.LOW, 0.02)                                                              # Fin de la señal de lectura
-
-        GPIO.setup(config.GPIOS[self._sensor][0], GPIO.IN, GPIO.PUD_UP)                                     # Cambiando a modo lectura
-
-        datos = self._recoger_datos()                                                                       # Recibiendo datos
-
-        longitudes = self._procesar_datos(datos)                                                            # Procesamiento de datos
-
-        if len(longitudes) != LONGITUD_DATOS:                                                               # Si no coincide la congitud con el valor esperado, ha habido un fallo en la transmisión
-            return resultado_dht11(ERR_MISSING_DATA, 0, 0)
-
-        else:
-            bits = self._calcular_bits(longitudes)                                                          # Calcular bits a partir de las longitudes
-
-            bytess = self._bits_a_bytes(bits)                                                               # Calcular bytes
-
-            checksum = self._calcular_checksum(bytess)                                                      # Calcular comprobación y comprobar
-
-            if bytess[4] != checksum:
-                return resultado_dht11(ERR_CRC, 0, 0)
-
-            else:
-                return resultado_dht11(ERR_NO_ERROR, bytess[2], bytess[0])
-
-
     def bucle(self):
         ''' Realiza (en bucle no en este caso) las tareas asignadas a este sistema
         '''
@@ -467,6 +428,39 @@ class dht11_hijos(comun.app):
             print('Hijo  #', self._id_hijo, "\tDisparado el evento de cierre", sep = '')
 
         # super().cerrar()                                                                                  # La llamada al método de cierre de la clase padre está desactivada a propósito
+
+
+    def leer(self):
+        ''' Lee datos del sensor
+        '''
+
+        GPIO.setup(self._config.GPIOS[self._id_hijo][0], GPIO.OUT)                                          # Modo de escritura
+
+        self._enviar_y_esperar(GPIO.HIGH, 0.05)                                                             # Señal de lectura
+
+        self._enviar_y_esperar(GPIO.LOW, 0.02)                                                              # Fin de la señal de lectura
+
+        GPIO.setup(self._config.GPIOS[self._id_hijo][0], GPIO.IN, GPIO.PUD_UP)                              # Cambiando a modo lectura
+
+        datos = self._recoger_datos()                                                                       # Recibiendo datos
+
+        longitudes = self._procesar_datos(datos)                                                            # Procesamiento de datos
+
+        if len(longitudes) != LONGITUD_DATOS:                                                               # Si no coincide la congitud con el valor esperado, ha habido un fallo en la transmisión
+            return resultado_dht11(ERR_MISSING_DATA, 0, 0)
+
+        else:
+            bits = self._calcular_bits(longitudes)                                                          # Calcular bits a partir de las longitudes
+
+            bytess = self._bits_a_bytes(bits)                                                               # Calcular bytes
+
+            checksum = self._calcular_checksum(bytess)                                                      # Calcular comprobación y comprobar
+
+            if bytess[4] != checksum:
+                return resultado_dht11(ERR_CRC, 0, 0)
+
+            else:
+                return resultado_dht11(ERR_NO_ERROR, bytess[2], bytess[0])
 
 
 class resultado_dht11:                                                          	                        # Clase resultado devuelto por el método dht11.leer()
