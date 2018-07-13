@@ -65,7 +65,7 @@ class temperatura(comun.app):
 
             while True:                                                                     # Se ejecutará siempre, ya que las condiciones de parada son externas
                 if not(self._modo_apagado):                                                 #     Si no se ha activado el "modo apagado"
-                    temperatura = check_output(CMD_COMANDO, CMD_PARAMETROS)                 #         Se lee la temperatura de la CPU
+                    temperatura = check_output([CMD_COMANDO, CMD_PARAMETROS])               #         Se lee la temperatura de la CPU
                     temperatura = float(temperatura[5:-3])                                  #         Se convierte a un valor numérico
 
                     if temperatura < self._config.TEMPERATURAS[0]:                          #         Se comprueba si está por debajo del valor mínimo
