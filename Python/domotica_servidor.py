@@ -19,7 +19,7 @@ DEBUG_PADRE     = False
 DEBUG_REMOTO    = False
 
 
-salir = False                                                                                                                     # Ya que no es posible matar a un hilo, esta "bandera" global servirá para indicarle a los hilos que deben terminar
+salir           = False                                                                                                                     # Ya que no es posible matar a un hilo, esta "bandera" global servirá para indicarle a los hilos que deben terminar
 
 
 import errno                                                                                                                                # Códigos de error
@@ -46,7 +46,7 @@ except ImportError:
     sys.exit(errno.ENOENT)
 
 
-semaforo = Lock()                                                                                                                    # Un semáforo evitará que el padre y los hijos den problemas al acceder a una variable que ambos puedan modificar
+semaforo        = Lock()                                                                                                                    # Un semáforo evitará que el padre y los hijos den problemas al acceder a una variable que ambos puedan modificar
 
 
 class domotica_servidor(comun.app):
@@ -60,7 +60,7 @@ class domotica_servidor(comun.app):
             - Se pone a la escucha
         '''
 
-        self._hijos = []                                                                                                        # Preparación de la lista contenedora de hijos
+        self._hijos = []                                                                                                                    # Preparación de la lista contenedora de hijos
 
         super().__init__(config, nombre)
 

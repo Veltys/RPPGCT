@@ -16,8 +16,8 @@ import os                                                                       
 from time import strftime                                                                           # Formato de fecha y hora
 
 
-class config_global(object):                                                                # Configuración común
-    IP_DEP_REMOTA   = '0.0.0.0'                                                             # IP del servidor de depuración
+class config_global(object):                                                                        # Configuración común
+    IP_DEP_REMOTA   = '0.0.0.0'                                                                     # IP del servidor de depuración
 
     RELE            = 0
     LED             = 10
@@ -26,7 +26,7 @@ class config_global(object):                                                    
     SONDA           = 30
 
 
-class aviso_electricidad_config(config_global):                                             # Configuración del sistema de aviso en caso de corte de electricidad
+class aviso_electricidad_config(config_global):                                                     # Configuración del sistema de aviso en caso de corte de electricidad
     ASUNTO          = '<NOMBRE_SISTEMA>: informe especial'
     CORREO          = 'Informe especial de <NOMBRE_SISTEMA>, generado el ' + str(strftime("%c")) + os.linesep + os.linesep \
                     + 'Ha habido un corte en la red eléctrica de <NOMBRE_SISTEMA> y se ha activado la batería.'
@@ -36,13 +36,13 @@ class aviso_electricidad_config(config_global):                                 
     REINTENTOS      = 10
 
 
-class correo_electronico_config(config_global):                                             # Configuración del sistema de correo electrónico
+class correo_electronico_config(config_global):                                                     # Configuración del sistema de correo electrónico
     CONTRASENYA     = ''
     SERVIDOR        = ''
     USUARIO         = ''
 
 
-class cpu_config(config_global):                                                            # Configuración del sistema de CPU
+class cpu_config(config_global):                                                                    # Configuración del sistema de CPU
     GPIOS           = [
                         (26, config_global.LED      , None, True , 'Verde'                      ),  # GPIOS contiene quíntuplas de datos en formato lista:
                         (19, config_global.LED      , None, True , 'Amarillo'                   ),  # el primer elemento será el número (BCM) de puerto GPIO a manipular,
@@ -77,8 +77,8 @@ class domotica_cliente_config(config_global):
 
 class domotica_servidor_config(domotica_cliente_config):
     GPIOS =           [
-                        (22, config_global.BOTON    , None, False, 'Botón reinicio router'      ), # En este caso, los puertos GPIO serán dados por pares:
-                        ( 4, config_global.RELE     , None, False, 'Relé reinicio router'       ), # Las entradas impares corresponderán a los relés que se gestionarán
+                        (22, config_global.BOTON    , None, False, 'Botón reinicio router'      ),  # En este caso, los puertos GPIO serán dados por pares:
+                        ( 4, config_global.RELE     , None, False, 'Relé reinicio router'       ),  # Las entradas impares corresponderán a los relés que se gestionarán
 
                         (24, config_global.BOTON    , None, False, 'Botón reinicio switch'      ),  # Las pares, a los pulsadores o equivalentes que irán asociados a dichos relés, para su conmutación
                         (23, config_global.RELE     , None, False, 'Relé reinicio switch'       ),
@@ -105,8 +105,8 @@ class domotica_servidor_config(domotica_cliente_config):
                       }
 
 
-class internet_config(config_global):                                                       # Configuración del sistema de comprobación de conectividad a Internet
-    HOSTS           = [                                                                     # HOSTS contiene los servidores a los cuales se les hará ping para comprobar si hay internet
+class internet_config(config_global):                                                               # Configuración del sistema de comprobación de conectividad a Internet
+    HOSTS           = [                                                                             # HOSTS contiene los servidores a los cuales se les hará ping para comprobar si hay internet
                         'google.es'                ,
                         '2001:4860:4860::8888'     ,
                         '2001:4860:4860::8844'     ,
