@@ -74,8 +74,8 @@ class temperatura(comun.app):
                     else:                                                                           #         Está igual o por encima del valor máximo
                         j = 3                                                                       #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
 
-                    for i, puerto in enumerate(self._config.GPIOS):                                 #         Se recorre la lista de leds
-                        puerto[2].ChangeDutyCycle(self._config.COLORES[j][i] * 100)                 #             Se cambia el ciclo de ejecución en función de la cordenada anteriormente asignada
+                    for i, _ in enumerate(self._config.GPIOS):                                      #         Se recorre la lista de leds
+                        self._config.GPIOS[i][2].ChangeDutyCycle(self._config.COLORES[j][i] * 100)  #             Se cambia el ciclo de ejecución en función de la cordenada anteriormente asignada
 
                 sleep(self._config.PAUSA)                                                           #     Pausa hasta la nueva comprobación
 

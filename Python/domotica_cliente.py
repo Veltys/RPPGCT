@@ -137,8 +137,8 @@ class domotica_cliente(comun.app):
                 if self._comprobar_lista_GPIOS():                                               #         Si es válido
                     self._estado_conexion = comun.estados_conexion.LISTA_CARGADA                #             El estado de la conexión es actualizado
 
-                    for _, puerto in enumerate(self._lista_GPIOS):                              #             Se recorre la lista para transformarla en el formato necesario
-                        puerto = (puerto, self.__estado('estado ' + puerto), self.__describir('describir ' + puerto))
+                    for i, puerto in enumerate(self._lista_GPIOS):                              #             Se recorre la lista para transformarla en el formato necesario
+                        self._lista_GPIOS[i] = (puerto, self.__estado('estado ' + puerto), self.__describir('describir ' + puerto))
 
                     self._estado_conexion = comun.estados_conexion.LISTA_EXTENDIDA              #             El estado de la conexión es actualizado de nuevo
 

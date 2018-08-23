@@ -234,7 +234,7 @@ class app(object):
                     GPIO.setwarnings(DEBUG)                                             # De esta forma alertará de los problemas sólo cuando se esté depurando
 
                     for i, puerto in enumerate(self._config.GPIOS):                     # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
-                        puerto = list(puerto)                                           #     Se necesita transformar en lista la tupla, ya que es posible que haga falta modificar su contenido
+                        self._config.GPIOS[i] = list(puerto)                            #     Se necesita transformar en lista la tupla, ya que es posible que haga falta modificar su contenido
 
                         if DEBUG:
                             print('Proceso  #', os.getpid(), "\tPreparando el puerto GPIO", puerto[0], sep = '')
@@ -246,7 +246,7 @@ class app(object):
                             GPIO.setup(puerto[0], GPIO.OUT, initial = GPIO.LOW if puerto[2] else GPIO.HIGH)
 
                             if puerto[1] == self._config.LED_PWM:
-                                puerto[2] = GPIO.PWM(puerto[0], self._config.FRECUENCIA)
+                                self._config.GPIOS[i][2] = GPIO.PWM(puerto[0], self._config.FRECUENCIA)
 
                         else:
                             if DEBUG:
