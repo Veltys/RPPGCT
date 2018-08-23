@@ -137,13 +137,8 @@ class domotica_cliente(comun.app):
                 if self._comprobar_lista_GPIOS():                                               #         Si es válido
                     self._estado_conexion = comun.estados_conexion.LISTA_CARGADA                #             El estado de la conexión es actualizado
 
-                    # TODO: Optimizar
-                    for i in range(len(self._lista_GPIOS)):                                     #             Se recorre la lista
-                        aux = self._lista_GPIOS[i]                                              #                 Se pone a salvo
-                        self._lista_GPIOS[i] = []                                               #                 Se sustituye por una lista vacía
-                        self._lista_GPIOS[i].append(aux)                                        #                 Se añade el elemento salvado a la lista
-                        self._lista_GPIOS[i].append(self.__estado('estado ' + aux))             #                 Se añade su estado
-                        self._lista_GPIOS[i].append(self.__describir('describir ' + aux))       #                 Se añade su descripción
+                    for i, puerto in enumerate(self._lista_GPIOS):                              #             Se recorre la lista para transformarla en el formato necesario
+                        puerto = (puerto, self.__estado('estado ' + aux), self.__describir('describir ' + aux))
 
                     self._estado_conexion = comun.estados_conexion.LISTA_EXTENDIDA              #             El estado de la conexión es actualizado de nuevo
 
@@ -168,7 +163,7 @@ class domotica_cliente(comun.app):
 
         print('Comandos disponibles para la versión del protocolo ' , self._VERSION_PROTOCOLO  , ':', sep = '')
 
-        if(self._estado_conexion == 0)   : print('Nota: después de conectar a un servidor, es posible que la lista de comandos se reduzca, si el protocolo a emplear es más antiguo respecto a la versión anteriormente citada')
+        if self._estado_conexion == 0    : print('Nota: después de conectar a un servidor, es posible que la lista de comandos se reduzca, si el protocolo a emplear es más antiguo respecto a la versión anteriormente citada')
         if self._VERSION_PROTOCOLO >= 1.0: print("\tconectar:\t\tConecta con el servidor")
         if self._VERSION_PROTOCOLO >= 1.0: print("\tlistar:\t\t\tMuestra la lista de puertos GPIO disponibles")
         if self._VERSION_PROTOCOLO >= 1.0: print("\tdesconectar:\t\tDesconecta del servidor")

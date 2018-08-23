@@ -68,9 +68,9 @@ class dht11(comun.app):
     def argumentos(self, argumentos = False):
         ''' Método "sobrecargado" gracias al parámetro "argumentos"
             - Para "argumentos" == "False"
-                - Actúa como observador de la variable "_estado_conexion" de la clase
+                - Actúa como observador de la variable "_argumentos" de la clase
             - Para "argumentos" != "False"
-                - Actúa como modificador de la variable "_estado_conexion" de la clase
+                - Actúa como modificador de la variable "_argumentos" de la clase
         '''
 
         if argumentos == False:
@@ -87,8 +87,7 @@ class dht11(comun.app):
         if len(self._argumentos) != 2 or self._argumentos[1] != '-h':
             argumentos = self.procesar_argumentos(self._argumentos)
 
-            # TODO: Optimizar
-            for i in range(len(self._config.GPIOS)):                                                        # Se recorre de dos en dos la lista de puertos GPIO para ir generando los hijos
+            for i, _ in enumerate(self._config.GPIOS):                                                      # Se recorre la lista de puertos GPIO para ir generando los hijos
                 if DEBUG:
                     print('Padre #', os.getpid(), "\tPreparando hijo ", i, sep = '')
 
