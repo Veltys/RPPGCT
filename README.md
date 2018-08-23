@@ -39,16 +39,16 @@ Colección de utilidades varias para el control GPIO en Python
     - Acabados los scripts para init.d.
 - 0.1.7:
     - Añadidas cabeceras en **boton.py**, **cpu.py**, **internet.py**, **pid.py**, **reiniciar_router.py** y **temperaturas.py**.
-    - Eliminada funcionalidad no necesaria en **reiniciar_router.py**.
     - Arreglo de fallos menores.
+    - Eliminada funcionalidad no necesaria en **reiniciar_router.py**.
 - 0.1.8:
     - Añadido el script actualizador.
 - 0.2.0:
-    - Configuración exportada a un único archivo.
     - Añadido un sistema de comprobación al importar para alertar de una mala (o inexistente) configuración en **boton.py**, **cpu.py**, **internet.py**, **pid.py**, **reiniciar_router.py** y **temperaturas.py**.
     - Actualizados **actualizador.sh**, **desinstalador.sh** e **instalador.sh**.
     - Eliminado *import* innecesario en **internet.py**.
     - Editado **.gitignore** para que no suba el archivo **config.py**.
+    - Exportada configuración a un único archivo.
 - 0.2.1:
     - Arreglo de fallo en los scripts de init.
 - 0.2.2:
@@ -56,15 +56,15 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.2.3:
     - Arreglos menores.
     - Cambio de editor, lo que puede provocar algún desajuste con las tabulaciones o similar.
-    - Comienzo del proceso de hacer el código independiente del sistema operativ, ya que así algunas cosas podré probarlas con mayor rapidez.
+    - Comenzado proceso para hacer el código independiente del sistema operativo.
 - 0.2.4:
-    - Movido todo el código común a **comun.py**.
-    - Arreglados fallos varios.
-    - Rediseñado el bucle de **temperaturas.py**.
-    - Añadida comprobación de superusuario en los scripts de **init**.
     - Añadido **indice_gpio.py**.
+    - Añadida comprobación de superusuario en los scripts de **init**.
+    - Arreglados fallos varios.
+    - Movido todo el código común a **comun.py**.
+    - Rediseñado el bucle de **temperaturas.py**.
 - 0.3.0:
-    - Actualización de la configuración de **config.py** para permitir puertos GPIO tanto de entrada, como de salida.
+    - Actualizada configuración de **config.py** para permitir puertos GPIO tanto de entrada, como de salida.
     - Actualizados **boton.py**, **comun.py**, **cpu.py**, **reiniciar_router.py** y **temperaturas.py** para adecuarse al nuevo **pid.py** para adecuarse a la nueva configuración.
     - Homogeneizado de **README.md**.
     - Implementación inicial de **domotica.py** a partir de **boton.py**.
@@ -77,59 +77,59 @@ Colección de utilidades varias para el control GPIO en Python
     - Añadido **domotica.py** en **actualizador.sh**.
     - Limpieza de código en **instalador.sh**, **actualizador.sh** y **desinstador.sh**.
 - 0.4.0:
-    - Renombrado de **domotica.py** a **domotica_servidor.py**.
-    - Editado **config.py.sample** para adecuarse al cambio de nombre.
+    - Actualizado **config.py.sample** con los parámetros correspondientes a las novedades.
+    - Actualizados **actualizador.sh**, **desinstalador.sh** e **instalador.sh** para adecuarse al cambio de nombre.
+    - Actualizados **comun.py**, **cpu.py**, **domotica_servidor.py**, **reiniciar_router.py** y **temperaturas.py** para adecuarse al nuevo **pid.py**.
+    - Añadida sección de *F. A. Q.* en **README.md**.
     - Añadidas comprobaciones a **comun.py** para no hacer nada si ciertas variables no existen.
     - Documentación de **comun.py**.
-    - Modificado **pid.py** para ser compatible con Windows.
-    - Pasado **pid.py** a estilo orientado a objetos.
-    - Actualizados **comun.py**, **cpu.py**, **domotica_servidor.py**, **reiniciar_router.py** y **temperaturas.py** para adecuarse al nuevo **pid.py**.
-    - Actualizado **config.py.sample** con los parámetros correspondientes a las novedades.
+    - Editado **config.py.sample** para adecuarse al cambio de nombre.
     - Homogeneizado de **README.md**.
     - Implementación inicial de **domotica_cliente.py**.
+    - Modificado **pid.py** para ser compatible con Windows.
+    - Pasado **pid.py** a estilo orientado a objetos.
+    - Renombrado de **domotica.py** a **domotica_servidor.py**.
     - Renombrado **temperaturas.py** a **temperatura.py** por convención de nombres.
-    - Actualizados **actualizador.sh**, **desinstalador.sh** e **instalador.sh** para adecuarse al cambio de nombre.
-    - Añadida sección de *F. A. Q.* en **README.md**.
 - 0.4.1:
     - Arreglados fallos varios en **actualizador.sh**, **desinstalador.sh** e **instalador.sh**.
+    - Homogeneizado de **README.md**.
     - Renombrado **domotica.sh** a **domotica_servidor.sh**.
     - Renombrado **temperaturas.sh** a **temperatura.sh**.
-    - Homogeneizado de **README.md**.
 - 0.4.2:
     - Arreglado fallo al lanzar hijos en **domotica_servidor.py**.
 - 0.4.3:
-    - Arreglado fallo en la descripción de **pid.py**
     - Arreglado fallo en la comprobación de desconexión de **domotica_servidor.py**
+    - Arreglado fallo en la descripción de **pid.py**
 - 0.4.4:
     - Arreglado fallo en la sangría de algunas línas de código en **domotica_servidor.py**
 - 0.4.5:
     - Arreglado fallo de versiones en los commits y en **README.md**.
 - 0.4.6:
+    - Actualizado fallo en **actualizador.sh**, **desinstalador.sh** e **instalador.sh**.
+    - Añadida la configuración necesaria para la depuración remota en **config.sample.py**.
+    - Añadidos algunos servidores más en la clase *internet_config* de **config.py.sample**.
+    - Implementado comando *estado* en **domotica_cliente.py** y **domotica_servidor.py**.
     - Modificado el procedimiento de arranque en **comun.py**, **cpu.py**, **domotica_cliente.py**, **domotica_servidor.py**, **reiniciar_router.py** y **temperaturas.py**.
     - Reajustado el código de **indice_gpio.py** para hacerlo más legible.
-    - Implementado comando *estado* en **domotica_cliente.py** y **domotica_servidor.py**.
-    - Actualizado un fallo en **actualizador.sh**, **desinstalador.sh** e **instalador.sh**.
     - Eliminado *import* innecesario en **domotica_servidor.py**.
     - Arreglo en la documentación de **comun.py**.
-    - Añadidos algunos servidores más en la clase *internet_config* de **config.py.sample**.
 - 0.5.0:
-    - Arreglado fallo en la inicialización de los puertos GPIO de salida (sólo en el caso de ser puertos activos a bajo nivel, como podría ser el caso de un relé) en **comun.py**.
     - Añadido nuevos agradecimientos y reordenación de dicha sección en **README.md**.
-    - Arreglo de fallos menores en la documentación de **domotica_servidor.py**. ¡Maldito copia-pega!
-    - Cambio en el modo de procesamiento de los hijos en **domotica_servidor.py**. Ahora debería ser más eficiente.
-    - Movida la configuración de *PAUSA* de la clase *domotica_cliente_config* a la clase *domotica_servidor_config*, ya que sólo hace falta en el servidor y no en ambos en **config.py.sample**.
-    - Arreglado fallo en un *import* de **indice_gpio.py**.
-    - Añadido un sistema de comprobación al importar para alertar de la no instalación del paquete *psutil* en **cpu.py**.
-    - Clarificado parte del texto del *Historial de versiones* en **README.md**.
-    - Clarificado parte del texto de **actualizador.sh** e **instalador.sh**.
-    - Reajustado el nombre de algunas variables en **domotica_cliente.py**.
-    - Renombrado **config.py.sample** a **config_sample.py**.
-    - Reajustada la "constante" *PAUSA* de la clase *domotica_servidor_config* en **config_sample.py**.
-    - Añadida la configuración necesaria para la depuración remota en **config.sample.py**.
-    - Configurado **domotica_servidor.py** para que lea la configuración de depuración remota.
-    - Actualizado el modo de encender los leds de **temperaturas.py**. Ahora puede soportar cualquier color.
+    - Añadido sistema de comprobación al importar para alertar de la no instalación del paquete *psutil* en **cpu.py**.
+    - Arreglado fallo en la inicialización de los puertos GPIO de salida (sólo en el caso de ser puertos activos a bajo nivel, como podría ser el caso de un relé) en **comun.py**.
     - Actualizada la configuración correspondiente en **config.py.sample**.
+    - Actualizado el modo de encender los leds de **temperaturas.py**. Ahora puede soportar cualquier color.
+    - Arreglado fallo en un *import* de **indice_gpio.py**.
+    - Arreglados fallos menores en la documentación de **domotica_servidor.py**. ¡Maldito copia-pega!
+    - Cambio en el modo de procesamiento de los hijos en **domotica_servidor.py**. Ahora debería ser más eficiente.
+    - Clarificado parte del texto de **actualizador.sh** e **instalador.sh**.
+    - Clarificado parte del texto del *Historial de versiones* en **README.md**.
+    - Configurado **domotica_servidor.py** para que lea la configuración de depuración remota.
     - Mejorada la documentación de **config_sample.py**.
+    - Movida la configuración de *PAUSA* de la clase *domotica_cliente_config* a la clase *domotica_servidor_config*, ya que sólo hace falta en el servidor y no en ambos en **config.py.sample**.
+    - Reajustado el nombre de algunas variables en **domotica_cliente.py**.
+    - Reajustada la "constante" *PAUSA* de la clase *domotica_servidor_config* en **config_sample.py**.
+    - Renombrado **config.py.sample** a **config_sample.py**.
 - 0.5.1:
     - Arreglado fallo en las variables de depuración en **temperatura.py**.
     - Convertido (de nuevo y espero que no vuelva a fallar) el retorno de línea de modo Windows a Linux en **cpu.py**.
@@ -138,36 +138,36 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.5.3:
     - Arreglado fallo en **desinstalador.sh**.
 - 0.5.4:
+    - Arreglada sangría de *imports* en **domotica_cliente.py**, **indice_gpio.py**, **internet.py**, **reiniciar_router.py** y **temperatura.py**.
     - Arreglo estético en **config_sample.py**.
     - Eliminados *imports* no necesarios en **domotica_cliente.py**.
-    - Arreglada sangría de *imports* en **domotica_cliente.py**, **indice_gpio.py**, **internet.py**, **reiniciar_router.py** y **temperatura.py**.
     - Implementado el comando de ayuda en **domotica_cliente.py**.
 - 0.6.0:
-    - Modificado **reiniciar_router.py** para que no actúe de manera independiente, sino a través de **domotica_servidor.py**.
-    - Taspasados métodos que ahora son comunes a varios scripts de **domotica_cliente.py** a **comun.py**.
-    - Modificado **domotica_cliente.py** para que la clase principal herede de la clase principal de **comun.py**.
-    - Arreglado fallo en la función *estado* en **comun.py**.
-    - Reajustadas configuraciones en arreglo a los cambios anteriores en **config_sample.py**.
-    - Añadido el campo *"descripción"* en las "constantes" *GPIO* en **config_sample.py**.
-    - Añadidos mecanismos para depuración remota en **domotica_cliente.py** y **reiniciar_router.py**.
-    - Añadido un bloque para interceptar un posible fallo al intentar borrar un archivo de bloqueo inexistente en **pid.py**. Esto podía ocurrir al reinstalar el sistema, especialmente si la parada de un servicio implica tiempo de procesamiento adicional, como en **domotica_servidor.py**. En este caso, es posible que el archivo de bloqueo sea borrado antes de la completa detención del servicio y, por consiguiente, éste arrojaría un fallo.
-    - Renombrado de la sección *Contenido* a *Sistemas* en **README.md**.
-    - Ahora las eliminaciones de los archivos de bloqueo en **actualizador.sh** y **desinstalador.sh** son silenciosas (> /dev/null), para evitar exceso de flood de fallos.
     - Actualizado el protocolo de comunicación entre **domotica_servidor.py** y **domotica_cliente.py** para el primero pueda indicar al segundo la descripción de los puertos GPIO y un "saludo" para acordar la versión del protocolo a emplear.
+    - Añadido el campo *"descripción"* en las "constantes" *GPIO* en **config_sample.py**.
+    - Añadido un bloque para interceptar un posible fallo al intentar borrar un archivo de bloqueo inexistente en **pid.py**. Esto podía ocurrir al reinstalar el sistema, especialmente si la parada de un servicio implica tiempo de procesamiento adicional, como en **domotica_servidor.py**. En este caso, es posible que el archivo de bloqueo sea borrado antes de la completa detención del servicio y, por consiguiente, éste arrojaría un fallo.
+    - Añadidos mecanismos para depuración remota en **domotica_cliente.py** y **reiniciar_router.py**.
+    - Arreglado fallo en la función *estado* en **comun.py**.
+    - Eliminaciones de archivos de bloqueo en **actualizador.sh** y **desinstalador.sh** silenciosas (> /dev/null), para evitar exceso de flood de fallos.
+    - Modificado **domotica_cliente.py** para que la clase principal herede de la clase principal de **comun.py**.
+    - Modificado **reiniciar_router.py** para que no actúe de manera independiente, sino a través de **domotica_servidor.py**.
     - Modificados **actualizador.sh**, **desinstalador.sh** e **instalador.sh** y añadido **config.sh** para ajustar más finamente los permisos a la hora de instalar / actualizar y agrupada toda la configuración común.
+    - Reajustadas configuraciones en arreglo a los cambios anteriores en **config_sample.py**.
+    - Renombrado de la sección *Contenido* a *Sistemas* en **README.md**.
+    - Taspasados métodos que ahora son comunes a varios scripts de **domotica_cliente.py** a **comun.py**.
 - 0.6.1:
-    - Renombrado **config_sample.py** a **config.py** y actualizadas referencias.
     - Arreglado fallo en **cpu.py**, que podría provocar que no se ejecutase correctamente.
+    - Renombrado **config_sample.py** a **config.py** y actualizadas referencias.
 - 0.6.2:    
-    - Arreglado fallo en la sangría en **README.md**.
     - Añadida la sección de *Otras licencias* en **README.md**.
+    - Arreglado fallo en la sangría en **README.md**.
     - Eliminado *import* innecesario en **cpu.py**.
 - 0.7.0:
+    - Añadida otra licencia en la sección de *Otras licencias* en **README.md**.
     - Implementado un sistema de lectura de sondas de temperatura DHT11 en **dht11.py**.
-    - Añadida otra licencia en la sección de *Otras licencias* en **README.md**.
 - 0.7.1:
-    - Implementados varios parámetros para variar la salida en **dht11.py**.
     - Añadida otra licencia en la sección de *Otras licencias* en **README.md**.
+    - Implementados varios parámetros para variar la salida en **dht11.py**.
 - 0.7.2:
     - Mejoras en la calidad del código.
 - 0.8.0:
@@ -175,19 +175,19 @@ Colección de utilidades varias para el control GPIO en Python
     - Eliminada la posibilidad de conectar a un servidor que no sea el local en **comun.py** y adecuado el código a la nueva conexión en **config.py**, **domotica_cliente.py** y **reiniciar_router.py**.
     - Eliminado código innecesario en **reiniciar_router.py**.
 - 0.8.1:
-    - Homogeneizado de **README.md**.
     - Añadido **aviso_electricidad.py** a la lista de scripts en **config.sh**.
-- 0.8.2:
-    - Independizado el código encargado de mandar correos electrónicos.
     - Homogeneizado de **README.md**.
+- 0.8.2:
+    - Homogeneizado de **README.md**.
+    - Independizado de código encargado de mandar correos electrónicos.
 - 0.8.3:
+    - Añadido acceso externo sencillo por pid en **pid.py**.
+    - Añadido soporte para leds PWM.
+    - Añadidos más controles de excepciones.
+    - Homogeneizado de **README.md**.
+    - Mejoras en la calidad del código.
     - Mejoras en la documentación.
     - Optimizaciones varias.
-    - Más controles de excepciones.
-    - Mejoras en la calidad del código.
-    - Añadido soporte para leds PWM.
-    - Añadido el acceso externo sencillo por pid en **pid.py**.
-    - Homogeneizado de **README.md**.
 
 
 ## Agradecimientos, fuentes consultadas y otros créditos
