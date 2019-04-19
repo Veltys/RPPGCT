@@ -5,8 +5,8 @@
 # Title         : pid.py
 # Description   : Módulo auxiliar para ciertas funciones de bloqueo y de PIDs
 # Author        : Veltys
-# Date          : 11-03-2019
-# Version       : 1.0.1
+# Date          : 19-04-2019
+# Version       : 1.1.0
 # Usage         : import pid | from pid import <clase>
 # Notes         : ...
 
@@ -138,29 +138,36 @@ class pid(_comun_pid):
         ''' Activa el acceso externo sencillo por pid
         '''
 
-        archivo = False                                                                     # Precarga de la variable archivo para evitar un posterior fallo
-
         try:                                                                                # Bloque try
             if os.name == 'posix':                                                          #     Si se trata de un sistema POSIX
                 archivo = open('/var/run/' + self._nombre[0:-3] + '.pid', 'w+')             #         Se abre un archivo de pid en el directorio /var/run
 
-                archivo.write(self._pid)                                                    #         Se escribe el pid en el archivo
+            elif os.name == 'nt':                                                           #     Si se trata de un sistema con nucleo NT
+                archivo = open('./' + self._nombre[0:-3] + '.pid', 'w+')                    #         Se abre un archivo de pid en el directorio ./
 
             else:                                                                           #     En cualquier otro caso y ante la duda, no es posible realizar un bloqueo
                 res = False                                                                 #         Por lo cual se genera el resultado del error
+
+                archivo = False                                                             #         Precarga de la variable archivo para evitar un posterior fallo
 
         except IOError:                                                                     # Si no hay permiso de escritura u otro error de entrada / salida
             res = False                                                                     #     Se genera el resultado de error
 
         else:                                                                               # Si no ha habido fallos
             if archivo:                                                                     #     Si se ha podido realizar la apertura
+                archivo.write(str(self._pid))                                               #         Se escribe el pid en el archivo
+
                 archivo.close()                                                             #         Se cierra el archivo (sólo interesa su creación, con eso es bastante)
 
                 self._activado = True                                                       #         Se actualiza la variable interna de información de activación
 
                 res = True                                                                  #         Se genera el resultado de éxito
 
-        return res                                                                          # Se devuelve el resultado previamente generado
+            else:                                                                           #     Si no se ha podido
+                res = False                                                                 #         Se genera el resultado de error
+
+        finally:                                                                            # En cualquier caso
+            return res                                                                      #     Se devuelve el resultado previamente generado
 
 
     def comprobar(self):
@@ -168,7 +175,10 @@ class pid(_comun_pid):
         '''
 
         if os.name == 'posix':                                                              # Si se trata de un sistema POSIX
-            return not(os.path.isfile('/var/run/' + self._nombre[0:-3] + '.pid'))           #     Se retorna la comprobación correspondiente a dicho sistema
+            return os.path.isfile('/var/run/' + self._nombre[0:-3] + '.pid')                #     Se retorna la comprobación correspondiente a dicho sistema
+
+        elif os.name == 'nt':                                                               #         Si se trata de un sistema con nucleo NT
+            return os.path.isfile('./' + self._nombre[0:-3] + '.pid')                       #     Se retorna la comprobación correspondiente a dicho sistema
 
         else:                                                                               # En cualquier otro caso y ante la duda, no es posible realizar un bloqueo
             return False                                                                    #     Se retorna directamente False, porque no está contemplado el bloqueo en este caso
@@ -182,6 +192,9 @@ class pid(_comun_pid):
             if self.comprobar():                                                            #     Si efectivamente se comprueba que el acceso externo sencillo se ha llevado a cabo
                 if os.name == 'posix':                                                      #         Si se trata de un sistema POSIX
                     os.remove('/var/run/' + self._nombre[0:-3] + '.pid')                    #             Se elimina el archivo de bloqueo
+
+                elif os.name == 'nt':                                                       #         Si se trata de un sistema con nucleo NT
+                    os.remove('./' + self._nombre[0:-3] + '.pid')                           #             Se elimina el archivo de bloqueo
 
             self._activado = False                                                          #     Sea como fuere, se actualiza la variable interna de información de activación
 
