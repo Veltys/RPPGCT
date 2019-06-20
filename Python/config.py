@@ -153,7 +153,7 @@ class temperatura_config(config_global):                                        
                         (22, config_global.RELE     , (3,) , False, 'Ventilador 2'              ),
                       ]
 
-    TEMPERATURAS    = [40, 45, 50]                                                                  # TEMPERATURAS contiene las temperaturas de activación de cada etapa
+    TEMPERATURAS    = [40, 50, 60]                                                                  # TEMPERATURAS contiene las temperaturas de activación de cada etapa
 
     PAUSA           = 60
 
