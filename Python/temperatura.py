@@ -6,7 +6,7 @@
 # Description   : Sistema indicador led de la temperatura del procesador en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
 # Author        : Veltys
 # Date          : 20-06-2019
-# Version       : 2.3.0
+# Version       : 2.3.1
 # Usage         : python3 temperatura.py
 # Notes         : Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual apaga todos los leds hasta que esta misma señal sea recibida de nuevo
@@ -56,10 +56,6 @@ class temperatura(comun.app):
         '''
 
         try:
-            for _, tipo, acceso, _, _ in self._config.GPIOS:                                            # Se recorre la lista de puertos GPIO
-                if tipo == config.LED_PWM:                                                              #     Si se está ante un led PWM
-                    acceso.start(0)                                                                     #         Se inicializa el led a 0 (porcentaje de su ciclo de trabajo que estará encendido)
-
             while True:                                                                                 # Se ejecutará siempre, ya que las condiciones de parada son externas
                 if not(self._modo_apagado):                                                             #     Si no se ha activado el "modo apagado"
                     temperatura = check_output([CMD_COMANDO, CMD_PARAMETROS])                           #         Se lee la temperatura de la CPU

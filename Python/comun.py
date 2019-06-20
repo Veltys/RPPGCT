@@ -5,8 +5,8 @@
 # Title         : comun.py
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
-# Date          : 23-08-2018
-# Version       : 0.5.1
+# Date          : 20-06-2019
+# Version       : 0.5.2
 # Usage         : import comun | from comun import <clase>
 # Notes         : ...
 
@@ -247,6 +247,11 @@ class app(object):
 
                             if puerto[1] == self._config.LED_PWM:
                                 self._config.GPIOS[i][2] = GPIO.PWM(puerto[0], self._config.FRECUENCIA)
+
+                                self._config.GPIOS[i][2].start(0)
+
+                            else:
+                                GPIO.output(puerto[0], GPIO.LOW if puerto[3] else GPIO.HIGH)
 
                         else:
                             if DEBUG:
