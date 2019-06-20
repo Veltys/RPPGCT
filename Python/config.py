@@ -1,12 +1,12 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 
 # Title         : config.py
 # Description   : Módulo configurador para ser importado en el resto de módulos o sistemas que lo necesiten
 # Author        : Veltys
-# Date          : 13-07-2018
-# Version       : 1.8.0
+# Date          : 20-06-2019
+# Version       : 1.9.0
 # Usage         : import config | from config import <clase>
 # Notes         : A título ilustrativo, a se ofrece una configuración por defecto (la mía, para ser exactos)
 
@@ -136,19 +136,21 @@ class reiniciar_router_config(domotica_cliente_config):                         
 
 class temperatura_config(config_global):                                                            # Configuración del sistema de temperaturas
     COLORES         = [                                                                             # COLORES contiene una matriz de 4 x 4 que, por columnas, representa cada led y, por filas, la etapa de temperatura
-                        (0.0, 0.0, 1.0, 0.0),
                         (0.0, 1.0, 0.0, 0.0),
                         (1.0, 0.6, 0.0, 0.0),
+                        (1.0, 0.0, 0.0, 0.0),
                         (1.0, 0.0, 0.0, 1.0),
                       ]
 
     FRECUENCIA      = 60                                                                            # FRECUENCIA contiene la frecuencia (en herzios) de refresco de los leds
 
     GPIOS           = [
-                        (16, config_global.LED_PWM  , None,  True , 'Frío'                      ),
-                        (20, config_global.LED_PWM  , None,  True , 'Intermedio'                ),
-                        (21, config_global.LED_PWM  , None,  True , 'Caliente'                  ),
-                        (12, config_global.LED_PWM  , None,  True , 'Alarma'                    ),
+                        (12, config_global.LED_PWM  , None,  True , 'Rojo'                      ),
+                        (16, config_global.LED_PWM  , None,  True , 'Verde'                     ),
+                        (20, config_global.LED_PWM  , None,  True , 'Azul'                      ),
+                        (26, config_global.LED_PWM  , None,  True , 'Alarma'                    ),
+                        (27, config_global.RELE     , (2,) , False, 'Ventilador 1'              ),  # El tercer elemento indicará el umbral de activación
+                        (22, config_global.RELE     , (3,) , False, 'Ventilador 2'              ),
                       ]
 
     TEMPERATURAS    = [40, 45, 50]                                                                  # TEMPERATURAS contiene las temperaturas de activación de cada etapa

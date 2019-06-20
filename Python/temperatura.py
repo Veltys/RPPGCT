@@ -5,8 +5,8 @@
 # Title         : temperatura.py
 # Description   : Sistema indicador led de la temperatura del procesador en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
 # Author        : Veltys
-# Date          : 23-08-2018
-# Version       : 2.2.5
+# Date          : 20-06-2019
+# Version       : 2.3.0
 # Usage         : python3 temperatura.py
 # Notes         : Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual apaga todos los leds hasta que esta misma señal sea recibida de nuevo
@@ -17,20 +17,22 @@ CMD_PARAMETROS  = 'measure_temp'
 DEBUG           = False
 DEBUG_REMOTO    = False
 
-import errno                                                                                        # Códigos de error
-import os                                                                                           # Funcionalidades varias del sistema operativo
-import sys                                                                                          # Funcionalidades varias del sistema
+import errno                                                                                            # Códigos de error
+import os                                                                                               # Funcionalidades varias del sistema operativo
+import sys                                                                                              # Funcionalidades varias del sistema
 
 if DEBUG_REMOTO:
-    import pydevd                                                                                   # Depuración remota
+    import pydevd                                                                                       # Depuración remota
 
-import comun                                                                                        # Funciones comunes a varios sistemas
+import RPi.GPIO as GPIO                                                                                 # Acceso a los pines GPIO
 
-from time import sleep                                                                              # Para hacer pausas
-from subprocess import check_output                                                                 # Llamadas a programas externos, recuperando su respuesta
+import comun                                                                                            # Funciones comunes a varios sistemas
+
+from time import sleep                                                                                  # Para hacer pausas
+from subprocess import check_output                                                                     # Llamadas a programas externos, recuperando su respuesta
 
 try:
-    from config import temperatura_config as config                                                 # Configuración
+    from config import temperatura_config as config                                                     # Configuración
 
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
@@ -54,30 +56,46 @@ class temperatura(comun.app):
         '''
 
         try:
-            for _, _, acceso, _, _ in self._config.GPIOS:                                           # Se recorre la lista de puertos GPIO
-                acceso.start(0)                                                                     #     Se inicializa el led a 0 (porcentaje de su ciclo de trabajo que estará encendido)
+            for _, tipo, acceso, _, _ in self._config.GPIOS:                                            # Se recorre la lista de puertos GPIO
+                if tipo == config.LED_PWM:                                                              #     Si se está ante un led PWM
+                    acceso.start(0)                                                                     #         Se inicializa el led a 0 (porcentaje de su ciclo de trabajo que estará encendido)
 
-            while True:                                                                             # Se ejecutará siempre, ya que las condiciones de parada son externas
-                if not(self._modo_apagado):                                                         #     Si no se ha activado el "modo apagado"
-                    temperatura = check_output([CMD_COMANDO, CMD_PARAMETROS])                       #         Se lee la temperatura de la CPU
-                    temperatura = float(temperatura[5:-3])                                          #         Se convierte a un valor numérico
+            while True:                                                                                 # Se ejecutará siempre, ya que las condiciones de parada son externas
+                if not(self._modo_apagado):                                                             #     Si no se ha activado el "modo apagado"
+                    temperatura = check_output([CMD_COMANDO, CMD_PARAMETROS])                           #         Se lee la temperatura de la CPU
+                    temperatura = float(temperatura[5:-3])                                              #         Se convierte a un valor numérico
 
-                    if temperatura < self._config.TEMPERATURAS[0]:                                  #         Se comprueba si está por debajo del valor mínimo
-                        j = 0                                                                       #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
+                    if temperatura < self._config.TEMPERATURAS[0]:                                      #         Se comprueba si está por debajo del valor mínimo
+                        j = 0                                                                           #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
 
-                    elif temperatura < self._config.TEMPERATURAS[1]:                                #         Se comprueba si está por debajo del valor medio
-                        j = 1                                                                       #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
+                    elif temperatura < self._config.TEMPERATURAS[1]:                                    #         Se comprueba si está por debajo del valor medio
+                        j = 1                                                                           #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
 
-                    elif temperatura < self._config.TEMPERATURAS[2]:                                #         Se comprueba si está por debajo del valor máximo
-                        j = 2                                                                       #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
+                    elif temperatura < self._config.TEMPERATURAS[2]:                                    #         Se comprueba si está por debajo del valor máximo
+                        j = 2                                                                           #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
 
-                    else:                                                                           #         Está igual o por encima del valor máximo
-                        j = 3                                                                       #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
+                    else:                                                                               #         Está igual o por encima del valor máximo
+                        j = 3                                                                           #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
 
-                    for i, _ in enumerate(self._config.GPIOS):                                      #         Se recorre la lista de leds
-                        self._config.GPIOS[i][2].ChangeDutyCycle(self._config.COLORES[j][i] * 100)  #             Se cambia el ciclo de ejecución en función de la cordenada anteriormente asignada
+                    i = 0                                                                               #         Contador de ciclos del bucle
 
-                sleep(self._config.PAUSA)                                                           #     Pausa hasta la nueva comprobación
+                    for gpio, tipo, acceso, activacion, _ in self._config.GPIOS:                        #         Se recorre la lista de leds
+                        if tipo == config.RELE:                                                         #             Si se está ante un relé
+                            if j in acceso:                                                             #                 Si se está en un escenario de activación
+                                GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)                #                     Se enciende
+
+                            else:                                                                       #                 En caso contrario
+                                GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)                #                     Se apaga
+
+                        elif tipo == config.LED_PWM:                                                    #             Si se está ante un led PWM
+                            acceso.ChangeDutyCycle(self._config.COLORES[j][i] * 100)                    #                 Se cambia el ciclo de ejecución en función de la cordenada anteriormente asignada
+
+                        else:                                                                           #             Si se está ante cualquier otro
+                            pass                                                                        #                 No se hace nada, ya que esto sería un caso que no debería de darse
+
+                        i += 1                                                                          #         Aumento del contador
+
+                sleep(self._config.PAUSA)                                                               #     Pausa hasta la nueva comprobación
 
         except KeyboardInterrupt:
             self.cerrar()

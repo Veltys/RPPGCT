@@ -183,6 +183,7 @@ Colección de utilidades varias para el control GPIO en Python
 - 0.8.3:
     - Añadido acceso externo sencillo por pid en **pid.py**.
     - Añadido soporte para leds PWM.
+    - Añadido soporte para relés en **temperatura.py**.
     - Añadidos más controles de excepciones.
     - Homogeneizado de **README.md**.
     - Mejoras en la calidad del código.

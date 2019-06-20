@@ -258,10 +258,12 @@ class app(object):
 
             else:
                 print('Error: No se puede bloquear ' + self._bloqueo.nombre(), file = sys.stderr)
+
                 return errno.EACCES
 
         else:
             print('Error: Ya se ha iniciado una instancia de ' + self._bloqueo.nombre(), file = sys.stderr)
+
             return errno.EEXIST
 
 
