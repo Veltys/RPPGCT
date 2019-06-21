@@ -3,8 +3,8 @@
 # Title         : actualizador.sh
 # Description   : Actualiza los scripts sin alterar la configuración de inicio automático
 # Author        : Veltys
-# Date          : 01-12-2017
-# Version       : 1.3.0
+# Date          : 21-06-2019
+# Version       : 1.3.1
 # Usage         : sudo bash actualizador.sh
 # Notes         : Es necesario ser superusuario para su correcto funcionamiento
 
@@ -16,6 +16,18 @@ else
 
 	echo "Recuerde revisar ${directorio}/${dependencias[0]} por si la configuración ha cambiado"
 	echo 'Es necesario que esté instalado el paquete psutil. No olvide instalarlo con "pip3 install psutil" si aún no lo está'
+
+	for dependencia in "${dependencias[@]}"; do
+		rm ${directorio}/${dependencia} &> /dev/null
+
+		install -m 0644 ./Python/${dependencia} ${directorio}/
+	done
+
+	for dep_ejecutable in "${dep_ejecutables[@]}"; do
+		rm ${directorio}/${dep_ejecutable} &> /dev/null
+
+		install ./Python/${dep_ejecutable} ${directorio}/
+	done
 
 	for script in "${scripts[@]}"; do
 		rm ${directorio}/${script}.py
@@ -30,15 +42,5 @@ else
 
 		install ./init/${arrancable}.sh /etc/init.d/${arrancable}
 		update-rc.d ${arrancable} defaults
-	done
-
-	for dependencia in "${dependencias[@]}"; do
-		rm ${directorio}/${dependencia} &> /dev/null
-		install -m 0644 ./Python/${dependencia} ${directorio}/
-	done
-
-	for dep_ejecutable in "${dep_ejecutables[@]}"; do
-		rm ${directorio}/${dep_ejecutable} &> /dev/null
-		install -m 0644 ./Python/${dep_ejecutable} ${directorio}/
 	done
 fi

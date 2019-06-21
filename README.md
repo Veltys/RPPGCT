@@ -185,6 +185,7 @@ Colección de utilidades varias para el control GPIO en Python
     - Añadido soporte para leds PWM.
     - Añadido soporte para relés en **temperatura.py**.
     - Añadidos más controles de excepciones.
+    - Arreglado el proceso de actualización en **actualizador.sh**.
     - Homogeneizado de **README.md**.
     - Mejoras en la calidad del código.
     - Mejoras en la documentación.
