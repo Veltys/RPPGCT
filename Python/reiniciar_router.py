@@ -5,8 +5,8 @@
 # Title         : reiniciar_router.py
 # Description   : Sistema que comprueba si hay acceso a Internet. Si no, manda una señal en un puerto GPIO determinado
 # Author        : Veltys
-# Date          : 06-07-2018
-# Version       : 2.2.3
+# Date          : 22-06-2019
+# Version       : 2.2.4
 # Usage         : python3 reiniciar_router.py
 # Notes         : La idea es conectar un relé a este GPIO y al mismo la alimentación del sistema de acceso a Internet
 #                 Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
@@ -60,8 +60,8 @@ class reiniciar_router(comun.app):
 
         try:
             if self._conectar(False):                                                       # Se conecta al servidor de domótica y se comprueba si se está conectado, si sí:
-                for GPIO in self._config.GPIO:                                              #     Se recorre la lista de puertos
-                    self._enviar_y_recibir('apagar ' + str(GPIO[0]))                        #         Se apaga cada uno de los puertos
+                for puerto in self._config.PUERTOS:                                         #     Se recorre la lista de puertos
+                    self._enviar_y_recibir('apagar ' + str(puerto))                         #         Se apaga cada uno de los puertos
 
                 self._desconectar()                                                         #     Se desconecta del servidor de domótica
 
@@ -73,13 +73,13 @@ class reiniciar_router(comun.app):
 
                 else:                                                                       #     Si no
                     if self._conectar(False):                                               #         Se conecta al servidor de domótica y se comprueba si se está conectado, si sí:
-                        for GPIO in self._config.GPIO:                                      #             Se recorre la lista de puertos GPIO
-                            self._enviar_y_recibir('encender ' + str(GPIO[0]))              #                 Se enciende cada uno de los puertos
+                        for puerto in self._config.PUERTOS:                                 #             Se recorre la lista de puertos GPIO
+                            self._enviar_y_recibir('encender ' + str(puerto))               #                 Se enciende cada uno de los puertos
 
                         sleep(self._config.PAUSA)                                           #             Se espera la pausa programada
 
-                        for GPIO in self._config.GPIO:                                      #             Se recorre la lista de puertos GPIO
-                            self._enviar_y_recibir('apagar ' + str(GPIO[0]))                #                 Se apaga cada uno de los puertos
+                        for puerto in self._config.PUERTOS:                                 #             Se recorre la lista de puertos GPIO
+                            self._enviar_y_recibir('apagar ' + str(puerto))                 #                 Se apaga cada uno de los puertos
 
                         self._desconectar()                                                 #             Se desconecta del servidor de domótica
 
