@@ -186,6 +186,7 @@ Colección de utilidades varias para el control GPIO en Python
     - Añadido soporte para relés en **temperatura.py**.
     - Añadidos más controles de excepciones.
     - Arreglado el proceso de actualización en **actualizador.sh**.
+    - Arreglado un fallo de acceso a un índice incorrecto de una tupla en **domotica_servidor.py**
     - Homogeneizado de **README.md**.
     - Mejoras en la calidad del código.
     - Mejoras en la documentación.

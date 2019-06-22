@@ -5,8 +5,8 @@
 # Title         : domotica_servidor.py
 # Description   : Parte servidor del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 13-07-2018
-# Version       : 2.0.3
+# Date          : 22-06-2019
+# Version       : 2.0.4
 # Usage         : python3 domotica_servidor.py
 # Notes         : Parte servidor del sistema en el que se gestionarán pares de puertos GPIO
 #                 Las entradas impares en la variable de configuración asociada GPIOS corresponderán a los relés que se gestionarán
@@ -442,7 +442,7 @@ class domotica_servidor_hijos(comun.app):
                         else:                                                                                                               #             En caso contrario (botón)
                             pass                                                                                                            #                 No es necesaria una acción
 
-                        if self._LLAMADAS[3] == True:                                                                                       #             Si se ha programado una llamada
+                        if self._LLAMADAS[2] == True:                                                                                       #             Si se ha programado una llamada
                             self._ejecutar(self._LLAMADAS[0])                                                                               #                 Ejecutar
 
                         self._GPIOS[0][3] = not(self._GPIOS[0][3])                                                                          #             Se prepara la próxima activación para una subida
