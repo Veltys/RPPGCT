@@ -6,7 +6,7 @@
 # Description   : Parte cliente del sistema gestor de domótica
 # Author        : Veltys
 # Date          : 24-06-2019
-# Version       : 1.1.9
+# Version       : 1.1.10
 # Usage         : python3 domotica_cliente.py [commandos]
 # Notes         : Parte cliente del sistema en el que se gestionarán pares de puertos GPIO
 
@@ -75,7 +75,7 @@ class domotica_cliente(comun.app):
         '''
 
         if self._estado_conexion >= comun.estados_conexion.LISTA_CARGADA:                                           # Si el estado de la conexión es el adecuado
-            mensaje = self._enviar_y_recibir(comando, True)                                                         #     Se manda el comando y se recibe el mensaje
+            mensaje = self._enviar_y_recibir(comando, False)                                                        #     Se manda el comando y se recibe el mensaje
 
             if mensaje != False and mensaje[0:4] == 'info':                                                         # Si se ha recibido un mensaje y es válido
                 return mensaje[6:]                                                                                  #     Devolver la parte relevante del mensaje

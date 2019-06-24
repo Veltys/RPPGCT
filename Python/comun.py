@@ -5,8 +5,8 @@
 # Title         : comun.py
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
-# Date          : 20-06-2019
-# Version       : 0.5.2
+# Date          : 24-06-2019
+# Version       : 0.5.3
 # Usage         : import comun | from comun import <clase>
 # Notes         : ...
 
@@ -163,10 +163,9 @@ class app(object):
 
                 else:                                                                   #     Si todo ha ido bien
                     mensaje = mensaje.decode('utf_8')                                   #         Se decodifica el mensaje recibido
-                    mensaje = mensaje.lower()                                           #         Y se normaliza
 
-            if normalizar:
-                mensaje = mensaje.lower()
+            if normalizar:                                                              # Si se ha solicitado la normalización
+                mensaje = mensaje.lower()                                               #     Se normaliza
 
             return mensaje
 

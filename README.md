@@ -188,6 +188,7 @@ Colección de utilidades varias para el control GPIO en Python
     - Arreglado el proceso de actualización en **actualizador.sh**.
     - Arreglado un fallo de acceso a un índice incorrecto de una tupla en **domotica_servidor.py**.
     - Arreglado un fallo por el cual no se imprimía el comando *describir* en **domotica_cliente.py**.
+    - Arreglado un fallo por el cual se normalizaba siempre la respuesta de un comando y no bajo petición en **comun.py** y **domotica_cliente.py**. 
     - Cambiada la nomenclatura de los puertos GPIO para el reinicio en caso de desconexión con el fin de evitar confusiones en su parte correspondiente de **config.py** y **reiniciar_router.py**.
     - Homogeneizado de **README.md**.
     - Mejoras en la calidad del código.
