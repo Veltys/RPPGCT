@@ -145,12 +145,12 @@ class temperatura_config(config_global):                                        
     FRECUENCIA      = 60                                                                            # FRECUENCIA contiene la frecuencia (en herzios) de refresco de los leds
 
     GPIOS           = [
-                        (12, config_global.LED_PWM  , None,  True , 'Rojo'                      ),
-                        (16, config_global.LED_PWM  , None,  True , 'Verde'                     ),
-                        (20, config_global.LED_PWM  , None,  True , 'Azul'                      ),
-                        (26, config_global.LED_PWM  , None,  True , 'Alarma'                    ),
-                        (27, config_global.RELE     , (2,) , False, 'Ventilador 1'              ),  # El tercer elemento indicará el umbral de activación
-                        (22, config_global.RELE     , (3,) , False, 'Ventilador 2'              ),
+                        (12, config_global.LED_PWM  , None, True , 'Rojo'                       ),
+                        (16, config_global.LED_PWM  , None, True , 'Verde'                      ),
+                        (20, config_global.LED_PWM  , None, True , 'Azul'                       ),
+                        (26, config_global.LED_PWM  , None, True , 'Alarma'                     ),
+                        (27, config_global.RELE     , (2,), False, 'Ventilador 1'               ),  # El tercer elemento indicará el umbral de activación
+                        (22, config_global.RELE     , (3,), False, 'Ventilador 2'               ),
                       ]
 
     TEMPERATURAS    = [40, 50, 60]                                                                  # TEMPERATURAS contiene las temperaturas de activación de cada etapa
