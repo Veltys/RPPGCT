@@ -11,41 +11,41 @@
 # Notes         :
 
 
-import errno                                                                                # Códigos de error
-import sys                                                                                  # Funcionalidades varias del sistema
+import errno                                                                                                                        # Códigos de error
+import sys                                                                                                                          # Funcionalidades varias del sistema
 
-from time import sleep                                                                      # Para hacer pausas
+from time import sleep                                                                                                              # Para hacer pausas
 
 try:
-    from config import aviso_electricidad_config as config                                  # Configuración
+    from config import aviso_electricidad_config as config                                                                          # Configuración
 
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
 
-from correo_electronico import mandar_correo                                                # Envío de correos electrónicos
+from correo_electronico import mandar_correo                                                                                        # Envío de correos electrónicos
 
 
 def main(argv):
-    sleep(config.PAUSA * 6)                                                                 # Pausa inicial para esperar a que se levante la red
+    sleep(config.PAUSA * 6)                                                                                                         # Pausa inicial para esperar a que se levante la red
 
     for reintentos in range(config.REINTENTOS):
-        if mandar_correo(config.DE, config.PARA, config.ASUNTO, config.CORREO):
-            print('El correo ha podido ser enviado')
+        if mandar_correo(config.DE, config.PARA, config.ASUNTO, config.CORREO):                                                     # Si se ha podido mandar el correo
+            print('El correo ha podido ser enviado')                                                                                #     Se informa de ello
 
-            enviado = True
+            enviado = True                                                                                                          #     Bandera de estado
 
-            break
+            break                                                                                                                   #     Se sale del bucle
 
-        else:
-            print('El correo no ha podido ser enviado... reintentando ', reintentos, '/', config.REINTENTOS, 'veces', sep = '')
+        else:                                                                                                                       # Si no
+            print('El correo no ha podido ser enviado... reintentando ', reintentos, '/', config.REINTENTOS, 'veces', sep = '')     #     Se informa de ello
 
-            enviado = False
+            enviado = False                                                                                                         #     Bandera de estado
 
-            sleep(config.PAUSA)
+            sleep(config.PAUSA)                                                                                                     #     Pausa para reintentar
 
-    if enviado == False:
-        print('Imposible reenviar el correo despues de', config.REINTENTOS, 'intentos')
+    if enviado == False:                                                                                                            # En caso de que haya sido imposible
+        print('Imposible reenviar el correo despues de', config.REINTENTOS, 'intentos')                                             #    Se informa de ello
 
 
 if __name__ == '__main__':
