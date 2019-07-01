@@ -194,6 +194,8 @@ Colección de utilidades varias para el control GPIO en Python
     - Mejoras en la calidad del código.
     - Mejoras en la documentación.
     - Optimizaciones varias.
+- 0.10.0:
+    - Cambiado el comportamiento para que ahora sea posible que un botón o sonda dispare más de un relé o led en **config.py** y **domotica_servidor.py**.
 
 
 ## Agradecimientos, fuentes consultadas y otros créditos
