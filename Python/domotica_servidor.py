@@ -112,16 +112,25 @@ class domotica_servidor(comun.app):
                 print('Padre #', os.getpid(), "\tPienso iniciar ", int(len(self._config.GPIOS) / 2), ' hijos', sep = '')
 
             if not(DEBUG_PADRE):
-                for i in range(int(len(self._config.GPIOS) / 2)):                                                                           #     Se recorre de dos en dos la lista de puertos GPIO para ir generando los hijos
-                    if DEBUG:
-                        print('Padre #', os.getpid(), "\tPreparando hijo ", i, sep = '')
+                for i in range(len(self._config.GPIOS)):                                                                                    #     Se recorre la lista de puertos GPIO para ir generando los hijos
+                    generar_hijo = False
 
-                    self._hijos.append(Thread(target = main_hijos, args = (i,)))                                                            #         Se prepara cada hijo y se configura
+                    for j in range(len(self._config.GPIOS[i])):                                                                             #         Se recorre cada tupla, para buscar botones o sondas (si no, no se necesitan hijos)
+                        if self._config.GPIOS[i][j] >= self._config.BOTON:                                                                  #             Si el elemento es de tipo botón o superior (sonda)
+                            generar_hijo = True                                                                                             #                 Se generará un hijo
 
-                    if DEBUG:
-                        print('Padre #', os.getpid(), "\tArrancando hijo ", i, sep = '')
+                            break                                                                                                           #                 Y se saldrá del bucle
 
-                    self._hijos[i].start()                                                                                                  #         Se inicia cada hijo
+                    if generar_hijo:                                                                                                        #         Si es necesario generar un hijo
+                        if DEBUG:
+                            print('Padre #', os.getpid(), "\tPreparando hijo ", i, sep = '')
+    
+                        self._hijos.append(Thread(target = main_hijos, args = (i,)))                                                        #             Se prepara hijo, se configura...
+    
+                        if DEBUG:
+                            print('Padre #', os.getpid(), "\tArrancando hijo ", i, sep = '')
+    
+                        self._hijos[i].start()                                                                                              #             ... y se inicia
 
             while True:                                                                                                                     # Se ejecutará siempre, ya que las condiciones de parada son externas
                 sc, _ = self._socket.accept()                                                                                               #     Se espera hasta que haya un evento en el socket
@@ -387,8 +396,7 @@ class domotica_servidor_hijos(comun.app):
         self._id_hijo = id_hijo
 
         self._GPIOS = []
-        self._GPIOS.append(self._config.GPIOS[self._id_hijo * 2])
-        self._GPIOS.append(self._config.GPIOS[self._id_hijo * 2 + 1])
+        self._GPIOS.append(self._config.GPIOS[self._id_hijo])
 
         self._LLAMADAS = self._config.LLAMADAS[self._id_hijo]
 
