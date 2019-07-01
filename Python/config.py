@@ -17,7 +17,7 @@ from time import strftime                                                       
 
 
 class config_global(object):                                                                                # Configuración común
-    IP_DEP_REMOTA       = '0.0.0.0'                                                                         # IP del servidor de depuración
+    IP_DEP_REMOTA       = '255.255.255.255'                                                                 # IP del servidor de depuración
 
     RELE                = 0
     LED                 = 10
@@ -100,7 +100,7 @@ class domotica_servidor_config(domotica_cliente_config):                        
                             (
                                 (27, config_global.RELE     , (2,), False, 'Ventilador 1'               ),  # El tercer elemento indicará el umbral de activación
                             ),
-    
+
                             (
                                 (22, config_global.RELE     , (3,), False, 'Ventilador 2'               ),
                             ),
