@@ -5,8 +5,8 @@
 # Title         : domotica_servidor.py
 # Description   : Parte servidor del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 22-06-2019
-# Version       : 2.0.4
+# Date          : 01-07-2019
+# Version       : 2.1.0
 # Usage         : python3 domotica_servidor.py
 # Notes         : Parte servidor del sistema en el que se gestionarán pares de puertos GPIO
 #                 Las entradas impares en la variable de configuración asociada GPIOS corresponderán a los relés que se gestionarán
@@ -83,18 +83,18 @@ class domotica_servidor(comun.app):
             self._socket.listen(1)                                                                                                          #     FIXME: No se preveen muchas conexiones, así que, por ahora, se soportará solamente un cliente
 
 
-    def apagar(self, puerto, puerto_buscado = False):
+    def apagar(self, gpio, buscar = True):
         ''' Apaga el puerto GPIO dado
         '''
 
         global semaforo                                                                                                                     # Es importante respetar la exclusión mutua
 
-        if puerto_buscado == False:                                                                                                         # Si el puerto dado es un número de puerto y no una ID interna
-            puerto = self.buscar_puerto_GPIO(puerto)                                                                                        #     Es necesario convertirlo a ID
+        if buscar:                                                                                                                          # Si es necesario buscar el puerto GPIO dado para recuperar sus características
+            gpio = self.buscar_gpio(gpio)                                                                                                   #     Se busca y se obtiene el elemento
 
-        if puerto != -1:                                                                                                                    # Si la id del puerto es válida
+        if gpio != False:                                                                                                                   # Si la id del puerto es válida
             with semaforo:                                                                                                                  #     Para realizar la operación es necesario un semáforo o podría haber problemas
-                GPIO.output(self._config.GPIOS[puerto][0], GPIO.LOW if self._config.GPIOS[puerto][3] else GPIO.HIGH)                        #         Se desactiva la salida del puerto GPIO
+                GPIO.output(gpio[0], GPIO.LOW if gpio[3] else GPIO.HIGH)                                                                    #         Se desactiva la salida del puerto GPIO
 
             return True                                                                                                                     #     Se informa del éxito
 
@@ -214,22 +214,23 @@ class domotica_servidor(comun.app):
             return
 
 
-    def buscar_puerto_GPIO(self, puerto):
-        ''' Convierte un número de puerto GPIO en una ID interna de la lista de puertos
+    def buscar_gpio(self, gpio):
+        ''' Devuelve, a partir de un número de puerto GPIO, la tupla de control correspondiente
             - Si el número de puerto dado está en la lista
-                - Devuelve la ID de la lista
+                - Devuelve la tupla de control correspondiente
             - Si no
-                - Devuelve -1
+                - Devuelve False
         '''
 
-        res = -1                                                                                                                            # Precálculo del resultado fallido
+        res = False                                                                                                                            # Precálculo del resultado fallido
 
-        if isinstance(puerto, int) and puerto > 0 and puerto <= 27:                                                                         # Si el puerto es un entero, positivo y menor que 27 (27 es el número de puertos GPIO que tiene una Raspberry Pi)
-            for i in range(1, len(self._config.GPIOS), 2):                                                                                  #     Se busca a lo largo de la lista de puertos
-                if self._config.GPIOS[i][0] == puerto:                                                                                      #         Si hay una coincidencia con el número dado
-                    res = i                                                                                                                 #             Se anotará la ID
+        if isinstance(gpio, int) and gpio > 0 and gpio <= 27:                                                                               # Si el puerto GPIO es un entero, positivo y menor que 27 (27 es el número de puertos GPIO que tiene una Raspberry Pi)
+            for i in range(len(self._config.GPIOS)):                                                                                        #     Se busca a lo largo de la lista de puertos
+                for j in range(len(self._config.GPIOS[i])):
+                    if self._config.GPIOS[i][j][0] == gpio:                                                                                 #         Si hay una coincidencia con el número dado
+                        res = self._config.GPIOS[i][j]                                                                                      #             Se recupera la entrada correspondiente
 
-                    break                                                                                                                   #             Y se detendrá la ejecución
+                        break                                                                                                               #             Y se saldrá del bucle
 
         return res                                                                                                                          # Se retorna el resultado
 
@@ -252,18 +253,18 @@ class domotica_servidor(comun.app):
         super().cerrar()                                                                                                                    # Llamada al método cerrar() del padre también
 
 
-    def conmutar(self, puerto, puerto_buscado = False):
+    def conmutar(self, gpio, buscar = True):
         ''' Conmuta (invierte) el estado de un puerto GPIO dado
         '''
 
         global semaforo                                                                                                                     # Es importante respetar la exclusión mutua
 
-        if puerto_buscado == False:                                                                                                         # Si el puerto dado es un número de puerto y no una ID interna
-            puerto = self.buscar_puerto_GPIO(puerto)                                                                                        #     Es necesario convertirlo a ID
+        if buscar:                                                                                                                          # Si es necesario buscar el puerto GPIO dado para recuperar sus características
+            gpio = self.buscar_gpio(gpio)                                                                                                   #     Se busca y se obtiene el elemento
 
-        if puerto != -1:
+        if gpio != False:                                                                                                                   # Si el puerto es correcto
             with semaforo:                                                                                                                  #     Para realizar la operación es necesario un semáforo o podría haber problemas
-                GPIO.output(self._config.GPIOS[puerto][0], not(GPIO.input(self._config.GPIOS[puerto][0])))                                  # Se conmuta la salida del puerto GPIO
+                GPIO.output(gpio[0], not(gpio[0]))                                                                                          #         Se conmuta la salida del puerto GPIO
 
             return True                                                                                                                     #     Se informa del éxito
 
@@ -271,32 +272,32 @@ class domotica_servidor(comun.app):
             return False                                                                                                                    #     Se informa del fallo
 
 
-    def describir(self, puerto, puerto_buscado = False):
+    def describir(self, gpio, buscar = True):
         ''' Devuelve la descripción de un puerto GPIO dado o False si hay algún error
         '''
 
-        if puerto_buscado == False:                                                                                                         # Si el puerto dado es un número de puerto y no una ID interna
-            puerto = self.buscar_puerto_GPIO(puerto)                                                                                        #     Es necesario convertirlo a ID
+        if buscar:                                                                                                                          # Si es necesario buscar el puerto GPIO dado para recuperar sus características
+            gpio = self.buscar_gpio(gpio)                                                                                                   #     Se busca y se obtiene el elemento
 
-        if puerto != -1:                                                                                                                    # Si el puerto es correcto
-            return self._config.GPIOS[puerto][4]                                                                                            #     Se devuelve su descripción
+        if gpio != False:                                                                                                                   # Si el puerto es correcto
+            return gpio[4]                                                                                                                  #     Se devuelve su descripción
 
         else:                                                                                                                               # Si no
             return False                                                                                                                    #     Se informa del fallo
 
 
-    def encender(self, puerto, puerto_buscado = False):
+    def encender(self, gpio, buscar = True):
         ''' Enciende un puerto GPIO dado
         '''
 
         global semaforo                                                                                                                     # Es importante respetar la exclusión mutua
 
-        if puerto_buscado == False:                                                                                                         # Si el puerto dado es un número de puerto y no una ID interna
-            puerto = self.buscar_puerto_GPIO(puerto)                                                                                        #     Es necesario convertirlo a ID
+        if buscar:                                                                                                                          # Si es necesario buscar el puerto GPIO dado para recuperar sus características
+            gpio = self.buscar_gpio(gpio)                                                                                                   #     Se busca y se obtiene el elemento
 
-        if puerto != -1:                                                                                                                    # Si el puerto es correcto
+        if gpio != False:                                                                                                                   # Si el puerto es correcto
             with semaforo:                                                                                                                  #     Para realizar la operación es necesario un semáforo o podría haber problemas
-                GPIO.output(self._config.GPIOS[puerto][0], GPIO.HIGH if self._config.GPIOS[puerto][3] else GPIO.LOW)                        #         Se activa la salida del puerto GPIO
+                GPIO.output(gpio[0], GPIO.HIGH if gpio[3] else GPIO.LOW)                                                                    #         Se activa la salida del puerto GPIO
 
             return True                                                                                                                     #     Se informa del éxito
 
@@ -304,17 +305,17 @@ class domotica_servidor(comun.app):
             return False                                                                                                                    #     Se informa del fallo
 
 
-    def estado(self, puerto, puerto_buscado = False):
+    def estado(self, gpio, buscar = True):
         ''' Devuelve el estado de un puerto GPIO dado o -1 si hay algún error
         '''
 
-        if puerto_buscado == False:                                                                                                         # Si el puerto dado es un número de puerto y no una ID interna
-            puerto = self.buscar_puerto_GPIO(puerto)                                                                                        #     Es necesario convertirlo a ID
+        if buscar:                                                                                                                          # Si es necesario buscar el puerto GPIO dado para recuperar sus características
+            gpio = self.buscar_gpio(gpio)                                                                                                   #     Se busca y se obtiene el elemento
 
-        if puerto != -1:                                                                                                                    # Si el puerto buscado ha sido hallado
-            estado_puerto = GPIO.input(self._config.GPIOS[puerto][0])                                                                       #     Se recoge su estado
+        if gpio != False:                                                                                                                   # Si el puerto buscado ha sido hallado
+            estado_puerto = GPIO.input(gpio[0])                                                                                             #     Se recoge su estado
 
-            return estado_puerto if self._config.GPIOS[puerto][3] else (estado_puerto + 1) % 2                                              #     Y se devuelve
+            return estado_puerto if gpio[3] else (estado_puerto + 1) % 2                                                                    #     Y se devuelve
 
         else:                                                                                                                               # Si no
             return -1                                                                                                                       #     Se informa del fallo
@@ -338,19 +339,19 @@ class domotica_servidor(comun.app):
             return 'Info: ' + str(self._VERSION_PROTOCOLO)                                                                                  # ... se pide al cliente que se adapte
 
 
-    def pulsar(self, puerto, puerto_buscado = False):
+    def pulsar(self, gpio, buscar = True):
         ''' Pulsa (enciende y apaga) un puerto GPIO dado
         '''
 
-        if puerto_buscado == False:                                                                                                         # Si el puerto dado es un número de puerto y no una ID interna
-            puerto = self.buscar_puerto_GPIO(puerto)                                                                                        #     Es necesario convertirlo a ID
+        if buscar:                                                                                                                          # Si es necesario buscar el puerto GPIO dado para recuperar sus características
+            gpio = self.buscar_gpio(gpio)                                                                                                   #     Se busca y se obtiene el elemento
 
-        if puerto != -1:                                                                                                                    # Si el puerto es correcto
-            res = self.encender(puerto, True)                                                                                               #     Condiciona el resultado a la devolución del método encender()
+        if gpio != False:                                                                                                                   # Si el puerto es correcto
+            res = self.encender(gpio, False)                                                                                                #     Condiciona el resultado a la devolución del método encender()
 
-            sleep(2)
+            sleep(self._config.PULSACION)
 
-            res = res and self.apagar(puerto, True)                                                                                         #     Recondiciona el resultado anterior a la devolución del método apagar()
+            res = res and self.apagar(gpio, False)                                                                                          #     Recondiciona el resultado anterior a la devolución del método apagar()
 
         else:                                                                                                                               # Si no
             res = False                                                                                                                     #     Establece el resultado como erróneo
