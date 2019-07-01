@@ -143,23 +143,25 @@ class domotica_servidor(comun.app):
                     print('Padre #', os.getpid(), "\tHe recibido el comando: ", comando, sep = '')
 
                 while comando[0:11] != 'desconectar':                                                                                       #     Mientras que el comando recibido no sea el de desconexión
-                    if comando == 'listar':                                                                                                 #         Si el comando es "listar"
+                    if self._VERSION_PROTOCOLO >= 1.0 and comando == 'listar':                                                              #         Si el comando es "listar"
                         mensaje = 'info: '                                                                                                  #             Se prepara el mensaje de respuesta
 
-                        for i in range(0, int(len(self._config.GPIOS)), 2):                                                                 #             Se recorre la lista de puertos GPIO
-                            mensaje = mensaje + str(self._config.GPIOS[i + 1][0]) + ' '                                                     #                 Y su información se añade al mensaje
+                        for i in range(len(self._config.GPIOS)):                                                                            #             Se recorre la lista de puertos GPIO
+                            for j in range(len(self._config.GPIOS[i])):
+                                if self._config.GPIOS[i][j][1] == config.RELE:
+                                    mensaje = mensaje + str(self._config.GPIOS[i][j][0]) + ' '                                              #                 Y su información se añade al mensaje
 
                         if DEBUG:
                             print('Padre #', os.getpid(), "\tVoy a mandarle el mensaje: ", mensaje, sep = '')
 
                     #                                                                                                                       #         Si el comando es "apagar", "conmutar", "describir", "encender", "estado", "hola" o "pulsar" y está bien formado
-                    elif (comando != 'apagar'       and comando[:6] == 'apagar'     and comando[6] == ' ' and comando[ 7:] != '') \
-                      or (comando != 'conmutar'     and comando[:8] == 'conmutar'   and comando[8] == ' ' and comando[ 9:] != '') \
-                      or (comando != 'describir'    and comando[:9] == 'describir'  and comando[9] == ' ' and comando[10:] != '') \
-                      or (comando != 'encender'     and comando[:8] == 'encender'   and comando[8] == ' ' and comando[ 9:] != '') \
-                      or (comando != 'estado'       and comando[:6] == 'estado'     and comando[6] == ' ' and comando[ 7:] != '') \
-                      or (comando != 'hola'         and comando[:4] == 'hola'       and comando[4] == ' ' and comando[ 5:] != '') \
-                      or (comando != 'pulsar'       and comando[:6] == 'pulsar'     and comando[6] == ' ' and comando[ 7:] != '') \
+                    elif (self._VERSION_PROTOCOLO >= 1.0 and comando != 'apagar'       and comando[:6] == 'apagar'     and comando[6] == ' ' and comando[ 7:] != '') \
+                      or (self._VERSION_PROTOCOLO >= 1.0 and comando != 'conmutar'     and comando[:8] == 'conmutar'   and comando[8] == ' ' and comando[ 9:] != '') \
+                      or (self._VERSION_PROTOCOLO >= 1.1 and comando != 'describir'    and comando[:9] == 'describir'  and comando[9] == ' ' and comando[10:] != '') \
+                      or (self._VERSION_PROTOCOLO >= 1.0 and comando != 'encender'     and comando[:8] == 'encender'   and comando[8] == ' ' and comando[ 9:] != '') \
+                      or (self._VERSION_PROTOCOLO >= 1.0 and comando != 'estado'       and comando[:6] == 'estado'     and comando[6] == ' ' and comando[ 7:] != '') \
+                      or (self._VERSION_PROTOCOLO >= 1.0 and comando != 'hola'         and comando[:4] == 'hola'       and comando[4] == ' ' and comando[ 5:] != '') \
+                      or (self._VERSION_PROTOCOLO >= 1.0 and comando != 'pulsar'       and comando[:6] == 'pulsar'     and comando[6] == ' ' and comando[ 7:] != '') \
                     :
                         funcion, params = comando.split(' ', 1)                                                                             #             Se prepara su ejecución
 
