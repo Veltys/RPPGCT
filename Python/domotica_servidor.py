@@ -395,8 +395,7 @@ class domotica_servidor_hijos(comun.app):
 
         self._id_hijo = id_hijo
 
-        self._GPIOS = []
-        self._GPIOS.append(self._config.GPIOS[self._id_hijo])
+        self._GPIOS = self._config.GPIOS[self._id_hijo]
 
         self._LLAMADAS = self._config.LLAMADAS[self._id_hijo]
 
