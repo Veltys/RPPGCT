@@ -77,7 +77,7 @@ class domotica_cliente(comun.app):
         if self._estado_conexion >= comun.estados_conexion.LISTA_CARGADA:                                           # Si el estado de la conexión es el adecuado
             mensaje = self._enviar_y_recibir(comando, False)                                                        #     Se manda el comando y se recibe el mensaje
 
-            if mensaje != False and mensaje[0:4] == 'info':                                                         # Si se ha recibido un mensaje y es válido
+            if mensaje and mensaje[0:4] == 'info':                                                                  # Si se ha recibido un mensaje y es válido
                 return mensaje[6:]                                                                                  #     Devolver la parte relevante del mensaje
 
             else:                                                                                                   # En caso contrario
@@ -238,7 +238,7 @@ class domotica_cliente(comun.app):
         if self._estado_conexion >= comun.estados_conexion.LISTA_CARGADA:                                           # Si el estado de la conexión es el adecuado
             mensaje = self._enviar_y_recibir(comando)                                                               #     Envía el comando y recibe el mensaje
 
-            if mensaje == False:                                                                                    #     Si el envío del mensaje da error
+            if not(mensaje):                                                                                        #     Si el envío del mensaje da error
                 print('Error: Servidor no responde', file = sys.stderr)                                             #         Se informa de ello
                 print('Error: Imposible interaccionar con el puerto GPIO solicitado, el servidor no responde')
 

@@ -73,7 +73,7 @@ class dht11(comun.app):
                 - Actúa como modificador de la variable "_argumentos" de la clase
         '''
 
-        if argumentos == False:
+        if not(argumentos):
             return self._argumentos
 
         else:

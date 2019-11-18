@@ -44,7 +44,7 @@ def main(argv):
 
             sleep(config.PAUSA)                                                                                                     #     Pausa para reintentar
 
-    if enviado == False:                                                                                                            # En caso de que haya sido imposible
+    if not(enviado):                                                                                                                # En caso de que haya sido imposible
         print('Imposible reenviar el correo despues de', config.REINTENTOS, 'intentos')                                             #    Se informa de ello
 
 

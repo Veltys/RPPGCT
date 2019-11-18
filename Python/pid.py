@@ -37,7 +37,7 @@ class _comun_pid(object):
                 - Actúa como modificador de la variable "_nombre" de la clase
         '''
 
-        if nombre == False:
+        if not(nombre):
             return self._nombre
 
         else:

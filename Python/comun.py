@@ -51,7 +51,7 @@ class app(object):
             - Asigna señales a sus correspondientes funciones
         '''
 
-        self._bloqueo           = bloqueo(nombre) if not(nombre == False) else False    # No siempre va a ser necesario realizar un bloqueo
+        self._bloqueo           = bloqueo(nombre) if nombre else False                  # No siempre va a ser necesario realizar un bloqueo
         self._config            = config
         self._estado_conexion   = estados_conexion.DESCONECTADO
         self._modo_apagado      = False
@@ -141,7 +141,7 @@ class app(object):
                 - Si sí, recibe el mensaje y lo retorna
         '''
 
-        if self._socket != False:
+        if self._socket:
             try:                                                                        # Bloque try
                 self._socket.send(comando.encode('utf-8'))                              #     Se manda el mensaje
 
@@ -219,8 +219,8 @@ class app(object):
             - Configura los puertos GPIO
         '''
 
-        if self._bloqueo == False or not(self._bloqueo.comprobar()):
-            if self._bloqueo == False or self._bloqueo.bloquear():
+        if not(self._bloqueo) or not(self._bloqueo.comprobar()):
+            if not(self._bloqueo) or self._bloqueo.bloquear():
                 try:
                     self._config.GPIOS
 
@@ -318,7 +318,7 @@ class app(object):
 
             GPIO.cleanup()                                                              #     Se liberan los pines GPIO
 
-        if not(self._bloqueo == False):                                                 # Si hay un boqueo
+        if self._bloqueo:                                                               # Si hay un boqueo
             self._bloqueo.desbloquear()                                                 #     Se desbloquea
 
         # TODO: PID
@@ -332,7 +332,7 @@ class app(object):
                 - Actúa como modificador de la variable "_estado_conexion" de la clase
         '''
 
-        if estado == False:
+        if not(estado):
             return self._estado_conexion
 
         else:
