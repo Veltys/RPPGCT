@@ -96,14 +96,6 @@ class domotica_servidor_config(domotica_cliente_config):                        
                                 (14, config_global.SONDA    , None, False, 'Indicador electricidad'     ),
                                 (15, config_global.RELE     , None, False, 'Relé activación router'     ),
                             ),
-
-                            (
-                                (27, config_global.RELE     , (2,), False, 'Ventilador 1'               ),  # El tercer elemento indicará el umbral de activación
-                            ),
-
-                            (
-                                (22, config_global.RELE     , (3,), False, 'Ventilador 2'               ),
-                            ),
                           ]
 
     LLAMADAS            = [                                                                                 # LLAMADAS determina, qué debe ser llamado por cada hijo y cuándo
@@ -111,8 +103,6 @@ class domotica_servidor_config(domotica_cliente_config):                        
                             (None                   , False, False),                                        # El segundo, si debe ser llamado cuando se dispare un evento de bajada
                             (None                   , False, False),                                        # Y el tercero, si debe ser llamado cuando se dispare un evento de subida
                             ('aviso_electricidad.py', False, True ),
-                            (                                     ),                                        # Placeholder: las entradas de GPIOS que no requieran hijos, no necesitan de este elemento...
-                            (                                     ),                                        # ... pero en caso de que una entrada posterior lo requiriese, fallaría si no estuvieran éstos
                           ]
 
     PAUSA               = 0.20
