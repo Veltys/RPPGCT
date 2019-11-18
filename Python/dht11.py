@@ -7,7 +7,7 @@
 # Author            : Veltys
 # Original author   : szazo
 # Date              : 18-11-2018
-# Version           : 2.0.2
+# Version           : 2.1.0
 # Usage             : python3 dht11.py o from dht11 import
 # Notes             : ...
 
@@ -353,7 +353,7 @@ class dht11_hijos(comun.app):
 
 
     def bucle(self):
-        ''' Realiza (en bucle no en este caso) las tareas asignadas a este sistema
+        ''' Realiza (en bucle no, en este caso) las tareas asignadas a este sistema
         '''
 
         resultado = self.leer()
@@ -459,7 +459,11 @@ class dht11_hijos(comun.app):
                 return resultado_dht11(ERR_CRC, 0, 0)
 
             else:
-                return resultado_dht11(ERR_NO_ERROR, bytess[2], bytess[0])
+                temperatura = bytess[2] + float(bytess[3]) / 10
+
+                humedad = bytess[0] + float(bytess[1]) / 10
+
+                return resultado_dht11(resultado_dht11.ERR_NO_ERROR, temperatura, humedad)
 
 
 class resultado_dht11:                                                          	                        # Clase resultado devuelto por el método dht11.leer()
