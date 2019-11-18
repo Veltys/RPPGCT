@@ -116,7 +116,7 @@ class domotica_servidor(comun.app):
                     generar_hijo = False
 
                     for j in range(len(self._config.GPIOS[i])):                                                                             #         Se recorre cada tupla, para buscar botones o sondas (si no, no se necesitan hijos)
-                        if self._config.GPIOS[i][j] >= self._config.BOTON:                                                                  #             Si el elemento es de tipo botón o superior (sonda)
+                        if self._config.GPIOS[i][j] == self._config.BOTON or self._config.GPIOS[i][j] == self._config.SONDA:                #             Si el elemento es de tipo botón o superior (sonda)
                             generar_hijo = True                                                                                             #                 Se generará un hijo
 
                             break                                                                                                           #                 Y se saldrá del bucle
