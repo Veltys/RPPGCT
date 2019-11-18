@@ -91,7 +91,7 @@ class domotica_servidor_config(domotica_cliente_config):                        
                                 (17, config_global.BOTON    , None, False, 'Botón reinicio cámara'      ),
                                 (27, config_global.RELE     , None, False, 'Relé reinicio cámara'       ),
                             ),
-    
+
                             (
                                 (14, config_global.SONDA    , None, False, 'Indicador electricidad'     ),
                                 (15, config_global.RELE     , None, False, 'Relé activación router'     ),

@@ -92,7 +92,7 @@ class domotica_servidor(comun.app):
         if buscar:                                                                                                                          # Si es necesario buscar el puerto GPIO dado para recuperar sus características
             gpio = self.buscar_gpio(gpio)                                                                                                   #     Se busca y se obtiene el elemento
 
-        if gpio != False:                                                                                                                   # Si la id del puerto es válida
+        if gpio:                                                                                                                            # Si la id del puerto es válida
             with semaforo:                                                                                                                  #     Para realizar la operación es necesario un semáforo o podría haber problemas
                 GPIO.output(gpio[0], GPIO.LOW if gpio[3] else GPIO.HIGH)                                                                    #         Se desactiva la salida del puerto GPIO
 
@@ -126,7 +126,7 @@ class domotica_servidor(comun.app):
                             print('Padre #', os.getpid(), "\tPreparando hijo ", i, sep = '')
     
                         self._hijos.append(Thread(target = main_hijos, args = (i,)))                                                        #             Se prepara hijo, se configura...
-    
+
                         if DEBUG:
                             print('Padre #', os.getpid(), "\tArrancando hijo ", i, sep = '')
 
@@ -181,7 +181,7 @@ class domotica_servidor(comun.app):
                             elif comando[:6] != 'estado' and comando[:9] != 'describir' and respuesta:
                                 mensaje = 'ok: ejecutado'
 
-                            elif (comando[:6] == 'estado' and respuesta != -1) or (comando[0:9] == 'describir' and respuesta != False):
+                            elif (comando[:6] == 'estado' and respuesta != -1) or (comando[0:9] == 'describir' and respuesta):
                                 mensaje = 'info: ' + str(respuesta)
 
                             else:
@@ -484,7 +484,8 @@ class domotica_servidor_hijos(comun.app):
     def _ejecutar(archivo):
         ''' Ejecuta un script en python3 dado
         '''
-        proceso = call('python3 ' + os.path.dirname(os.path.abspath(__file__)) + '/' + archivo, shell = True)
+
+        proceso = call(sys.executable + os.path.dirname(os.path.abspath(__file__)) + '/' + archivo, shell = True)
 
         if proceso == 0:                                                                                                                    # Si el proceso devolvió una ejecución correcta
             return True                                                                                                                     #     Se informa del éxito

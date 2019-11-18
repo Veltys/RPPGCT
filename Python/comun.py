@@ -97,7 +97,7 @@ class app(object):
 
                 mensaje = self._enviar_y_recibir('hola ' + str(self._VERSION_PROTOCOLO))
 
-                if mensaje == False:                                                    # Si hay algún fallo al conectar con el servidor
+                if not(mensaje):                                                        # Si hay algún fallo al conectar con el servidor
                     return False                                                        #     Se informa del fallo
 
                 elif(mensaje[:2] == 'ok'):                                              # Si el servidor devuelve un "ok" (significa que la versión del protocolo del servidor es la misma)
