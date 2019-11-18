@@ -96,7 +96,7 @@ class domotica_servidor_config(domotica_cliente_config):                        
                                 (14, config_global.SONDA    , None, False, 'Indicador electricidad'     ),
                                 (15, config_global.RELE     , None, False, 'Relé activación router'     ),
                             ),
-    
+
                             (
                                 (27, config_global.RELE     , (2,), False, 'Ventilador 1'               ),  # El tercer elemento indicará el umbral de activación
                             ),

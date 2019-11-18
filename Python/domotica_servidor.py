@@ -129,7 +129,7 @@ class domotica_servidor(comun.app):
     
                         if DEBUG:
                             print('Padre #', os.getpid(), "\tArrancando hijo ", i, sep = '')
-    
+
                         self._hijos[i].start()                                                                                              #             ... y se inicia
 
             while True:                                                                                                                     # Se ejecutará siempre, ya que las condiciones de parada son externas
@@ -421,42 +421,45 @@ class domotica_servidor_hijos(comun.app):
         global salir, semaforo
 
         try:
-            GPIO.add_event_detect(self._GPIOS[0][0], GPIO.BOTH)                                                                             # Se añade el evento; se ha empleado GPIO.BOTH porque GPIO.RISING y GPIO.FALLING no parecen funcionar del todo bien
+            for entrada_GPIO in self._GPIOS:
+                for puerto_GPIO in entrada_GPIO:
+                    if puerto_GPIO[1] == self._config.BOTON or puerto_GPIO[1] == self._config.SONDA:
+                        GPIO.add_event_detect(puerto_GPIO[0], GPIO.BOTH)                                                                    # Se añade el evento; se ha empleado GPIO.BOTH porque GPIO.RISING y GPIO.FALLING no parecen funcionar del todo bien
 
             while not(salir):                                                                                                               # Mientras la condición de parada no se active
-                if DEBUG:
-                    print('Hijo  #', self._id_hijo, "\tEsperando al puerto GPIO", self._GPIOS[0][0], sep = '')
+                activacion = 0                                                                                                              #     Variable de activación: 0 ➡ no activación; 1 ➡ activación de subida; 2 ➡ activación de bajada
 
-                if GPIO.event_detected(self._GPIOS[0][0]):                                                                                  #     Se comprueba el puerto que ha sido activado
-                    if not(self._GPIOS[0][3]):                                                                                              #         Si es una subida
-                        if DEBUG:
-                            print('Hijo  #', self._id_hijo, "\tSe ha disparado el evento de subida esperado en el puerto GPIO", self._GPIOS[0][0], sep = '')
+                for entrada_GPIO in self._GPIOS:
+                    for puerto_GPIO in entrada_GPIO:
+                        if puerto_GPIO[1] == self._config.BOTON or puerto_GPIO[1] == self._config.SONDA:                                    #                 Si se está ante un elemento de entrada
+                            if DEBUG:
+                                print('Hijo  #', self._id_hijo, "\tEsperando al puerto GPIO", puerto_GPIO[0], sep = '')
 
-                        with semaforo:                                                                                                      #             Para realizar la operación es necesario un semáforo o podría haber problemas
-                            GPIO.output(self._GPIOS[1][0], not(GPIO.input(self._GPIOS[1][0])))                                              #                 Se conmuta la salida del puerto GPIO
+                            if GPIO.event_detected(puerto_GPIO[0]):                                                                         #                     Se comprueba el puerto que ha sido activado
+                                if not(puerto_GPIO[3]):                                                                                     #                         Si es una subida
+                                    if DEBUG:
+                                        print('Hijo  #', self._id_hijo, "\tSe ha disparado el evento de subida esperado en el puerto GPIO", puerto_GPIO[0], sep = '')
 
-                        if self._LLAMADAS[1] == True:                                                                                       #             Si se ha programado una llamada
-                            self.cargar_y_ejecutar(self._LLAMADAS[0])                                                                       #                 Se ejecuta
+                                    activacion = 1                                                                                          #                             Se programa la ejecución posterior
 
-                        self._GPIOS[0][3] = not(self._GPIOS[0][3])                                                                          #             Así se diferencia de las bajadas
+                                else: # elif puerto_GPIO[3]:                                                                                #                         Si es una bajada
+                                    if DEBUG:
+                                        print('Hijo  #', self._id_hijo, "\tSe ha disparado el evento de bajada esperado en el puerto GPIO", puerto_GPIO[0], sep = '')
 
-                    elif self._GPIOS[0][3]:                                                                                                 #         Si es una bajada
-                        if DEBUG:
-                            print('Hijo  #', self._id_hijo, "\tSe ha disparado el evento de bajada esperado en el puerto GPIO", self._GPIOS[0][0], sep = '')
+                                    activacion = 2                                                                                          #                             Se programa la ejecución posterior
 
-                        if self._GPIOS[0][1] == self._config.SONDA:                                                                         #             Si se está ante una sonda, cada evento deberá conmutar siempre
-                            with semaforo:                                                                                                  #                 Para realizar la operación es necesario un semáforo o podría haber problemas
-                                GPIO.output(self._GPIOS[1][0], not(GPIO.input(self._GPIOS[1][0])))                                          #                     Se conmuta la salida del puerto GPIO
+                                puerto_GPIO[3] = not(puerto_GPIO[3])                                                                        #                         Se prepara la próxima activación
 
-                        else:                                                                                                               #             En caso contrario (botón)
-                            pass                                                                                                            #                 No es necesaria una acción
+                        elif puerto_GPIO[1] == self._config.RELE:                                                                           #                 Si estamos ante un elemento de salida
+                            if activacion > 0:                                                                                              #                     Si ha sido activado
+                                with semaforo:                                                                                              #                         Para realizar la operación es necesario un semáforo o podría haber problemas
+                                    GPIO.output(self._GPIOS[1][0], not(GPIO.input(self._GPIOS[1][0])))                                      #                             Se conmuta la salida del puerto GPIO
 
-                        if self._LLAMADAS[2] == True:                                                                                       #             Si se ha programado una llamada
-                            self._ejecutar(self._LLAMADAS[0])                                                                               #                 Ejecutar
+                if activacion > 0:                                                                                                          #         Una vez recorrida la tupla, se vuelve a comprobar si ha sido activado
+                    if self._LLAMADAS[1] == True:                                                                                           #             Si se ha programado una llamada
+                        self.cargar_y_ejecutar(self._LLAMADAS[0])                                                                           #                 Se ejecuta
 
-                        self._GPIOS[0][3] = not(self._GPIOS[0][3])                                                                          #             Se prepara la próxima activación para una subida
-
-                sleep(self._config.PAUSA)                                                                                                   #     Pausa programada para evitar la saturación del sistema
+                sleep(self._config.PAUSA)                                                                                                   #         Pausa programada para evitar la saturación del sistema
 
             self.cerrar()                                                                                                                   # Cuando se salga del bucle, se ejecutarán las rutinas de salida
 
