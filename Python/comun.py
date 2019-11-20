@@ -5,8 +5,8 @@
 # Title         : comun.py
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
-# Date          : 18-11-2019
-# Version       : 0.5.4
+# Date          : 20-11-2019
+# Version       : 0.5.5
 # Usage         : import comun | from comun import <clase>
 # Notes         : ...
 
@@ -173,14 +173,14 @@ class app(object):
             return False
 
 
-    def _sig_apagado(self, signum, frame):
+    def _sig_apagado(self, signum, frame):                                              # @UnusedVariable
         ''' Funcion "wrapper" para el procesamiento de la señal de apagado
         '''
 
         self.apagado()
 
 
-    def _sig_cerrar(self, signum, frame):
+    def _sig_cerrar(self, signum, frame):                                               # @UnusedVariable
         ''' Funcion "wrapper" para el procesamiento de la señal de cierre
         '''
 
@@ -188,7 +188,7 @@ class app(object):
         os._exit(0)
 
 
-    def _sig_test(self, signum, frame):
+    def _sig_test(self, signum, frame):                                                 # @UnusedVariable
         ''' Funcion "wrapper" para el procesamiento de la señal de pruebas
         '''
 
