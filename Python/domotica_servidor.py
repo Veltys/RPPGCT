@@ -114,24 +114,25 @@ class domotica_servidor(comun.app):
             if not(DEBUG_PADRE):
                 i = 0                                                                                                                       #     Contador para generar las IDs de los hijos
 
-                for _, puerto in enumerate(self._config.GPIOS):                                                                             #     Se recorre la lista de puertos GPIO para ir generando los hijos
-                    generar_hijo = False
+                for _, puertos in enumerate(self._config.GPIOS):                                                                            #     Se recorre la lista de puertos GPIO para ir generando los hijos
+                    for puerto in puertos:
+                        generar_hijo = False
 
-                    if puerto[0] == self._config.BOTON or puerto[0] == self._config.SONDA:                                                  #         Si el elemento es de tipo botón o superior (sonda)
-                        generar_hijo = True                                                                                                 #             Se generará un hijo
+                        if puerto[0] == self._config.BOTON or puerto[0] == self._config.SONDA:                                              #         Si el elemento es de tipo botón o superior (sonda)
+                            generar_hijo = True                                                                                             #             Se generará un hijo
 
-                    if generar_hijo:                                                                                                        #         Si es necesario generar un hijo
-                        if DEBUG:
-                            print('Padre #', os.getpid(), "\tPreparando hijo ", i, sep = '')
+                        if generar_hijo:                                                                                                    #         Si es necesario generar un hijo
+                            if DEBUG:
+                                print('Padre #', os.getpid(), "\tPreparando hijo ", i, sep = '')
 
-                        self._hijos.append(Thread(target = main_hijos, args = (i,)))                                                        #             Se prepara hijo, se configura...
+                            self._hijos.append(Thread(target = main_hijos, args = (i,)))                                                    #             Se prepara hijo, se configura...
 
-                        if DEBUG:
-                            print('Padre #', os.getpid(), "\tArrancando hijo ", i, sep = '')
+                            if DEBUG:
+                                print('Padre #', os.getpid(), "\tArrancando hijo ", i, sep = '')
 
-                        self._hijos[i].start()                                                                                              #             ... y se inicia
+                            self._hijos[i].start()                                                                                          #             ... y se inicia
 
-                        i = i + 1                                                                                                           #             Cada hijo iniciado incrementa el contador
+                            i = i + 1                                                                                                       #             Cada hijo iniciado incrementa el contador
 
             while True:                                                                                                                     # Se ejecutará siempre, ya que las condiciones de parada son externas
                 sc, _ = self._socket.accept()                                                                                               #     Se espera hasta que haya un evento en el socket
