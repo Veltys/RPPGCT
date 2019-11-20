@@ -234,8 +234,6 @@ class app(object):
 
                     for i, puertos in enumerate(self._config.GPIOS):                    # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
                         for j, puerto in enumerate(puertos):
-                            self._config.GPIOS[i] = list(puerto)                        #     Se necesita transformar en lista la tupla, ya que es posible que haga falta modificar su contenido
-
                             if DEBUG:
                                 print('Proceso  #', os.getpid(), "\tPreparando el puerto GPIO", puerto[0], sep = '')
 
