@@ -114,7 +114,7 @@ class domotica_servidor(comun.app):
             if not(DEBUG_PADRE):
                 i = 0                                                                                                                       #     Contador para generar las IDs de los hijos
 
-                for _, puertos in enumerate(self._config.GPIOS):                                                                            #     Se recorre la lista de puertos GPIO para ir generando los hijos
+                for puertos in self._config.GPIOS:                                                                                          #     Se recorre la lista de puertos GPIO para ir generando los hijos
                     for puerto in puertos:
                         generar_hijo = False
 
