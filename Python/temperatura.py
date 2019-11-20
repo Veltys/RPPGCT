@@ -31,6 +31,9 @@ import comun                                                                    
 from time import sleep                                                                                  # Para hacer pausas
 from subprocess import check_output                                                                     # Llamadas a programas externos, recuperando su respuesta
 
+if DEBUG_REMOTO:
+    from pydevd_file_utils import setup_client_server_paths                                             # Configuración de las rutas Eclipse ➡
+
 try:
     from config import temperatura_config as config                                                     # Configuración
 
@@ -108,6 +111,8 @@ class temperatura(comun.app):
 
 def main(argv):
     if DEBUG_REMOTO:
+        setup_client_server_paths(config.PYDEV_REMOTE_PATHS)
+
         pydevd.settrace(config.IP_DEP_REMOTA)
 
     app = temperatura(config, os.path.basename(argv[0]))

@@ -26,6 +26,9 @@ from email.mime.text import MIMEText                                            
 from smtplib import SMTP, SMTPAuthenticationError                                           # Envío de e-mails vía SMTP y excepciones del envío
 from socket import gaierror                                                                 # Excepciones del socket
 
+if DEBUG_REMOTO:
+    from pydevd_file_utils import setup_client_server_paths                                 # Configuración de las rutas Eclipse ➡
+
 try:
     from config import correo_electronico_config as config                                  # Configuración
 
@@ -36,6 +39,8 @@ except ImportError:
 
 def mandar_correo(de, para, asunto, correo):
     if DEBUG_REMOTO:
+        setup_client_server_paths(config.PYDEV_REMOTE_PATHS)
+
         pydevd.settrace(config.IP_DEP_REMOTA)
 
     mensaje             = MIMEText(correo)                                                  # Creación de un mensaje de correo en formato MIME

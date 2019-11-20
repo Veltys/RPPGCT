@@ -25,6 +25,10 @@ class config_global(object):                                                    
     BOTON               = 20
     SONDA               = 30
 
+    PYDEV_REMOTE_PATHS  = [
+                            ('/home/usuario/.../proyecto-local', '/ruta/al/proyecto/remoto'),
+                          ]
+
 
 class aviso_electricidad_config(config_global):                                                             # Configuración del sistema de aviso en caso de corte de electricidad
     ASUNTO              = '<NOMBRE_SISTEMA>: informe especial'

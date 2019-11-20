@@ -24,6 +24,9 @@ if DEBUG_REMOTO:
 
 import comun                                                                                                        # Funciones comunes a varios sistemas
 
+if DEBUG_REMOTO:
+    from pydevd_file_utils import setup_client_server_paths                                                         # Configuración de las rutas Eclipse ➡
+
 try:
     from config import domotica_cliente_config as config                                                            # Configuración
 
@@ -348,6 +351,8 @@ class domotica_cliente(comun.app):
 
 def main(argv):
     if DEBUG_REMOTO:
+        setup_client_server_paths(config.PYDEV_REMOTE_PATHS)
+
         pydevd.settrace(config.IP_DEP_REMOTA)
 
     app = domotica_cliente(config, sys.argv)

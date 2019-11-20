@@ -38,6 +38,9 @@ from subprocess import call                                                     
 from threading import Lock, Thread                                                                                                          # Capacidades multihilo
 from time import sleep                                                                                                                      # Para hacer pausas
 
+if DEBUG_REMOTO:
+    from pydevd_file_utils import setup_client_server_paths                                                                                 # Configuración de las rutas Eclipse ➡
+
 try:
     from config import domotica_servidor_config as config                                                                                   # Configuración
 
@@ -508,7 +511,9 @@ class domotica_servidor_hijos(comun.app):
 
 def main(argv):
     if DEBUG_REMOTO:
-        pydevd.settrace(config.IP_DEP_REMOTA)
+        setup_client_server_paths(config.PYDEV_REMOTE_PATHS)
+
+        pydevd.settrace(config.IP_DEP_REMOTA, trace_only_current_thread = False)
 
     app = domotica_servidor(config, os.path.basename(sys.argv[0]))
     err = app.arranque()
