@@ -133,7 +133,7 @@ class domotica_servidor(comun.app):
                             if DEBUG:
                                 print('Padre #', os.getpid(), "\tArrancando hijo ", i, sep = '')
 
-                            self._hijos[i].start()                                                                                          #             ... y se inicia
+                            self._hijos[-1].start()                                                                                         #             ... y se inicia
 
                         i = i + 1                                                                                                           #             Se incrementa el contador
 
