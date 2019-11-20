@@ -6,7 +6,7 @@
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
 # Date          : 20-11-2019
-# Version       : 0.5.5
+# Version       : 0.6.0
 # Usage         : import comun | from comun import <clase>
 # Notes         : ...
 
@@ -232,31 +232,32 @@ class app(object):
 
                     GPIO.setwarnings(DEBUG)                                             # De esta forma alertará de los problemas sólo cuando se esté depurando
 
-                    for i, puerto in enumerate(self._config.GPIOS):                     # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
-                        self._config.GPIOS[i] = list(puerto)                            #     Se necesita transformar en lista la tupla, ya que es posible que haga falta modificar su contenido
+                    for _, puertos in enumerate(self._config.GPIOS):
+                        for i, puerto in enumerate(puertos):                            # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
+                            self._config.GPIOS[i] = list(puerto)                            #     Se necesita transformar en lista la tupla, ya que es posible que haga falta modificar su contenido
 
-                        if DEBUG:
-                            print('Proceso  #', os.getpid(), "\tPreparando el puerto GPIO", puerto[0], sep = '')
-
-                        if puerto[1] < self._config.BOTON:
                             if DEBUG:
-                                print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", puerto[0], ' como salida', sep = '')
+                                print('Proceso  #', os.getpid(), "\tPreparando el puerto GPIO", puerto[0], sep = '')
 
-                            GPIO.setup(puerto[0], GPIO.OUT, initial = GPIO.LOW if puerto[2] else GPIO.HIGH)
+                            if puerto[1] == self._config.RELE or puerto[1] == self._config.LED or puerto[1] == self._config.LED_PWM:
+                                if DEBUG:
+                                    print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", puerto[0], ' como salida', sep = '')
 
-                            if puerto[1] == self._config.LED_PWM:
-                                self._config.GPIOS[i][2] = GPIO.PWM(puerto[0], self._config.FRECUENCIA)
+                                GPIO.setup(puerto[0], GPIO.OUT, initial = GPIO.LOW if puerto[2] else GPIO.HIGH)
 
-                                self._config.GPIOS[i][2].start(0)
+                                if puerto[1] == self._config.LED_PWM:
+                                    self._config.GPIOS[i][2] = GPIO.PWM(puerto[0], self._config.FRECUENCIA)
+
+                                    self._config.GPIOS[i][2].start(0)
+
+                                else:
+                                    GPIO.output(puerto[0], GPIO.LOW if puerto[3] else GPIO.HIGH)
 
                             else:
-                                GPIO.output(puerto[0], GPIO.LOW if puerto[3] else GPIO.HIGH)
+                                if DEBUG:
+                                    print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", self._config.GPIOS[i][0], 'como entrada', sep = '')
 
-                        else:
-                            if DEBUG:
-                                print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", self._config.GPIOS[i][0], 'como entrada', sep = '')
-
-                            GPIO.setup(self._config.GPIOS[i][0], GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
+                                GPIO.setup(self._config.GPIOS[i][0], GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 
                 return 0
 
