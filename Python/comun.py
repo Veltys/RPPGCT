@@ -203,12 +203,13 @@ class app(object):
 
         self._modo_apagado = not(self._modo_apagado)                                    # Se comuta el modo apagado
 
-        for gpio, tipo, acceso, activacion, _ in self._config.GPIOS:                    # Se recorre la lista de puertos GPIO
-            if tipo == self._config.LED:                                                #     Si se está ante un led
-                GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)                #         Se "apaga" de modo simple
+        for puertos in self._config.GPIOS:                                              # Se recorre la lista de puertos GPIO
+            for gpio, tipo, acceso, activacion, _ in puertos:
+                if tipo == self._config.LED:                                            #     Si se está ante un led
+                    GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)            #         Se "apaga" de modo simple
 
-            elif tipo == self._config.LED_PWM:                                          #     Si se está ante un led controlado por PWM
-                acceso.ChangeDutyCycle(0)                                               #         Se "apaga" de modo ciclo de trabajo
+                elif tipo == self._config.LED_PWM:                                      #     Si se está ante un led controlado por PWM
+                    acceso.ChangeDutyCycle(0)                                           #         Se "apaga" de modo ciclo de trabajo
 
 
     def arranque(self):
@@ -311,11 +312,12 @@ class app(object):
             pass                                                                        #     Sin problema
 
         else:                                                                           # Si sí los hay
-            for _, tipo, acceso, _, _ in self._config.GPIOS:                            #     Se recorren los pines GPIO
-                if tipo == self._config.LED_PWM:                                        #         Si el pin es un led controlado por PWM
-                    acceso.stop()                                                       #             Se le ordena parar
-
-            GPIO.cleanup()                                                              #     Se liberan los pines GPIO
+            for puertos in self._config.GPIOS:                                          #     Se recorren los pines GPIO
+                for _, tipo, acceso, _, _ in puertos:
+                    if tipo == self._config.LED_PWM:                                    #         Si el pin es un led controlado por PWM
+                        acceso.stop()                                                   #             Se le ordena parar
+    
+                GPIO.cleanup()                                                          #     Se liberan los pines GPIO
 
         if self._bloqueo:                                                               # Si hay un boqueo
             self._bloqueo.desbloquear()                                                 #     Se desbloquea
@@ -376,12 +378,13 @@ class app(object):
             if DEBUG:
                 print('Encendiendo leds')
 
-            for gpio, tipo, acceso, activacion, _ in self._config.GPIOS:                #     Se recorre la lista de puertos GPIO
-                if tipo == self._config.RELE or tipo == self._config.LED:               #         Si se está ante un relé o un led normal
-                    GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)            #             Se "enciende" de modo normal
+            for puertos in self._config.GPIOS:                                          #     Se recorre la lista de puertos GPIO
+                for gpio, tipo, acceso, activacion, _ in puertos:
+                    if tipo == self._config.RELE or tipo == self._config.LED:           #         Si se está ante un relé o un led normal
+                        GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)        #             Se "enciende" de modo normal
 
-                elif tipo == self._config.LED_PWM:                                      #         Si se está ante un led controlado por PWM
-                    acceso.ChangeDutyCycle(100)                                         #             Se "enciende" de modo ciclo de trabajo
+                    elif tipo == self._config.LED_PWM:                                  #         Si se está ante un led controlado por PWM
+                        acceso.ChangeDutyCycle(100)                                     #             Se "enciende" de modo ciclo de trabajo
 
             if DEBUG:
                 print('Esperando', self._config.PAUSA, 'segundos')

@@ -115,10 +115,10 @@ class domotica_servidor(comun.app):
                 i = 0                                                                                                                       #     Contador para generar las IDs de los hijos
 
                 for puertos in self._config.GPIOS:                                                                                          #     Se recorre la lista de puertos GPIO para ir generando los hijos
-                    for puerto in puertos:
+                    for _, tipo, _, _, _ in puertos:
                         generar_hijo = False
 
-                        if puerto[1] == self._config.BOTON or puerto[1] == self._config.SONDA:                                              #         Si el elemento es de tipo botón o superior (sonda)
+                        if tipo == self._config.BOTON or tipo == self._config.SONDA:                                              #         Si el elemento es de tipo botón o superior (sonda)
                             generar_hijo = True                                                                                             #             Se generará un hijo
 
                         if generar_hijo:                                                                                                    #         Si es necesario generar un hijo
@@ -148,10 +148,10 @@ class domotica_servidor(comun.app):
                     if self._VERSION_PROTOCOLO >= 1.0 and comando == 'listar':                                                              #         Si el comando es "listar"
                         mensaje = 'info: '                                                                                                  #             Se prepara el mensaje de respuesta
 
-                        for i in range(len(self._config.GPIOS)):                                                                            #             Se recorre la lista de puertos GPIO
-                            for j in range(len(self._config.GPIOS[i])):
-                                if self._config.GPIOS[i][j][1] == config.RELE:
-                                    mensaje = mensaje + str(self._config.GPIOS[i][j][0]) + ' '                                              #                 Y su información se añade al mensaje
+                        for puertos in self._config.GPIOS:                                                                                  #             Se recorre la lista de puertos GPIO
+                            for gpio, tipo, _, _, _ in puertos:
+                                if tipo == config.RELE:
+                                    mensaje = mensaje + str(gpio) + ' '                                              #                 Y su información se añade al mensaje
 
                         if DEBUG:
                             print('Padre #', os.getpid(), "\tVoy a mandarle el mensaje: ", mensaje, sep = '')
