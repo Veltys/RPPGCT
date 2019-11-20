@@ -109,17 +109,16 @@ class domotica_servidor(comun.app):
         try:
             if DEBUG:
                 print('Padre #', os.getpid(), "\tMi configuración es: ", self._config.GPIOS, sep = '')
-                print('Padre #', os.getpid(), "\tPienso iniciar ", int(len(self._config.GPIOS) / 2), ' hijos', sep = '')
+                print('Padre #', os.getpid(), "\tPienso iniciarun máximo de ", int(len(self._config.GPIOS)), ' hijos', sep = '')            #     Ya no es posible saber a priori cuántos hijos serán inciados
 
             if not(DEBUG_PADRE):
-                for i in range(len(self._config.GPIOS)):                                                                                    #     Se recorre la lista de puertos GPIO para ir generando los hijos
+                i = 0                                                                                                                       #     Contador para generar las IDs de los hijos
+
+                for _, puerto in enumerate(self._config.GPIOS):                                                                             #     Se recorre la lista de puertos GPIO para ir generando los hijos
                     generar_hijo = False
 
-                    for j in range(len(self._config.GPIOS[i])):                                                                             #         Se recorre cada tupla, para buscar botones o sondas (si no, no se necesitan hijos)
-                        if self._config.GPIOS[i][j] == self._config.BOTON or self._config.GPIOS[i][j] == self._config.SONDA:                #             Si el elemento es de tipo botón o superior (sonda)
-                            generar_hijo = True                                                                                             #                 Se generará un hijo
-
-                            break                                                                                                           #                 Y se saldrá del bucle
+                    if puerto[0] == self._config.BOTON or puerto[0] == self._config.SONDA:                                                  #         Si el elemento es de tipo botón o superior (sonda)
+                        generar_hijo = True                                                                                                 #             Se generará un hijo
 
                     if generar_hijo:                                                                                                        #         Si es necesario generar un hijo
                         if DEBUG:
@@ -131,6 +130,8 @@ class domotica_servidor(comun.app):
                             print('Padre #', os.getpid(), "\tArrancando hijo ", i, sep = '')
 
                         self._hijos[i].start()                                                                                              #             ... y se inicia
+
+                        i = i + 1                                                                                                           #             Cada hijo iniciado incrementa el contador
 
             while True:                                                                                                                     # Se ejecutará siempre, ya que las condiciones de parada son externas
                 sc, _ = self._socket.accept()                                                                                               #     Se espera hasta que haya un evento en el socket
