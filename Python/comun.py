@@ -316,7 +316,7 @@ class app(object):
                 for _, tipo, acceso, _, _ in puertos:
                     if tipo == self._config.LED_PWM:                                    #         Si el pin es un led controlado por PWM
                         acceso.stop()                                                   #             Se le ordena parar
-    
+
                 GPIO.cleanup()                                                          #     Se liberan los pines GPIO
 
         if self._bloqueo:                                                               # Si hay un boqueo
