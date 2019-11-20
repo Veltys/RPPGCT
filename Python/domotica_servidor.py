@@ -118,7 +118,7 @@ class domotica_servidor(comun.app):
                     for puerto in puertos:
                         generar_hijo = False
 
-                        if puerto[0] == self._config.BOTON or puerto[0] == self._config.SONDA:                                              #         Si el elemento es de tipo botón o superior (sonda)
+                        if puerto[1] == self._config.BOTON or puerto[1] == self._config.SONDA:                                              #         Si el elemento es de tipo botón o superior (sonda)
                             generar_hijo = True                                                                                             #             Se generará un hijo
 
                         if generar_hijo:                                                                                                    #         Si es necesario generar un hijo
