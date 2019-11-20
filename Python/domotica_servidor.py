@@ -526,6 +526,11 @@ def main(argv):
 
 
 def main_hijos(argv):
+    if DEBUG_REMOTO:
+        setup_client_server_paths(config.PYDEV_REMOTE_PATHS)
+
+        pydevd.settrace(config.IP_DEP_REMOTA, trace_only_current_thread = False)
+
     app = domotica_servidor_hijos(argv, config)
 
     err = app.arranque()
