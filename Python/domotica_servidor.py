@@ -124,7 +124,7 @@ class domotica_servidor(comun.app):
                     if generar_hijo:                                                                                                        #         Si es necesario generar un hijo
                         if DEBUG:
                             print('Padre #', os.getpid(), "\tPreparando hijo ", i, sep = '')
-    
+
                         self._hijos.append(Thread(target = main_hijos, args = (i,)))                                                        #             Se prepara hijo, se configura...
 
                         if DEBUG:

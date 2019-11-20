@@ -86,7 +86,7 @@ class domotica_servidor_config(domotica_cliente_config):                        
                                 (24, config_global.BOTON    , None, False, 'Botón reinicio switch'      ),  # Las pares, a los pulsadores o equivalentes que irán asociados a dichos relés, para su conmutación
                                 (23, config_global.RELE     , None, False, 'Relé reinicio switch'       ),
                             ),
-    
+
                             (
                                 (17, config_global.BOTON    , None, False, 'Botón reinicio cámara'      ),
                                 (27, config_global.RELE     , None, False, 'Relé reinicio cámara'       ),
