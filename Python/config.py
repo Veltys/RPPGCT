@@ -106,7 +106,7 @@ class domotica_servidor_config(domotica_cliente_config):                        
                             (None                   , False, False),                                        # El primer elemento de cada tupla es el comando (en python, por seguridad) a llamar
                             (None                   , False, False),                                        # El segundo, si debe ser llamado cuando se dispare un evento de bajada
                             (None                   , False, False),                                        # Y el tercero, si debe ser llamado cuando se dispare un evento de subida
-                            ('aviso_electricidad.py', False, True ),
+                            ('aviso_electricidad.py', False, True ),                                        # Advertencia: Debe existir una entrada por cada hijo que se genere, no por cada sub-lista de GPIOS
                           )
 
     PAUSA               = 0.20

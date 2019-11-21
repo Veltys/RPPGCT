@@ -135,7 +135,7 @@ class domotica_servidor(comun.app):
 
                             self._hijos[-1].start()                                                                                         #             ... y se inicia
 
-                        i = i + 1                                                                                                           #             Se incrementa el contador
+                            i = i + 1                                                                                                       #             Se incrementa el contador para cada hijo generado
 
             while True:                                                                                                                     # Se ejecutará siempre, ya que las condiciones de parada son externas
                 sc, _ = self._socket.accept()                                                                                               #     Se espera hasta que haya un evento en el socket
