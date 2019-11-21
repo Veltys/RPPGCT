@@ -5,8 +5,8 @@
 # Title         : domotica_servidor.py
 # Description   : Parte servidor del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 18-11-2019
-# Version       : 2.2.0
+# Date          : 21-11-2019
+# Version       : 2.3.0
 # Usage         : python3 domotica_servidor.py
 # Notes         : Parte servidor del sistema en el que se gestionarán pares de puertos GPIO
 #                 Las entradas impares en la variable de configuración asociada GPIOS corresponderán a los relés que se gestionarán
@@ -460,8 +460,9 @@ class domotica_servidor_hijos(comun.app):
                                 GPIO.output(gpio, not(GPIO.input(gpio)))                                                                    #                     Se conmuta la salida del puerto GPIO
 
                 if activado > 0:                                                                                                            #         Una vez recorrida la tupla, se vuelve a comprobar si ha sido activado
-                    if self._LLAMADAS[1]:                                                                                                   #             Si se ha programado una llamada
-                        self.cargar_y_ejecutar(self._LLAMADAS[0])                                                                           #                 Se ejecuta
+                    for llamada in self._LLAMADAS:                                                                                          #             Si sí, se recorren las llamadas
+                        if llamada[activado]:                                                                                               #                 Si se ha programado alguna del tipo especificado
+                            self.cargar_y_ejecutar(llamada[0])                                                                              #                     Se ejecuta
 
                 sleep(self._config.PAUSA)                                                                                                   #         Pausa programada para evitar la saturación del sistema
 

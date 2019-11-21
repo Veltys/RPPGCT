@@ -196,6 +196,7 @@ Colección de utilidades varias para el control GPIO en Python
     - Optimizaciones varias.
 - 0.10.0:
     - Actualizados los últimos cambios del original en **dht11.py**.
+    - Añadida la posibilidad de realizar más de una llamada por cada sensor de domótica en **config.py** y **domotica_servidor.py**.
     - Cambiado el comportamiento para que ahora sea posible que un botón o sonda dispare más de un relé o led en **config.py** y **domotica_servidor.py**.
     - Optimizaciones varias y de seguridad.
 
