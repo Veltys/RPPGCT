@@ -104,11 +104,11 @@ class domotica_servidor_config(domotica_cliente_config):                        
 
     LLAMADAS            = (                                                                                 # LLAMADAS determina, qué debe ser llamado por cada hijo y cuándo
                             (                                                                               # El primer elemento de cada tupla es el comando (en python, por seguridad) a llamar
-                                (None                   , False, False)                                     # El segundo, si debe ser llamado cuando se dispare un evento de bajada
+                                (None                   , False, False),                                    # El segundo, si debe ser llamado cuando se dispare un evento de bajada
                             ),                                                                              # Y el tercero, si debe ser llamado cuando se dispare un evento de subida
                                                                                                             # Advertencia: Debe existir una entrada por cada hijo que se genere, no por cada sub-lista de GPIOS
                             (
-                                (None                   , False, False)
+                                (None                   , False, False),
                             ),      
                                   
                             (
