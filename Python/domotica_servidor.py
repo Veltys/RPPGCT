@@ -434,31 +434,30 @@ class domotica_servidor_hijos(comun.app):
             while not(salir):                                                                                                               # Mientras la condición de parada no se active
                 activado = 0                                                                                                                #     Variable de activado: 0 ➡ no activado; 1 ➡ activado de subida; 2 ➡ activado de bajada
 
-                for puertos in self._GPIOS:
-                    for gpio, tipo, _, activacion, _ in puertos:
-                        if tipo == self._config.BOTON or tipo == self._config.SONDA:                                                        #                 Si se está ante un elemento de entrada
-                            if DEBUG:
-                                print('Hijo  #', self._id_hijo, "\tEsperando al puerto GPIO", gpio, sep = '')
+                for gpio, tipo, _, activacion, _ in self._GPIOS:
+                    if tipo == self._config.BOTON or tipo == self._config.SONDA:                                                            #         Si se está ante un elemento de entrada
+                        if DEBUG:
+                            print('Hijo  #', self._id_hijo, "\tEsperando al puerto GPIO", gpio, sep = '')
 
-                            if GPIO.event_detected(gpio):                                                                                   #                     Se comprueba el puerto que ha sido activado
-                                if not(activacion):                                                                                         #                         Si es una subida
-                                    if DEBUG:
-                                        print('Hijo  #', self._id_hijo, "\tSe ha disparado el evento de subida esperado en el puerto GPIO", gpio, sep = '')
+                        if GPIO.event_detected(gpio):                                                                                       #             Se comprueba el puerto que ha sido activado
+                            if not(activacion):                                                                                             #                 Si es una subida
+                                if DEBUG:
+                                    print('Hijo  #', self._id_hijo, "\tSe ha disparado el evento de subida esperado en el puerto GPIO", gpio, sep = '')
 
-                                    activado = 1                                                                                            #                             Se programa la ejecución posterior
+                                activado = 1                                                                                                #                     Se programa la ejecución posterior
 
-                                else: # elif activacion:                                                                                    #                         Si es una bajada
-                                    if DEBUG:
-                                        print('Hijo  #', self._id_hijo, "\tSe ha disparado el evento de bajada esperado en el puerto GPIO", gpio, sep = '')
+                            else: # elif activacion:                                                                                        #                 Si es una bajada
+                                if DEBUG:
+                                    print('Hijo  #', self._id_hijo, "\tSe ha disparado el evento de bajada esperado en el puerto GPIO", gpio, sep = '')
 
-                                    activado = 2                                                                                            #                             Se programa la ejecución posterior
+                                activado = 2                                                                                                #                     Se programa la ejecución posterior
 
-                                activacion = not(activacion)                                                                                #                         Se prepara la próxima activación
+                            activacion = not(activacion)                                                                                    #                 Se prepara la próxima activación
 
-                        elif tipo == self._config.RELE:                                                                                     #                 Si estamos ante un elemento de salida
-                            if activado > 0:                                                                                                #                     Si ha sido activado
-                                with semaforo:                                                                                              #                         Para realizar la operación es necesario un semáforo o podría haber problemas
-                                    GPIO.output(self._GPIOS[1][0], not(GPIO.input(self._GPIOS[1][0])))                                      #                             Se conmuta la salida del puerto GPIO
+                    elif tipo == self._config.RELE:                                                                                         #         Si se está ante un elemento de salida
+                        if activado > 0:                                                                                                    #             Si ha sido activado
+                            with semaforo:                                                                                                  #                 Para realizar la operación es necesario un semáforo o podría haber problemas
+                                GPIO.output(gpio, not(GPIO.input(gpio)))                                                                    #                     Se conmuta la salida del puerto GPIO
 
                 if activado > 0:                                                                                                            #         Una vez recorrida la tupla, se vuelve a comprobar si ha sido activado
                     if self._LLAMADAS[1] == True:                                                                                           #             Si se ha programado una llamada
