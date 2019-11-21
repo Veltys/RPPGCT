@@ -362,7 +362,7 @@ class domotica_servidor(comun.app):
         if buscar:                                                                                                                          # Si es necesario buscar el puerto GPIO dado para recuperar sus características
             gpio = self.buscar_gpio(gpio)                                                                                                   #     Se busca y se obtiene el elemento
 
-        if gpio != False:                                                                                                                   # Si el puerto es correcto
+        if gpio:                                                                                                                            # Si el puerto es correcto
             res = self.encender(gpio, False)                                                                                                #     Condiciona el resultado a la devolución del método encender()
 
             sleep(self._config.PULSACION)
