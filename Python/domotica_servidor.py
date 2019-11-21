@@ -427,10 +427,9 @@ class domotica_servidor_hijos(comun.app):
         global salir, semaforo
 
         try:
-            for puertos in self._GPIOS:
-                for gpio, tipo, _, _, _ in puertos:
-                    if tipo == self._config.BOTON or tipo == self._config.SONDA:
-                        GPIO.add_event_detect(gpio, GPIO.BOTH)                                                                    # Se añade el evento; se ha empleado GPIO.BOTH porque GPIO.RISING y GPIO.FALLING no parecen funcionar del todo bien
+            for gpio, tipo, _, _, _ in self._GPIOS:
+                if tipo == self._config.BOTON or tipo == self._config.SONDA:
+                    GPIO.add_event_detect(gpio, GPIO.BOTH)                                                                                  # Se añade el evento; se ha empleado GPIO.BOTH porque GPIO.RISING y GPIO.FALLING no parecen funcionar del todo bien
 
             while not(salir):                                                                                                               # Mientras la condición de parada no se active
                 activado = 0                                                                                                                #     Variable de activado: 0 ➡ no activado; 1 ➡ activado de subida; 2 ➡ activado de bajada
