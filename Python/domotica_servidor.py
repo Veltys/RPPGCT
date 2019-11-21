@@ -311,7 +311,7 @@ class domotica_servidor(comun.app):
         if buscar:                                                                                                                          # Si es necesario buscar el puerto GPIO dado para recuperar sus características
             gpio = self.buscar_gpio(gpio)                                                                                                   #     Se busca y se obtiene el elemento
 
-        if gpio != False:                                                                                                                   # Si el puerto es correcto
+        if gpio:                                                                                                                            # Si el puerto es correcto
             with semaforo:                                                                                                                  #     Para realizar la operación es necesario un semáforo o podría haber problemas
                 GPIO.output(gpio[0], GPIO.HIGH if gpio[3] else GPIO.LOW)                                                                    #         Se activa la salida del puerto GPIO
 
@@ -328,7 +328,7 @@ class domotica_servidor(comun.app):
         if buscar:                                                                                                                          # Si es necesario buscar el puerto GPIO dado para recuperar sus características
             gpio = self.buscar_gpio(gpio)                                                                                                   #     Se busca y se obtiene el elemento
 
-        if gpio != False:                                                                                                                   # Si el puerto buscado ha sido hallado
+        if gpio:                                                                                                                            # Si el puerto buscado ha sido hallado
             estado_puerto = GPIO.input(gpio[0])                                                                                             #     Se recoge su estado
 
             return estado_puerto if gpio[3] else (estado_puerto + 1) % 2                                                                    #     Y se devuelve
@@ -460,7 +460,7 @@ class domotica_servidor_hijos(comun.app):
                                 GPIO.output(gpio, not(GPIO.input(gpio)))                                                                    #                     Se conmuta la salida del puerto GPIO
 
                 if activado > 0:                                                                                                            #         Una vez recorrida la tupla, se vuelve a comprobar si ha sido activado
-                    if self._LLAMADAS[1] == True:                                                                                           #             Si se ha programado una llamada
+                    if self._LLAMADAS[1]:                                                                                                   #             Si se ha programado una llamada
                         self.cargar_y_ejecutar(self._LLAMADAS[0])                                                                           #                 Se ejecuta
 
                 sleep(self._config.PAUSA)                                                                                                   #         Pausa programada para evitar la saturación del sistema
