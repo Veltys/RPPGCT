@@ -81,9 +81,9 @@ class domotica_cliente_config(config_global):                                   
 
 class domotica_servidor_config(domotica_cliente_config):                                                    # Configuración del sistema servidor de domótica
     GPIOS               = [                                                                                 # En este caso, los puertos GPIO serán anidados:
-                            [                                                                               # Las entradas en la misma tupla estarán vinculadas entre sí y se gestionarán como un todo. Por ejemplo:
-                                [22, config_global.BOTON    , None, False, 'Botón reinicio router'      ],  # Un botón de activación...
-                                [ 4, config_global.RELE     , None, False, 'Relé reinicio router'       ],  # ... y su correspondiente relé
+                            [                                                                               # Las entradas en la misma lista estarán vinculadas entre sí y se gestionarán como un todo. Por ejemplo:
+                                [22, config_global.BOTON    , None, False, 'Botón reinicio router'      ],  # Uno o más elementos de activación...
+                                [ 4, config_global.RELE     , None, False, 'Relé reinicio router'       ],  # ... y sus correspondiente salidas a activar
                             ],
 
                             [
