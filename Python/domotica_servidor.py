@@ -278,7 +278,7 @@ class domotica_servidor(comun.app):
         if buscar:                                                                                                                          # Si es necesario buscar el puerto GPIO dado para recuperar sus características
             gpio = self.buscar_gpio(gpio)                                                                                                   #     Se busca y se obtiene el elemento
 
-        if gpio != False:                                                                                                                   # Si el puerto es correcto
+        if gpio:                                                                                                                            # Si el puerto es correcto
             with semaforo:                                                                                                                  #     Para realizar la operación es necesario un semáforo o podría haber problemas
                 GPIO.output(gpio[0], not(gpio[0]))                                                                                          #         Se conmuta la salida del puerto GPIO
 
@@ -295,7 +295,7 @@ class domotica_servidor(comun.app):
         if buscar:                                                                                                                          # Si es necesario buscar el puerto GPIO dado para recuperar sus características
             gpio = self.buscar_gpio(gpio)                                                                                                   #     Se busca y se obtiene el elemento
 
-        if gpio != False:                                                                                                                   # Si el puerto es correcto
+        if gpio:                                                                                                                            # Si el puerto es correcto
             return gpio[4]                                                                                                                  #     Se devuelve su descripción
 
         else:                                                                                                                               # Si no
