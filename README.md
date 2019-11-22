@@ -35,6 +35,7 @@ Movido a [CHANGELOG.md](CHANGELOG.md).
 * A *Barlan*, por [la entrada sobre sockets en Python 3.4 en el foro de *underc0de.org*](https://underc0de.org/foro/python/(mini-guia)-sockets-en-python-(3-4)/), la cual me ha permitido adaptar mis conocimientos en C / C++ en este campo en **domotica_cliente.py** y **domotica_servidor.py**.
 * A *Pherkad*, por [la sección de "Control del acceso a los recursos. Bloqueos" en la web *python-para-impacientes.blogspot.com.es*](http://python-para-impacientes.blogspot.com.es/2016/12/threading-programacion-con-hilos-y-ii.html), la cual me ha evitado dolores de cabeza variados en **domotica_servidor.py**.
 * A *szazo*, por [su implementación de la lectura de la sonda de temperatura DHT11 en Python](https://github.com/szazo/DHT11_Python), la cuál he utilizado (adaptado) en mi **dht11.py**.
+* A *Olivier Lacan*, por [su excelente plantilla para archivos CHANGELOG.md](https://keepachangelog.com/es-ES/0.3.0/), la cuál he utilizado (adaptada) en mi **CHANGELOG.MD**.
 
 
 ## Por hacer (*TODO*)

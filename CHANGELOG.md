@@ -26,7 +26,8 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 
 ## [0.10.0] - ??-11-2019
 ### Añadido
-- Archivo separado para el historial de versiones en **CHANGELOG.md**
+- Archivo separado para el historial de versiones en **CHANGELOG.md**.
+- Agradecimiento por la plantilla para este archivo.
 - Posibilidad de realizar más de una llamada por cada sensor de domótica en **config.py** y **domotica_servidor.py**.
 - Últimos cambios del original en **dht11.py**.
 
