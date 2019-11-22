@@ -110,14 +110,14 @@ class domotica_servidor_config(domotica_cliente_config):                        
                             (
                                 (None                   , False, False),
                             ),      
-                                  
+
                             (
                                 (None                   , False, False)
-                            ),                                 
+                            ),
 
                             (
                                 ('aviso_electricidad.py', False, True )
-                            ),                                  
+                            ),
                           )
 
     PAUSA               = 0.50

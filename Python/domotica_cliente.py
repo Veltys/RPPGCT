@@ -5,8 +5,8 @@
 # Title         : domotica_cliente.py
 # Description   : Parte cliente del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 18-11-2019
-# Version       : 1.1.11
+# Date          : 22-11-2019
+# Version       : 1.1.12
 # Usage         : python3 domotica_cliente.py [commandos]
 # Notes         : Parte cliente del sistema en el que se gestionarán pares de puertos GPIO
 
@@ -25,7 +25,7 @@ if DEBUG_REMOTO:
 import comun                                                                                                        # Funciones comunes a varios sistemas
 
 if DEBUG_REMOTO:
-    from pydevd_file_utils import setup_client_server_paths                                                         # Configuración de las rutas Eclipse ➡
+    from pydevd_file_utils import setup_client_server_paths                                                         # Configuración de las rutas Eclipse
 
 try:
     from config import domotica_cliente_config as config                                                            # Configuración
@@ -80,14 +80,16 @@ class domotica_cliente(comun.app):
         if self._estado_conexion >= comun.estados_conexion.LISTA_CARGADA:                                           # Si el estado de la conexión es el adecuado
             mensaje = self._enviar_y_recibir(comando, False)                                                        #     Se manda el comando y se recibe el mensaje
 
-            if mensaje and mensaje[0:4] == 'info':                                                                  # Si se ha recibido un mensaje y es válido
-                return mensaje[6:]                                                                                  #     Devolver la parte relevante del mensaje
+            if mensaje and mensaje[0:4] == 'info':                                                                  #     Si se ha recibido un mensaje y es válido
+                print('Descripción del puerto GPIO' + comando[10:] + ': "' + mensaje[6:] + '"')                     #         Se imprime la parte relevante del comando y del mensaje
 
-            else:                                                                                                   # En caso contrario
-                return ''                                                                                           #     Devolver una cadena vacía
+            else:                                                                                                   #     Si no
+                print('Error: Número de puerto GPIO no válido', file = sys.stderr)                                  #         Se informa de ello
+                print('Error: El número de puerto GPIO no es válido')
 
-        else:                                                                                                       # En caso contrario
-            return ''                                                                                               #     Devolver una cadena vacía
+        else:                                                                                                       # Si no
+            print('Error: Sin lista de puertos GPIO, estado de conexión inadecuado', file = sys.stderr)             #         Se informa de ello
+            print('Error: Imposible solicitar una lista de puertos GPIO, no ' + self.estado_conexion_lenguaje_natural(self.estado_conexion() + 1))
 
 
     def __estado(self, comando):
@@ -145,19 +147,19 @@ class domotica_cliente(comun.app):
 
                     self._estado_conexion = comun.estados_conexion.LISTA_EXTENDIDA                                  #             El estado de la conexión es actualizado de nuevo
 
-                    return True                                                                                     #             Se devuelve True
+                    return True
 
             else:                                                                                                   #     Si no
-                print('Error: Sin lista de puertos GPIO, el servidor no responde', file = sys.stderr)
+                print('Error: Sin lista de puertos GPIO, el servidor no responde', file = sys.stderr)               #         Se informa de ello
                 print('Error: Imposible solicitar una lista de puertos GPIO, el servidor no responde')
 
-                return False                                                                                        #         Se devuelve False
+                return False
 
-        else:                                                                                                       # Si no
-            print('Error: Sin lista de puertos GPIO, estado de conexión inadecuado', file = sys.stderr)
+        else:                                                                                                       #     Si no
+            print('Error: Sin lista de puertos GPIO, estado de conexión inadecuado', file = sys.stderr)             #         Se informa de ello
             print('Error: Imposible solicitar una lista de puertos GPIO, no ' + self.estado_conexion_lenguaje_natural(self.estado_conexion() + 1))
 
-            return False                                                                                            # Se devuelve False
+            return False
 
 
     def __mostrar_ayuda(self):
@@ -198,7 +200,7 @@ class domotica_cliente(comun.app):
             return True
 
         else:                                                                                                       # Si no
-            print('Error: Sin lista de puertos GPIO', file = sys.stderr)                                            #     Informa de ello
+            print('Error: Sin lista de puertos GPIO', file = sys.stderr)                                            #     Se informa de ello
             print('Error: No hay ninguna lista de puertos GPIO cargada')
 
             return False
@@ -299,8 +301,8 @@ class domotica_cliente(comun.app):
                     self.__varios(comando)                                                                          #         Se ejecuta
 
                 #                                                                                                   #     Si el comando es "describir" y está bien formado
-                elif  self._VERSION_PROTOCOLO >= 1.1 and comando != 'describir' and comando[0:9] == 'describir' and comando[9] == ' ' and comando[10:] != '':
-                    print('Descripción del puerto GPIO' + comando[10:] + ': "' + self.__describir(comando) + '"')   #         Se ejecuta e imprime
+                elif self._VERSION_PROTOCOLO >= 1.1 and comando != 'describir' and comando[0:9] == 'describir' and comando[9] == ' ' and comando[10:] != '':
+                    self.__describir(comando)                                                                       #         Se ejecuta
 
                 elif comando == 'listar':                                                                           #     Si el comando es "listar"
                     if self.__listar():                                                                             #         Se procede al listado y si es válido
