@@ -13,8 +13,8 @@
 # Title         : temperatura
 # Description   : Script de init.d para el arranque automático del sistema "temperatura.py".
 # Author        : Veltys
-# Date          : 23-07-2017
-# Version       : 1.1.2
+# Date          : 2019-11-22
+# Version       : 1.1.3
 # Usage         : /etc/init.d/temperaturas {start|stop|restart|status}
 # Notes         :
 

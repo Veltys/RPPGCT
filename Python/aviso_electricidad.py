@@ -5,8 +5,8 @@
 # Title         : aviso_electricidad.py
 # Description   : Sistema de aviso en caso de corte de electricidad
 # Author        : Veltys
-# Date          : 18-11-2018
-# Version       : 1.1.1
+# Date          : 2019-11-22
+# Version       : 1.1.2
 # Usage         : python3 aviso_electricidad.py
 # Notes         :
 

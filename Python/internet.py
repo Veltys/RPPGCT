@@ -6,8 +6,8 @@
 # Description       : Módulo auxiliar para la comprobación de si hay o no Internet
 # Original author   : linuxitux
 # Author            : Veltys
-# Date              : 18-11-2018
-# Version           : 2.0.6
+# Date              : 2019-22-11
+# Version           : 2.0.7
 # Usage             : python3 internet.py o from internet import hay_internet
 # Notes             : Se debe poder generar tráfico ICMP (ping), es decir, no debe ser bloqueado por un cortafuegos
 #                     Este módulo está pensado para ser llamado desde otros módulos y no directamente, aunque si es llamado de esta forma, también hará su trabajo e informará al usuario de si hay conexión a Internet

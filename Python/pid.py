@@ -5,8 +5,8 @@
 # Title         : pid.py
 # Description   : Módulo auxiliar para ciertas funciones de bloqueo y de PIDs
 # Author        : Veltys
-# Date          : 18-11-2019
-# Version       : 1.1.1
+# Date          : 2019-11-22
+# Version       : 1.1.2
 # Usage         : import pid | from pid import <clase>
 # Notes         : ...
 

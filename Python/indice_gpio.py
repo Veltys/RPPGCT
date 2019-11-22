@@ -5,8 +5,8 @@
 # Title         : indice_gpio.py
 # Description   : Sistema indizador de puertos GPIO
 # Author        : Veltys
-# Date          : 04-07-2018
-# Version       : 1.0.5
+# Date          : 2019-11-22
+# Version       : 1.0.6
 # Usage         : python3 indice_gpio.py
 # Notes         : Sistema que lee las distintas configuraciones y muestra cuáles puertos están ocupados y cuáles no
 

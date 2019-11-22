@@ -3,8 +3,8 @@
 # Title         : desinstalador.sh
 # Description   : Desinstala los scripts y elimina la configuración para iniciarse automáticamente
 # Author        : Veltys
-# Date          : 01-12-2017
-# Version       : 1.3.0
+# Date          : 2019-11-22
+# Version       : 1.3.1
 # Usage         : sudo bash desinstalador.sh
 # Notes         : Es necesario ser superusuario para su correcto funcionamiento
 

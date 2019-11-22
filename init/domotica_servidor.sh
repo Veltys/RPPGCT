@@ -13,8 +13,8 @@
 # Title         : domotica_servidor
 # Description   : Script de init.d para el arranque automático del sistema "domotica_servidor.py".
 # Author        : Veltys
-# Date          : 23-07-2017
-# Version       : 1.0.2
+# Date          : 2019-11-22
+# Version       : 1.0.3
 # Usage         : /etc/init.d/domotica_servidor {start|stop|restart|status}
 # Notes         : 
 

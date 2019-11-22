@@ -3,8 +3,8 @@
 # Title         : instalador.sh
 # Description   : Instala los scripts y los configura para iniciarse automáticamente
 # Author        : Veltys
-# Date          : 01-12-2017
-# Version       : 1.3.0
+# Date          : 2019-11-22
+# Version       : 1.3.1
 # Usage         : sudo bash instalador.sh
 # Notes         : Es necesario ser superusuario para su correcto funcionamiento
 

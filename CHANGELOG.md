@@ -24,7 +24,7 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - [ ] ¡Mucho más!
 
 
-## [0.10.0] - ??-11-2019
+## [0.10.0] - 2019-11-??
 ### Añadido
 - Archivo separado para el historial de versiones en **CHANGELOG.md**.
 - Agradecimiento por la plantilla para este archivo.
@@ -33,6 +33,7 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 
 ### Arreglado
 - Cambiado el comportamiento para que ahora sea posible que un botón o sonda dispare más de un relé o led en **config.py** y **domotica_servidor.py**.
+- Fechas en el estándar ISO 8601 en **actualizador.sh**, **aviso_electricidad.py**, **CHANGELOG.md**, **comun.py**, **config.py**, **config.sh**, **correo_electronico.py**, **desinstalador.sh**, **cpu.py**, **cpu.sh**, **dht11.py**, **domotica_cliente.py**, **domotica_servidor.py**, **domotica_servidor.sh**, **indice_gpio.py**, **instalador.sh**, **internet.py**, **pid.py**, **reiniciar_router.py**, **reiniciar_router.sh**, **temperatura.py** y **temperatura.sh**.
 - Mejoras en la calidad del código.
 - Optimizaciones varias y de seguridad.
 
@@ -40,7 +41,7 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - Secciones *Historial de versiones* y *Por hacer (*TODO*)* en **README.md**.
 
 
-## [0.9.0] - 25-06-2019
+## [0.9.0] - 2019-06-25
 ### Añadido
 - Acceso externo sencillo por pid en **pid.py**.
 - Más controles de excepciones.
@@ -59,13 +60,13 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - Proceso de actualización en **actualizador.sh**.
 
 
-## [0.8.2] - 01-07-2018
+## [0.8.2] - 2018-07-01
 ### Arreglado
 - Homogeneizado (aún más) de **README.md**.
 - Independizado de código encargado de mandar correos electrónicos.
 
 
-## [0.8.1] - 01-07-2018
+## [0.8.1] - 2018-07-01
 ### Añadido
 - **aviso_electricidad.py** a la lista de scripts en **config.sh**.
 
@@ -73,7 +74,7 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - Homogeneizado de **README.md**.
 
 
-## [0.8.0] - 01-07-2018
+## [0.8.0] - 2018-07-01
 ### Añadido
 - Posibilidad de invocar código al dispararse eventos en puertos GPIO en **domotica_servidor.py**.
 
@@ -82,24 +83,24 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - Posibilidad de conectar a un servidor que no sea el local en **comun.py** y adecuado el código a la nueva conexión en **config.py**, **domotica_cliente.py** y **reiniciar_router.py**.
 
 
-## [0.7.2] - 17-06-2018
+## [0.7.2] - 2018-06-17
 ### Arreglado
 - Mejoras en la calidad del código.
 
 
-## [0.7.1] - 03-05-2018
+## [0.7.1] - 2018-05-03
 ### Añadido
 - Otra licencia en la sección de *Otras licencias* en **README.md**.
 - Varios parámetros para variar la salida en **dht11.py**.
 
 
-## [0.7.0] - 11-03-2018
+## [0.7.0] - 2018-03-11
 ### Añadido
 - Otra licencia en la sección de *Otras licencias* en **README.md**.
 - Sistema de lectura de sondas de temperatura DHT11 en **dht11.py**.
 
 
-## [0.6.2] - 11-03-2018
+## [0.6.2] - 2018-03-11
 ### Añadido
 - Sección de *Otras licencias* en **README.md**.
 
@@ -110,13 +111,13 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - *Import* innecesario en **cpu.py**.
 
 
-## [0.6.1] - 31-12-2017
+## [0.6.1] - 2017-12-31
 ### Arreglado
 - Fallo en **cpu.py**, que podría provocar que no se ejecutase correctamente.
 - Renombrado **config_sample.py** a **config.py** y actualizadas referencias.
 
 
-## [0.6.0] - 02-12-2017
+## [0.6.0] - 2017-12-02
 ### Añadido
 - Bloque para interceptar un posible fallo al intentar borrar un archivo de bloqueo inexistente en **pid.py**. Esto podía ocurrir al reinstalar el sistema, especialmente si la parada de un servicio implica tiempo de procesamiento adicional, como en **domotica_servidor.py**. En este caso, es posible que el archivo de bloqueo sea borrado antes de la completa detención del servicio y, por consiguiente, éste arrojaría un fallo.
 - Campo *"descripción"* en las "constantes" *GPIO* en **config_sample.py**.
@@ -134,7 +135,7 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - Taspasados métodos que ahora son comunes a varios scripts de **domotica_cliente.py** a **comun.py**.
 
 
-## [0.5.4] - 18-11-2017
+## [0.5.4] - 2017-11-18
 ### Añadido
 - Comando de ayuda en **domotica_cliente.py**.
 
@@ -146,23 +147,23 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - *Imports* no necesarios en **domotica_cliente.py**.
 
 
-## [0.5.3] - 03-10-2017
+## [0.5.3] - 2017-10-03
 ### Arreglado
 - Fallo en **desinstalador.sh**.
 
 
-## [0.5.2] - 23-08-2017
+## [0.5.2] - 2017-08-23
 ### Arreglado
 - Modificado el tiempo de pausa de la clase *domotica_servidor_config* en **config_sample.py** para reducir la tasa de fallo. Sigue sin ser perfecto, pero a la espera de que arreglen [este fallo](https://sourceforge.net/p/raspberry-gpio-python/tickets/103/), es lo mejor que puedo hacer.
 
 
-## [0.5.1] - 13-08-2017
+## [0.5.1] - 2017-08-13
 ### Arreglado
 - Convertido (de nuevo y espero que no vuelva a fallar) el retorno de línea de modo Windows a Linux en **cpu.py**.
 - Fallo en las variables de depuración en **temperatura.py**.
 
 
-## [0.5.0] - 13-08-2017
+## [0.5.0] - 2017-08-13
 ### Añadido
 - Configuración necesaria en **domotica_servidor.py** para que lea la configuración de depuración remota.
 - Nuevos agradecimientos y reordenación de dicha sección en **README.md**.
@@ -184,7 +185,7 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - Renombrado **config.py.sample** a **config_sample.py**.
 
 
-## [0.4.6] - 10-08-2017
+## [0.4.6] - 2017-08-10
 ### Añadido
 - Algunos servidores más en la clase *internet_config* de **config.py.sample**.
 - Comando *estado* en **domotica_cliente.py** y **domotica_servidor.py**.
@@ -200,28 +201,28 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - *Import* innecesario en **domotica_servidor.py**.
 
 
-## [0.4.5] - 24-07-2017
+## [0.4.5] - 2017-07-24
 ### Arreglado
 - Fallo de versiones en los commits y en **README.md**.
 
 
-## [0.4.4] - 24-07-2017
+## [0.4.4] - 2017-07-24
 ### Arreglado
 - Fallo en la sangría de algunas línas de código en **domotica_servidor.py**
 
 
-## [0.4.3] - 24-07-2017
+## [0.4.3] - 2017-07-24
 ### Arreglado
 - Fallo en la comprobación de desconexión de **domotica_servidor.py**
 - Fallo en la descripción de **pid.py**
 
 
-## [0.4.2] - 24-07-2017
+## [0.4.2] - 2017-07-24
 ### Arreglado
 - Fallo al lanzar hijos en **domotica_servidor.py**.
 
 
-## [0.4.1] - 23-07-2017
+## [0.4.1] - 2017-07-23
 ### Arreglado
 - Fallos varios en **actualizador.sh**, **desinstalador.sh** e **instalador.sh**.
 - Homogeneizado de **README.md**.
@@ -229,7 +230,7 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - Renombrado **temperaturas.sh** a **temperatura.sh**.
 
 
-## [0.4.0] - 23-07-2017
+## [0.4.0] - 2017-07-23
 ### Añadido
 - Comprobaciones a **comun.py** para no hacer nada si ciertas variables no existen.
 - Sección de *F. A. Q.* en **README.md**.
@@ -248,7 +249,7 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - Renombrado **temperaturas.py** a **temperatura.py** por convención de nombres.
 
 
-## [0.3.3] - 10-07-2017
+## [0.3.3] - 2017-07-10
 ### Añadido
 - **domotica.py** en **actualizador.sh**.
 
@@ -256,18 +257,18 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - Fallo en **reiniciar_router.py**.
 - Limpieza de código en **instalador.sh**, **actualizador.sh** y **desinstador.sh**.
 
-## [0.3.2] - 07-07-2017
+## [0.3.2] - 2017-07-07
 ### Arreglado
 - Fallos varios
 - Limpieza de código en **actualizador.sh**.
 
 
-## [0.3.1] - 07-07-2017
+## [0.3.1] - 2017-07-07
 ### Arreglado
 - Fallos en **instalador.sh**, **actualizador.sh** y **desinstador.sh**.
 
 
-## [0.3.0] - 07-07-2017
+## [0.3.0] - 2017-07-07
 ### Añadido
 - **boton.py**, **comun.py**, **cpu.py**, **reiniciar_router.py** y **temperaturas.py** para adecuarse al nuevo **pid.py** para adecuarse a la nueva configuración.
 - Configuración de **config.py** para permitir puertos GPIO tanto de entrada, como de salida.
@@ -277,7 +278,7 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - Homogeneizado de **README.md**.
 
 
-## [0.2.4] - 05-07-2017
+## [0.2.4] - 2017-07-05
 ### Añadido
 - Comprobación de superusuario en los scripts de **init**.
 - **indice_gpio.py**.
@@ -288,24 +289,24 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - Rediseñado el bucle de **temperaturas.py**.
 
 
-## [0.2.3] - 02-07-2017
+## [0.2.3] - 2017-07-02
 ### Arreglado
 - Arreglos menores.
 - Cambio de editor, lo que puede provocar algún desajuste con las tabulaciones o similar.
 - Comenzado proceso para hacer el código independiente del sistema operativo.
 
 
-## [0.2.2] - 02-07-2017
+## [0.2.2] - 2017-07-02
 ### Arreglado
 - Fallo en **temperaturas.py**.
 
 
-## [0.2.1] - 01-07-2017
+## [0.2.1] - 2017-07-01
 ### Arreglado
 - Fallo en los scripts de init.
 
 
-## [0.2.0] - 01-07-2017
+## [0.2.0] - 2017-07-01
 ### Añadido
 - Exportada configuración a un único archivo.
 - Sistema de comprobación al importar para alertar de una mala (o inexistente) configuración en **boton.py**, **cpu.py**, **internet.py**, **pid.py**, **reiniciar_router.py** y **temperaturas.py**.
@@ -320,12 +321,12 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - *import* innecesario en **internet.py**.
 
 
-## [0.1.8] - 01-07-2017
+## [0.1.8] - 2017-07-01
 ### Añadido
 - Script actualizador.
 
 
-## [0.1.7] - 29-06-2017
+## [0.1.7] - 2017-06-29
 ### Añadido
 - Cabeceras en **boton.py**, **cpu.py**, **internet.py**, **pid.py**, **reiniciar_router.py** y **temperaturas.py**.
 
@@ -336,39 +337,39 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - Funcionalidad no necesaria en **reiniciar_router.py**.
 
 
-## [0.1.6] - 29-06-2017
+## [0.1.6] - 2017-06-29
 ### Añadido
 - Instalador.
 - Scripts para init.d.
 - Sección de "Agradecimientos y otros créditos" en **README.md** y en los archivos correspondientes.
 
 
-## [0.1.5] - 28-06-2017
+## [0.1.5] - 2017-06-28
 ### Añadido
 - Instalador de pruebas.
 - *Rama* (*branch*) de *testing*.
 
 
-## [0.1.4] - 28-06-2017
+## [0.1.4] - 2017-06-28
 ### Añadido
 - **README.md**.
 
 
-## [0.1.3] - 28-06-2017
+## [0.1.3] - 2017-06-28
 ### Arreglado
 - Arreglo del mismo fallo anterior en **cpu.py**.
 
 
-## [0.1.2] - 28-06-2017
+## [0.1.2] - 2017-06-28
 ### Arreglado
 - Fallo menor en **temperaturas.py**.
 
 
-## [0.1.1] - 28-06-2017
+## [0.1.1] - 2017-06-28
 ### Añadido
 - Scrpit de init.d **temperaturas.sh**, para darle a **temperaturas.py** la capacidad de autoarranque.
 
 
-## [0.1.0] - 28-06-2017
+## [0.1.0] - 2017-06-28
 ### Añadido
 - Scripts **boton.py**, **cpu.py**, **internet.py**, **pid.py**, **reiniciar_router.py** y **temperaturas.py**.

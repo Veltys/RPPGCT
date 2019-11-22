@@ -5,8 +5,8 @@
 # Title         : correo_electronico.py
 # Description   : Sistema de envío de correos electrónicos
 # Author        : Veltys
-# Date          : 01-07-2018
-# Version       : 1.0.1
+# Date          : 2019-11-22
+# Version       : 1.0.2
 # Usage         : from correo_electronico import mandar_correo
 # Notes         :
 
