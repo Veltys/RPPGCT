@@ -76,23 +76,45 @@ class temperatura(comun.app):
                     else:                                                                               #         Está igual o por encima del valor máximo
                         j = 3                                                                           #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
 
+                    igual = False
+
+                    for i, velocidades in enumerate(self._config.VELOCIDADES):                          #         Se recorre la tupla de temperaturas y velocidades
+                        if velocidades[0] < temperatura:                                                #             Cáculo del elemento menor
+                            menor = i
+
+                        elif velocidades[0] > temperatura:                                              #             Cáculo del elemento mayor
+                            mayor = i
+
+                        elif velocidades[0] == temperatura:                                             #             Cáculo del elemento igual, si lo hay
+                            igual = i
+
+                    if not(igual):                                                                      #         Si no existe un elemento igual, se ha de interpolar
+                        velocidad = ((temperatura - self._config.VELOCIDADES[menor][0]) / (self._config.VELOCIDADES[mayor][0] - self._config.VELOCIDADES[menor][0])) * (self._config.VELOCIDADES[mayor][1] - self._config.VELOCIDADES[menor][1]) + self._config.VELOCIDADES[menor][1]
+
+                    else:                                                                               #         Si sí
+                        velocidad = self._config.VELOCIDADES[igual][1]                                  #             Se almacena su valor para posterior uso
+
                     i = 0                                                                               #         Contador de ciclos del bucle
 
-                    for gpio, tipo, acceso, activacion, _ in self._config.GPIOS:                        #         Se recorre la lista de leds
-                        if tipo == config.RELE:                                                         #             Si se está ante un relé
-                            if j in acceso:                                                             #                 Si se está en un escenario de activación
-                                GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)                #                     Se enciende
+                    for puertos in self._config.GPIOS:                                                  #         Se recorre la lista de leds
+                        for gpio, tipo, acceso, activacion, _ in puertos:
+                            if tipo == config.LED:                                                      #             Si se está ante un led
+                                if j >= 3:                                                              #                 Si hay que activarlo
+                                    GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)            #                     Se activa
 
-                            else:                                                                       #                 En caso contrario
-                                GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)                #                     Se apaga
+                                else:                                                                   #                 Si no
+                                    GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)            #                     Se desactiva
 
-                        elif tipo == config.LED_PWM:                                                    #             Si se está ante un led PWM
-                            acceso.ChangeDutyCycle(self._config.COLORES[j][i] * 100)                    #                 Se cambia el ciclo de ejecución en función de la cordenada anteriormente asignada
+                            elif tipo == config.LED_PWM:                                                #             Si se está ante un led PWM
+                                acceso.ChangeDutyCycle(self._config.COLORES[j][i] * 100)                #                 Se cambia el ciclo de ejecución en función de la cordenada anteriormente asignada
 
-                        else:                                                                           #             Si se está ante cualquier otro
-                            pass                                                                        #                 No se hace nada, ya que esto sería un caso que no debería de darse
+                            elif tipo == config.VENTILADOR_PWM:                                         #             Si se está ante un ventilador PWM
+                                acceso.ChangeDutyCycle(velocidad * 100)                                 #                 Se cambia el ciclo de ejecución en función de la cordenada anteriormente asignada
 
-                        i += 1                                                                          #         Aumento del contador
+                            else:                                                                       #             Si se está ante cualquier otro
+                                pass                                                                    #                 No se hace nada, ya que esto sería un caso que no debería de darse
+
+                            i += 1                                                                      #         Aumento del contador
 
                 sleep(self._config.PAUSA)                                                               #     Pausa hasta la nueva comprobación
 

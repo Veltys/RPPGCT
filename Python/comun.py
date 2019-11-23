@@ -238,13 +238,17 @@ class app(object):
                             if DEBUG:
                                 print('Proceso  #', os.getpid(), "\tPreparando el puerto GPIO", puerto[0], sep = '')
 
-                            if puerto[1] == self._config.RELE or puerto[1] == self._config.LED or puerto[1] == self._config.LED_PWM:
+                            if puerto[1] == self._config.RELE           \
+                            or puerto[1] == self._config.LED            \
+                            or puerto[1] == self._config.LED_PWM        \
+                            or puerto[1] == self._config.VENTILADOR     \
+                            or puerto[1] == self._config.VENTILADOR_PWM :
                                 if DEBUG:
                                     print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", puerto[0], ' como salida', sep = '')
 
                                 GPIO.setup(puerto[0], GPIO.OUT, initial = GPIO.LOW if puerto[2] else GPIO.HIGH)
 
-                                if puerto[1] == self._config.LED_PWM:
+                                if puerto[1] == self._config.LED_PWM or puerto[1] == self._config.VENTILADOR_PWM:
                                     self._config.GPIOS[i][j][2] = GPIO.PWM(puerto[0], self._config.FRECUENCIA)
 
                                     self._config.GPIOS[i][j][2].start(0)
