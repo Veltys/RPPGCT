@@ -176,7 +176,7 @@ class temperatura_config(config_global):                                        
                             [[16, config_global.LED_PWM         , None, True , 'Verde'                      ]],
                             [[20, config_global.LED_PWM         , None, True , 'Azul'                       ]],
                             [[26, config_global.LED             , None, True , 'Alarma'                     ]],
-                            [[18, config_global.VENTILADOR_PWM  , None, True , 'Alarma'                     ]],
+                            [[18, config_global.VENTILADOR_PWM  , None, True , 'Ventilador'                 ]],
                           ]
 
     PAUSA               = 60
