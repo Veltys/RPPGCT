@@ -101,6 +101,7 @@ class temperatura(comun.app):
 
                         else:                                                                           #         En cualquier otro caso, se habrá de interpolar
                             velocidad = ((temperatura - self._config.VELOCIDADES[menor][0]) / (self._config.VELOCIDADES[mayor][0] - self._config.VELOCIDADES[menor][0])) * (self._config.VELOCIDADES[mayor][1] - self._config.VELOCIDADES[menor][1]) + self._config.VELOCIDADES[menor][1]
+                            velocidad = round(velocidad, 2)
 
                     else:                                                                               #         Si sí
                         velocidad = self._config.VELOCIDADES[igual][1]                                  #             Se almacena su valor para posterior uso
