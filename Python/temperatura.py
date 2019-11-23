@@ -94,11 +94,11 @@ class temperatura(comun.app):
 
                             break
 
-                    if not(igual):                                                                      #         Si no existe un elemento igual, puede que haya que interpolar
-                        if not(mayor):                                                                  #         Si valor mayor no se ha modificado e igual tampoco, se está ante un valor mayor que el máximo
+                    if igual is False:                                                                  #         Si no existe un elemento igual, puede que haya que interpolar
+                        if mayor is False:                                                              #         Si valor mayor no se ha modificado e igual tampoco, se está ante un valor mayor que el máximo
                             velocidad = self._config.VELOCIDADES[len(self._config.VELOCIDADES) - 1][1]  #             Se establece la velocidad al final de los puntos
 
-                        elif not(menor):                                                                #         Si valor menor no se ha modificado e igual tampoco, se está ante un valor menor que el mínimo
+                        elif menor is False:                                                            #         Si valor menor no se ha modificado e igual tampoco, se está ante un valor menor que el mínimo
                             velocidad = self._config.VELOCIDADES[0][1]                                  #             Se establece la velocidad al inicial de los puntos
 
                         else:                                                                           #         En cualquier otro caso, se habrá de interpolar
