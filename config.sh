@@ -3,7 +3,7 @@
 # Title         : config.sh
 # Description   : Almacena la configuración necesaria para el resto de scripts de bash
 # Author        : Veltys
-# Date          : 2018-11-22
+# Date          : 2019-11-22
 # Version       : 1.4.1
 # Usage         : source config.sh
 # Notes         : 

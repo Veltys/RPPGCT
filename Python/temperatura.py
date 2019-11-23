@@ -5,8 +5,8 @@
 # Title         : temperatura.py
 # Description   : Sistema indicador led de la temperatura del procesador en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
 # Author        : Veltys
-# Date          : 2019-06-22
-# Version       : 2.3.2
+# Date          : 2019-06-23
+# Version       : 3.0.0
 # Usage         : python3 temperatura.py
 # Notes         : Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual apaga todos los leds hasta que esta misma señal sea recibida de nuevo
