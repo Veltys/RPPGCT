@@ -82,10 +82,8 @@ class temperatura(comun.app):
                         if velocidades[0] < temperatura:                                                #             Cáculo del elemento menor
                             menor = i
 
-                        elif velocidades[0] == temperatura:                                             #             Cáculo del elemento igual, si lo hay y del mayor
+                        elif velocidades[0] == temperatura:                                             #             Cáculo del elemento igual
                             igual = i
-
-                            mayor = i + 1
 
                             break
 
