@@ -5,8 +5,8 @@
 # Title         : config.py
 # Description   : Módulo configurador para ser importado en el resto de módulos o sistemas que lo necesiten
 # Author        : Veltys
-# Date          : 2019-11-22
-# Version       : 1.12.1
+# Date          : 2019-11-24
+# Version       : 1.12.2
 # Usage         : import config | from config import <clase>
 # Notes         : A título ilustrativo, a se ofrece una configuración por defecto (la mía, para ser exactos)
 
@@ -28,7 +28,7 @@ class config_global(object):                                                    
     SONDA               = 40
 
     PYDEV_REMOTE_PATHS  = [
-                            ('/home/usuario/.../proyecto-local', '/ruta/al/proyecto/remoto'),
+                            (r'/home/usuario/.../proyecto-local', r'/ruta/al/proyecto/remoto'),
                           ]
 
 
