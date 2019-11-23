@@ -82,11 +82,17 @@ class temperatura(comun.app):
                         if velocidades[0] < temperatura:                                                #             Cáculo del elemento menor
                             menor = i
 
-                        elif velocidades[0] > temperatura:                                              #             Cáculo del elemento mayor
+                        elif velocidades[0] == temperatura:                                             #             Cáculo del elemento igual, si lo hay y del mayor
+                            igual = i
+
+                            mayor = i + 1
+
+                            break
+
+                        elif velocidades[0] > temperatura:                                              #             Cáculo del elemento mayor, si no hay igual
                             mayor = i
 
-                        elif velocidades[0] == temperatura:                                             #             Cáculo del elemento igual, si lo hay
-                            igual = i
+                            break
 
                     if not(igual):                                                                      #         Si no existe un elemento igual, se ha de interpolar
                         velocidad = ((temperatura - self._config.VELOCIDADES[menor][0]) / (self._config.VELOCIDADES[mayor][0] - self._config.VELOCIDADES[menor][0])) * (self._config.VELOCIDADES[mayor][1] - self._config.VELOCIDADES[menor][1]) + self._config.VELOCIDADES[menor][1]
