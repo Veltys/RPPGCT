@@ -76,7 +76,7 @@ class temperatura(comun.app):
                     else:                                                                               #         Está igual o por encima del valor máximo
                         j = 3                                                                           #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
 
-                    igual = False
+                    igual = mayor = menor = False                                                       #         Inicialización de variables
 
                     for i, velocidades in enumerate(self._config.VELOCIDADES):                          #         Se recorre la tupla de temperaturas y velocidades
                         if velocidades[0] < temperatura:                                                #             Cáculo del elemento menor
@@ -94,8 +94,15 @@ class temperatura(comun.app):
 
                             break
 
-                    if not(igual):                                                                      #         Si no existe un elemento igual, se ha de interpolar
-                        velocidad = ((temperatura - self._config.VELOCIDADES[menor][0]) / (self._config.VELOCIDADES[mayor][0] - self._config.VELOCIDADES[menor][0])) * (self._config.VELOCIDADES[mayor][1] - self._config.VELOCIDADES[menor][1]) + self._config.VELOCIDADES[menor][1]
+                    if not(igual):                                                                      #         Si no existe un elemento igual, puede que haya que interpolar
+                        if not(mayor):                                                                  #         Si valor mayor no se ha modificado e igual tampoco, se está ante un valor mayor que el máximo
+                            velocidad = self._config.VELOCIDADES[len(self._config.VELOCIDADES) - 1][1]  #             Se establece la velocidad al final de los puntos
+
+                        elif not(menor):                                                                #         Si valor menor no se ha modificado e igual tampoco, se está ante un valor menor que el mínimo
+                            velocidad = self._config.VELOCIDADES[0][1]                                  #             Se establece la velocidad al inicial de los puntos
+
+                        else:                                                                           #         En cualquier otro caso, se habrá de interpolar
+                            velocidad = ((temperatura - self._config.VELOCIDADES[menor][0]) / (self._config.VELOCIDADES[mayor][0] - self._config.VELOCIDADES[menor][0])) * (self._config.VELOCIDADES[mayor][1] - self._config.VELOCIDADES[menor][1]) + self._config.VELOCIDADES[menor][1]
 
                     else:                                                                               #         Si sí
                         velocidad = self._config.VELOCIDADES[igual][1]                                  #             Se almacena su valor para posterior uso
