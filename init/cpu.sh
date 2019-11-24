@@ -13,8 +13,8 @@
 # Title         : cpu
 # Description   : Script de init.d para el arranque automático del sistema "cpu.py".
 # Author        : Veltys
-# Date          : 07-07-2017
-# Version       : 1.1.1
+# Date          : 2019-11-22
+# Version       : 1.1.2
 # Usage         : /etc/init.d/cpu {start|stop|restart|status}
 # Notes         : 
 

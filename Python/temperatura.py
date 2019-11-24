@@ -5,8 +5,8 @@
 # Title         : temperatura.py
 # Description   : Sistema indicador led de la temperatura del procesador en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
 # Author        : Veltys
-# Date          : 20-06-2019
-# Version       : 2.3.1
+# Date          : 2019-06-23
+# Version       : 3.0.0
 # Usage         : python3 temperatura.py
 # Notes         : Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual apaga todos los leds hasta que esta misma señal sea recibida de nuevo
@@ -30,6 +30,9 @@ import comun                                                                    
 
 from time import sleep                                                                                  # Para hacer pausas
 from subprocess import check_output                                                                     # Llamadas a programas externos, recuperando su respuesta
+
+if DEBUG_REMOTO:
+    from pydevd_file_utils import setup_client_server_paths                                             # Configuración de las rutas Eclipse ➡
 
 try:
     from config import temperatura_config as config                                                     # Configuración
@@ -73,23 +76,57 @@ class temperatura(comun.app):
                     else:                                                                               #         Está igual o por encima del valor máximo
                         j = 3                                                                           #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
 
+                    igual = mayor = menor = False                                                       #         Inicialización de variables
+
+                    for i, velocidades in enumerate(self._config.VELOCIDADES):                          #         Se recorre la tupla de temperaturas y velocidades
+                        if velocidades[0] < temperatura:                                                #             Cáculo del elemento menor
+                            menor = i
+
+                        elif velocidades[0] == temperatura:                                             #             Cáculo del elemento igual
+                            igual = i
+
+                            break
+
+                        elif velocidades[0] > temperatura:                                              #             Cáculo del elemento mayor, si no hay igual
+                            mayor = i
+
+                            break
+
+                    if igual is False:                                                                  #         Si no existe un elemento igual, puede que haya que interpolar
+                        if mayor is False:                                                              #         Si valor mayor no se ha modificado e igual tampoco, se está ante un valor mayor que el máximo
+                            velocidad = self._config.VELOCIDADES[len(self._config.VELOCIDADES) - 1][1]  #             Se establece la velocidad al final de los puntos
+
+                        elif menor is False:                                                            #         Si valor menor no se ha modificado e igual tampoco, se está ante un valor menor que el mínimo
+                            velocidad = self._config.VELOCIDADES[0][1]                                  #             Se establece la velocidad al inicial de los puntos
+
+                        else:                                                                           #         En cualquier otro caso, se habrá de interpolar
+                            velocidad = ((temperatura - self._config.VELOCIDADES[menor][0]) / (self._config.VELOCIDADES[mayor][0] - self._config.VELOCIDADES[menor][0])) * (self._config.VELOCIDADES[mayor][1] - self._config.VELOCIDADES[menor][1]) + self._config.VELOCIDADES[menor][1]
+                            velocidad = round(velocidad, 2)
+
+                    else:                                                                               #         Si sí
+                        velocidad = self._config.VELOCIDADES[igual][1]                                  #             Se almacena su valor para posterior uso
+
                     i = 0                                                                               #         Contador de ciclos del bucle
 
-                    for gpio, tipo, acceso, activacion, _ in self._config.GPIOS:                        #         Se recorre la lista de leds
-                        if tipo == config.RELE:                                                         #             Si se está ante un relé
-                            if j in acceso:                                                             #                 Si se está en un escenario de activación
-                                GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)                #                     Se enciende
+                    for puertos in self._config.GPIOS:                                                  #         Se recorre la lista de leds
+                        for gpio, tipo, acceso, activacion, _ in puertos:
+                            if tipo == config.LED:                                                      #             Si se está ante un led
+                                if j >= 3:                                                              #                 Si hay que activarlo
+                                    GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)            #                     Se activa
 
-                            else:                                                                       #                 En caso contrario
-                                GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)                #                     Se apaga
+                                else:                                                                   #                 Si no
+                                    GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)            #                     Se desactiva
 
-                        elif tipo == config.LED_PWM:                                                    #             Si se está ante un led PWM
-                            acceso.ChangeDutyCycle(self._config.COLORES[j][i] * 100)                    #                 Se cambia el ciclo de ejecución en función de la cordenada anteriormente asignada
+                            elif tipo == config.LED_PWM:                                                #             Si se está ante un led PWM
+                                acceso.ChangeDutyCycle(self._config.COLORES[j][i] * 100)                #                 Se cambia el ciclo de ejecución en función de la cordenada anteriormente asignada
 
-                        else:                                                                           #             Si se está ante cualquier otro
-                            pass                                                                        #                 No se hace nada, ya que esto sería un caso que no debería de darse
+                            elif tipo == config.VENTILADOR_PWM:                                         #             Si se está ante un ventilador PWM
+                                acceso.ChangeDutyCycle(velocidad * 100)                                 #                 Se cambia el ciclo de ejecución en función de la cordenada anteriormente asignada
 
-                        i += 1                                                                          #         Aumento del contador
+                            else:                                                                       #             Si se está ante cualquier otro
+                                pass                                                                    #                 No se hace nada, ya que esto sería un caso que no debería de darse
+
+                            i += 1                                                                      #         Aumento del contador
 
                 sleep(self._config.PAUSA)                                                               #     Pausa hasta la nueva comprobación
 
@@ -108,6 +145,8 @@ class temperatura(comun.app):
 
 def main(argv):
     if DEBUG_REMOTO:
+        setup_client_server_paths(config.PYDEV_REMOTE_PATHS)
+
         pydevd.settrace(config.IP_DEP_REMOTA)
 
     app = temperatura(config, os.path.basename(argv[0]))

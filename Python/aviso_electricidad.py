@@ -5,8 +5,8 @@
 # Title         : aviso_electricidad.py
 # Description   : Sistema de aviso en caso de corte de electricidad
 # Author        : Veltys
-# Date          : 01-07-2018
-# Version       : 1.1.0
+# Date          : 2019-11-22
+# Version       : 1.1.2
 # Usage         : python3 aviso_electricidad.py
 # Notes         :
 
@@ -44,7 +44,7 @@ def main(argv):
 
             sleep(config.PAUSA)                                                                                                     #     Pausa para reintentar
 
-    if enviado == False:                                                                                                            # En caso de que haya sido imposible
+    if not(enviado):                                                                                                                # En caso de que haya sido imposible
         print('Imposible reenviar el correo despues de', config.REINTENTOS, 'intentos')                                             #    Se informa de ello
 
 

@@ -5,8 +5,8 @@
 # Title         : comun.py
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
-# Date          : 24-06-2019
-# Version       : 0.5.3
+# Date          : 2019-11-22
+# Version       : 0.6.2
 # Usage         : import comun | from comun import <clase>
 # Notes         : ...
 
@@ -51,7 +51,7 @@ class app(object):
             - Asigna señales a sus correspondientes funciones
         '''
 
-        self._bloqueo           = bloqueo(nombre) if not(nombre == False) else False    # No siempre va a ser necesario realizar un bloqueo
+        self._bloqueo           = bloqueo(nombre) if nombre else False                  # No siempre va a ser necesario realizar un bloqueo
         self._config            = config
         self._estado_conexion   = estados_conexion.DESCONECTADO
         self._modo_apagado      = False
@@ -97,7 +97,7 @@ class app(object):
 
                 mensaje = self._enviar_y_recibir('hola ' + str(self._VERSION_PROTOCOLO))
 
-                if mensaje == False:                                                    # Si hay algún fallo al conectar con el servidor
+                if not(mensaje):                                                        # Si hay algún fallo al conectar con el servidor
                     return False                                                        #     Se informa del fallo
 
                 elif(mensaje[:2] == 'ok'):                                              # Si el servidor devuelve un "ok" (significa que la versión del protocolo del servidor es la misma)
@@ -141,7 +141,7 @@ class app(object):
                 - Si sí, recibe el mensaje y lo retorna
         '''
 
-        if self._socket != False:
+        if self._socket:
             try:                                                                        # Bloque try
                 self._socket.send(comando.encode('utf-8'))                              #     Se manda el mensaje
 
@@ -173,14 +173,14 @@ class app(object):
             return False
 
 
-    def _sig_apagado(self, signum, frame):
+    def _sig_apagado(self, signum, frame):                                              # @UnusedVariable
         ''' Funcion "wrapper" para el procesamiento de la señal de apagado
         '''
 
         self.apagado()
 
 
-    def _sig_cerrar(self, signum, frame):
+    def _sig_cerrar(self, signum, frame):                                               # @UnusedVariable
         ''' Funcion "wrapper" para el procesamiento de la señal de cierre
         '''
 
@@ -188,7 +188,7 @@ class app(object):
         os._exit(0)
 
 
-    def _sig_test(self, signum, frame):
+    def _sig_test(self, signum, frame):                                                 # @UnusedVariable
         ''' Funcion "wrapper" para el procesamiento de la señal de pruebas
         '''
 
@@ -203,12 +203,13 @@ class app(object):
 
         self._modo_apagado = not(self._modo_apagado)                                    # Se comuta el modo apagado
 
-        for gpio, tipo, acceso, activacion, _ in self._config.GPIOS:                    # Se recorre la lista de puertos GPIO
-            if tipo == self._config.LED:                                                #     Si se está ante un led
-                GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)                #         Se "apaga" de modo simple
+        for puertos in self._config.GPIOS:                                              # Se recorre la lista de puertos GPIO
+            for gpio, tipo, acceso, activacion, _ in puertos:
+                if tipo == self._config.LED:                                            #     Si se está ante un led
+                    GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)            #         Se "apaga" de modo simple
 
-            elif tipo == self._config.LED_PWM:                                          #     Si se está ante un led controlado por PWM
-                acceso.ChangeDutyCycle(0)                                               #         Se "apaga" de modo ciclo de trabajo
+                elif tipo == self._config.LED_PWM:                                      #     Si se está ante un led controlado por PWM
+                    acceso.ChangeDutyCycle(0)                                           #         Se "apaga" de modo ciclo de trabajo
 
 
     def arranque(self):
@@ -219,8 +220,8 @@ class app(object):
             - Configura los puertos GPIO
         '''
 
-        if self._bloqueo == False or not(self._bloqueo.comprobar()):
-            if self._bloqueo == False or self._bloqueo.bloquear():
+        if not(self._bloqueo) or not(self._bloqueo.comprobar()):
+            if not(self._bloqueo) or self._bloqueo.bloquear():
                 try:
                     self._config.GPIOS
 
@@ -232,31 +233,34 @@ class app(object):
 
                     GPIO.setwarnings(DEBUG)                                             # De esta forma alertará de los problemas sólo cuando se esté depurando
 
-                    for i, puerto in enumerate(self._config.GPIOS):                     # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
-                        self._config.GPIOS[i] = list(puerto)                            #     Se necesita transformar en lista la tupla, ya que es posible que haga falta modificar su contenido
-
-                        if DEBUG:
-                            print('Proceso  #', os.getpid(), "\tPreparando el puerto GPIO", puerto[0], sep = '')
-
-                        if puerto[1] < self._config.BOTON:
+                    for i, puertos in enumerate(self._config.GPIOS):                    # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
+                        for j, puerto in enumerate(puertos):
                             if DEBUG:
-                                print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", puerto[0], ' como salida', sep = '')
+                                print('Proceso  #', os.getpid(), "\tPreparando el puerto GPIO", puerto[0], sep = '')
 
-                            GPIO.setup(puerto[0], GPIO.OUT, initial = GPIO.LOW if puerto[2] else GPIO.HIGH)
+                            if puerto[1] == self._config.RELE           \
+                            or puerto[1] == self._config.LED            \
+                            or puerto[1] == self._config.LED_PWM        \
+                            or puerto[1] == self._config.VENTILADOR     \
+                            or puerto[1] == self._config.VENTILADOR_PWM :
+                                if DEBUG:
+                                    print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", puerto[0], ' como salida', sep = '')
 
-                            if puerto[1] == self._config.LED_PWM:
-                                self._config.GPIOS[i][2] = GPIO.PWM(puerto[0], self._config.FRECUENCIA)
+                                GPIO.setup(puerto[0], GPIO.OUT, initial = GPIO.LOW if puerto[2] else GPIO.HIGH)
 
-                                self._config.GPIOS[i][2].start(0)
+                                if puerto[1] == self._config.LED_PWM or puerto[1] == self._config.VENTILADOR_PWM:
+                                    self._config.GPIOS[i][j][2] = GPIO.PWM(puerto[0], self._config.FRECUENCIA)
+
+                                    self._config.GPIOS[i][j][2].start(0)
+
+                                else:
+                                    GPIO.output(puerto[0], GPIO.LOW if puerto[3] else GPIO.HIGH)
 
                             else:
-                                GPIO.output(puerto[0], GPIO.LOW if puerto[3] else GPIO.HIGH)
+                                if DEBUG:
+                                    print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", puerto[0], 'como entrada', sep = '')
 
-                        else:
-                            if DEBUG:
-                                print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", self._config.GPIOS[i][0], 'como entrada', sep = '')
-
-                            GPIO.setup(self._config.GPIOS[i][0], GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
+                                GPIO.setup(puerto[0], GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 
                 return 0
 
@@ -312,13 +316,14 @@ class app(object):
             pass                                                                        #     Sin problema
 
         else:                                                                           # Si sí los hay
-            for _, tipo, acceso, _, _ in self._config.GPIOS:                            #     Se recorren los pines GPIO
-                if tipo == self._config.LED_PWM:                                        #         Si el pin es un led controlado por PWM
-                    acceso.stop()                                                       #             Se le ordena parar
+            for puertos in self._config.GPIOS:                                          #     Se recorren los pines GPIO
+                for _, tipo, acceso, _, _ in puertos:
+                    if tipo == self._config.LED_PWM:                                    #         Si el pin es un led controlado por PWM
+                        acceso.stop()                                                   #             Se le ordena parar
 
-            GPIO.cleanup()                                                              #     Se liberan los pines GPIO
+                GPIO.cleanup()                                                          #     Se liberan los pines GPIO
 
-        if not(self._bloqueo == False):                                                 # Si hay un boqueo
+        if self._bloqueo:                                                               # Si hay un boqueo
             self._bloqueo.desbloquear()                                                 #     Se desbloquea
 
         # TODO: PID
@@ -332,7 +337,7 @@ class app(object):
                 - Actúa como modificador de la variable "_estado_conexion" de la clase
         '''
 
-        if estado == False:
+        if not(estado):
             return self._estado_conexion
 
         else:
@@ -377,12 +382,13 @@ class app(object):
             if DEBUG:
                 print('Encendiendo leds')
 
-            for gpio, tipo, acceso, activacion, _ in self._config.GPIOS:                #     Se recorre la lista de puertos GPIO
-                if tipo == self._config.RELE or tipo == self._config.LED:               #         Si se está ante un relé o un led normal
-                    GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)            #             Se "enciende" de modo normal
+            for puertos in self._config.GPIOS:                                          #     Se recorre la lista de puertos GPIO
+                for gpio, tipo, acceso, activacion, _ in puertos:
+                    if tipo == self._config.RELE or tipo == self._config.LED:           #         Si se está ante un relé o un led normal
+                        GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)        #             Se "enciende" de modo normal
 
-                elif tipo == self._config.LED_PWM:                                      #         Si se está ante un led controlado por PWM
-                    acceso.ChangeDutyCycle(100)                                         #             Se "enciende" de modo ciclo de trabajo
+                    elif tipo == self._config.LED_PWM:                                  #         Si se está ante un led controlado por PWM
+                        acceso.ChangeDutyCycle(100)                                     #             Se "enciende" de modo ciclo de trabajo
 
             if DEBUG:
                 print('Esperando', self._config.PAUSA, 'segundos')

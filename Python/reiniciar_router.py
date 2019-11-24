@@ -5,8 +5,8 @@
 # Title         : reiniciar_router.py
 # Description   : Sistema que comprueba si hay acceso a Internet. Si no, manda una señal en un puerto GPIO determinado
 # Author        : Veltys
-# Date          : 22-06-2019
-# Version       : 2.2.4
+# Date          : 2019-11-22
+# Version       : 2.2.5
 # Usage         : python3 reiniciar_router.py
 # Notes         : La idea es conectar un relé a este GPIO y al mismo la alimentación del sistema de acceso a Internet
 #                 Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
@@ -28,6 +28,9 @@ if DEBUG_REMOTO:
     import pydevd                                                                           # Depuración remota
 
 from time import sleep                                                                      # Gestión de pausas
+
+if DEBUG_REMOTO:
+    from pydevd_file_utils import setup_client_server_paths                                 # Configuración de las rutas Eclipse ➡
 
 try:
     from config import reiniciar_router_config as config                                    # Configuración
@@ -100,6 +103,8 @@ class reiniciar_router(comun.app):
 
 def main(argv):
     if DEBUG_REMOTO:
+        setup_client_server_paths(config.PYDEV_REMOTE_PATHS)
+
         pydevd.settrace(config.IP_DEP_REMOTA)
 
     app = reiniciar_router(config, os.path.basename(argv[0]))

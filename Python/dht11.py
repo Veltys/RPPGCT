@@ -6,8 +6,8 @@
 # Description       : Sistema gestor de sonda de temperatura DHT11
 # Author            : Veltys
 # Original author   : szazo
-# Date              : 23-08-2018
-# Version           : 2.0.1
+# Date              : 2019-11-22
+# Version           : 2.1.2
 # Usage             : python3 dht11.py o from dht11 import
 # Notes             : ...
 
@@ -39,6 +39,9 @@ import comun                                                                    
 
 from threading import Thread                                                                                # Capacidades multihilo
 from time import sleep                                                                                      # Para hacer pausas
+
+if DEBUG_REMOTO:
+    from pydevd_file_utils import setup_client_server_paths                                                 # Configuración de las rutas Eclipse ➡
 
 try:
     from config import dht11_config as config                                                               # Configuración
@@ -73,7 +76,7 @@ class dht11(comun.app):
                 - Actúa como modificador de la variable "_argumentos" de la clase
         '''
 
-        if argumentos == False:
+        if not(argumentos):
             return self._argumentos
 
         else:
@@ -353,7 +356,7 @@ class dht11_hijos(comun.app):
 
 
     def bucle(self):
-        ''' Realiza (en bucle no en este caso) las tareas asignadas a este sistema
+        ''' Realiza (en bucle no, en este caso) las tareas asignadas a este sistema
         '''
 
         resultado = self.leer()
@@ -459,7 +462,11 @@ class dht11_hijos(comun.app):
                 return resultado_dht11(ERR_CRC, 0, 0)
 
             else:
-                return resultado_dht11(ERR_NO_ERROR, bytess[2], bytess[0])
+                temperatura = bytess[2] + float(bytess[3]) / 10
+
+                humedad = bytess[0] + float(bytess[1]) / 10
+
+                return resultado_dht11(resultado_dht11.ERR_NO_ERROR, temperatura, humedad)
 
 
 class resultado_dht11:                                                          	                        # Clase resultado devuelto por el método dht11.leer()
@@ -479,7 +486,9 @@ class resultado_dht11:                                                          
 
 def main(argv):
     if DEBUG_REMOTO:
-        pydevd.settrace(config.IP_DEP_REMOTA)
+        setup_client_server_paths(config.PYDEV_REMOTE_PATHS)
+
+        pydevd.settrace(config.IP_DEP_REMOTA, trace_only_current_thread = False)
 
     app = dht11(config, os.path.basename(argv[0]))
 

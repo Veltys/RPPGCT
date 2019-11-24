@@ -6,8 +6,8 @@
 # Description       : Módulo auxiliar para la comprobación de si hay o no Internet
 # Original author   : linuxitux
 # Author            : Veltys
-# Date              : 04-07-2018
-# Version           : 2.0.5
+# Date              : 2019-22-11
+# Version           : 2.0.7
 # Usage             : python3 internet.py o from internet import hay_internet
 # Notes             : Se debe poder generar tráfico ICMP (ping), es decir, no debe ser bloqueado por un cortafuegos
 #                     Este módulo está pensado para ser llamado desde otros módulos y no directamente, aunque si es llamado de esta forma, también hará su trabajo e informará al usuario de si hay conexión a Internet
@@ -32,9 +32,9 @@ def ping(host):
     '''
 
     if sys.platform.startswith('win'):                                          # Si la plataforma en la que nos hallamos es Windows
-        ret = call(['ping', '-n', '3', '-w', '5000', host], stdout = open(os.devnull, 'w'), stderr = open(os.devnull, 'w'))
+        ret = call(['C:\Windows\System32\PING.EXE', '-n', '3', '-w', '5000', host], stdout = open(os.devnull, 'w'), stderr = open(os.devnull, 'w'))
     else:                                                                       # En caso contrario, se asume UNIX (o POSIX)
-        ret = call(['ping', '-c', '3', '-W', '5', host], stdout = open(os.devnull, 'w'), stderr = open(os.devnull, 'w'))
+        ret = call(['/bin/ping', '-c', '3', '-W', '5', host], stdout = open(os.devnull, 'w'), stderr = open(os.devnull, 'w'))
 
     return ret == 0                                                             # Se evalúa si el resultado es el esperado y se devuelve éste
 
