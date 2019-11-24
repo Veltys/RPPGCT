@@ -4,24 +4,31 @@ Todos los cambios importantes en este proyecto serán documentados en este docum
 Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Por hacer (*TODO*)]
+- [ ] Implementar comandos por archivo en **domotica_cliente.py**.
+- [ ] Hacer un cliente en Django, que permita una gestión más visual del sistema.
+- [ ] Rehacer **dht11.py** de manera que pueda ser configurado para leer individualmente cada sensor.
+- [ ] ¡Mucho más!
+
+
+## [Hecho (*DONE*)]
 - [x] Crear una rama (*branch*) de *testing*.
 - [x] Pasar **boton.py** a dicha rama.
 - [x] Testear en dicha rama el instalador.
 - [x] Acabar de hacer el resto de scripts de init.d.
 - [x] Añadir el control de relés.
-- [ ] ~~Añadir el configurador general.~~
-- [ ] ~~Añadir el control de GPIOs general: leds y relés.~~
 - [x] Implementar la domótica remota.
 - [x] Cambiar el comando *conectar* para que sea un *conectar* y *listar* en **domotica_cliente.py** ~~y **domotica_servidor.py**~~.
 - [x] Implementar comando *estado* para ver en qué estado se encuentra un puerto GPIO en **domotica_cliente.py** y **domotica_servidor.py**.
 - [x] Implementar comandos por parámetros en **domotica_cliente.py**.
-- [ ] Implementar comandos por archivo en **domotica_cliente.py**.
 - [x] Integrar el control de relés en un archivo separado.
+
+
+## [Cancelado]
+- [ ] ~~Añadir el configurador general.~~
+- [ ] ~~Añadir el control de GPIOs general: leds y relés.~~
 - [ ] ~~Añadir control de versiones en la instalación.~~
 - [ ] ~~Hacer que **actualizador.sh** sea "inteligente" y actualice en función de la versión.~~
-- [ ] Hacer un cliente en Django, que permita una gestión más visual del sistema.
-- [ ] Rehacer **dht11.py** de manera que pueda ser configurado para leer individualmente cada sensor
-- [ ] ¡Mucho más!
+
 
 
 ## [0.10.0] - 2019-11-24
