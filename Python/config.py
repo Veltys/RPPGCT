@@ -111,7 +111,7 @@ class domotica_servidor_config(domotica_cliente_config):                        
                                                                                                                 # Advertencia: Debe existir una entrada por cada hijo que se genere, no por cada sub-lista de GPIOS
                             (
                                 (None                   , False, False),
-                            ),      
+                            ),
 
                             (
                                 (None                   , False, False)
