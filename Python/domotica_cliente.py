@@ -101,7 +101,7 @@ class domotica_cliente(comun.app):
         if self._estado_conexion >= comun.estados_conexion.LISTA_CARGADA:                                           # Si el estado de la conexión es el adecuado
             mensaje = self._enviar_y_recibir(comando, True)                                                         #     Se manda el comando y se recibe el mensaje
 
-            if not(mensaje):                                                                                        #     Si se ha recibido un mensaje
+            if mensaje is not(False):                                                                               #     Si se ha recibido un mensaje
                 if mensaje[0:4] == 'info':                                                                          #         Si el mensaje es válido
                     estado = int(mensaje[6:])                                                                       #         Se preprocesa una parte
 
