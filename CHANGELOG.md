@@ -7,6 +7,7 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - [ ] Implementar comandos por archivo en **domotica_cliente.py**.
 - [ ] Hacer un cliente en Django, que permita una gestión más visual del sistema.
 - [ ] Rehacer **dht11.py** de manera que pueda ser configurado para leer individualmente cada sensor.
+- [ ] Pasar los scripts de inicio a *systemctl*.
 - [ ] ¡Mucho más!
 
 
