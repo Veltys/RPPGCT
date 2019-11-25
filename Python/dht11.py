@@ -6,8 +6,8 @@
 # Description       : Sistema gestor de sonda de temperatura DHT11
 # Author            : Veltys
 # Original author   : szazo
-# Date              : 2019-11-22
-# Version           : 2.1.2
+# Date              : 2019-11-25
+# Version           : 2.1.4
 # Usage             : python3 dht11.py o from dht11 import
 # Notes             : ...
 
@@ -257,7 +257,7 @@ class dht11_hijos(comun.app):
         ''' Envío del activador de la sonda y espera de la pausa para posteriormente recibir
         '''
 
-        GPIO.output(self._config.GPIOS[self._id_hijo][0], salida)
+        GPIO.output(self._config.GPIOS[self._id_hijo][0][0], salida)
 
         sleep(pausa)
 
@@ -338,7 +338,7 @@ class dht11_hijos(comun.app):
 
 
         while True:
-            actual = GPIO.input(self._config.GPIOS[self._id_hijo][0])
+            actual = GPIO.input(self._config.GPIOS[self._id_hijo][0][0])
 
             datos.append(actual)
 
@@ -436,13 +436,13 @@ class dht11_hijos(comun.app):
         ''' Lee datos del sensor
         '''
 
-        GPIO.setup(self._config.GPIOS[self._id_hijo][0], GPIO.OUT)                                          # Modo de escritura
+        GPIO.setup(self._config.GPIOS[self._id_hijo][0][0], GPIO.OUT)                                       # Modo de escritura
 
         self._enviar_y_esperar(GPIO.HIGH, 0.05)                                                             # Señal de lectura
 
         self._enviar_y_esperar(GPIO.LOW, 0.02)                                                              # Fin de la señal de lectura
 
-        GPIO.setup(self._config.GPIOS[self._id_hijo][0], GPIO.IN, GPIO.PUD_UP)                              # Cambiando a modo lectura
+        GPIO.setup(self._config.GPIOS[self._id_hijo][0][0], GPIO.IN, GPIO.PUD_UP)                              # Cambiando a modo lectura
 
         datos = self._recoger_datos()                                                                       # Recibiendo datos
 
@@ -466,7 +466,7 @@ class dht11_hijos(comun.app):
 
                 humedad = bytess[0] + float(bytess[1]) / 10
 
-                return resultado_dht11(resultado_dht11.ERR_NO_ERROR, temperatura, humedad)
+                return resultado_dht11(ERR_NO_ERROR, temperatura, humedad)
 
 
 class resultado_dht11:                                                          	                        # Clase resultado devuelto por el método dht11.leer()
