@@ -20,9 +20,6 @@ Colección de utilidades varias para el control GPIO en Python
 - **temperaturas.py**: Sistema indicador led de la temperatura del procesador en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
 
 
-## Historial de versiones
-Movido a [CHANGELOG.md](CHANGELOG.md).
-
 ## Agradecimientos, fuentes consultadas y otros créditos
 * A la [documentación oficial de Python](https://docs.python.org/3/), por motivos evidentes.
 * A la [documentación del depurador remoto de PyDev](http://www.pydev.org/manual_adv_remote_debugger.html), porque la mayor parte del código se ejecuta en una Raspberry Pi y depurarlo en remoto en el PC es un lujo.
@@ -36,10 +33,6 @@ Movido a [CHANGELOG.md](CHANGELOG.md).
 * A *Pherkad*, por [la sección de "Control del acceso a los recursos. Bloqueos" en la web *python-para-impacientes.blogspot.com.es*](http://python-para-impacientes.blogspot.com.es/2016/12/threading-programacion-con-hilos-y-ii.html), la cual me ha evitado dolores de cabeza variados en **domotica_servidor.py**.
 * A *szazo*, por [su implementación de la lectura de la sonda de temperatura DHT11 en Python](https://github.com/szazo/DHT11_Python), la cuál he utilizado (adaptado) en mi **dht11.py**.
 * A *Olivier Lacan*, por [su excelente plantilla para archivos CHANGELOG.md](https://keepachangelog.com/es-ES/0.3.0/), la cuál he utilizado (adaptada) en mi **CHANGELOG.MD**.
-
-
-## Por hacer (*TODO*)
-Movido a [CHANGELOG.md](CHANGELOG.md).
 
 
 ## F. A. Q. (*Frequently Asked Questions*) o P. F. (Preguntas Frecuentes)
