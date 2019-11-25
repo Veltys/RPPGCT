@@ -5,8 +5,8 @@
 # Title         : comun.py
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
-# Date          : 2019-11-22
-# Version       : 0.6.2
+# Date          : 2019-11-25
+# Version       : 0.6.3
 # Usage         : import comun | from comun import <clase>
 # Notes         : ...
 
@@ -29,10 +29,11 @@ from pid import bloqueo                                                         
 
 
 class estados_conexion():
-    DESCONECTADO    = 0
-    CONECTADO       = 1
-    LISTA_CARGADA   = 2
-    LISTA_EXTENDIDA = 3
+    ERROR           = -1
+    DESCONECTADO    =  0
+    CONECTADO       =  1
+    LISTA_CARGADA   =  2
+    LISTA_EXTENDIDA =  3
 
 
 class app(object):

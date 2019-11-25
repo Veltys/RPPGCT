@@ -6,7 +6,7 @@
 # Description   : Módulo configurador para ser importado en el resto de módulos o sistemas que lo necesiten
 # Author        : Veltys
 # Date          : 2019-11-24
-# Version       : 1.12.2
+# Version       : 1.12.3
 # Usage         : import config | from config import <clase>
 # Notes         : A título ilustrativo, a se ofrece una configuración por defecto (la mía, para ser exactos)
 
@@ -182,6 +182,8 @@ class temperatura_config(config_global):                                        
     PAUSA               = 60
 
     TEMPERATURAS        = (40, 50, 60)                                                                          # TEMPERATURAS contiene las temperaturas de activación de cada etapa
+
+    VELOCIDAD_MINIMA    = 0.30                                                                                  # Velocidad mínima necesaria para el giro del ventilador
 
     VELOCIDADES         = (                                                                                     # VELOCIDADES contiene pares temperatura - velocidad del ventilador
                             (20, 0.00),

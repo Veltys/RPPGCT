@@ -6,7 +6,7 @@
 # Description   : Sistema indicador led de la temperatura del procesador en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
 # Author        : Veltys
 # Date          : 2019-06-23
-# Version       : 3.0.0
+# Version       : 3.0.1
 # Usage         : python3 temperatura.py
 # Notes         : Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual apaga todos los leds hasta que esta misma señal sea recibida de nuevo
@@ -102,6 +102,9 @@ class temperatura(comun.app):
                         else:                                                                           #         En cualquier otro caso, se habrá de interpolar
                             velocidad = ((temperatura - self._config.VELOCIDADES[menor][0]) / (self._config.VELOCIDADES[mayor][0] - self._config.VELOCIDADES[menor][0])) * (self._config.VELOCIDADES[mayor][1] - self._config.VELOCIDADES[menor][1]) + self._config.VELOCIDADES[menor][1]
                             velocidad = round(velocidad, 2)
+
+                        if velocidad > 0 and velocidad < self._config.VELOCIDAD_MINIMA:                 #         Ya calculada la velocidad, si ésta es menor que el mínimo que el ventilador requiere para su funcionamiento
+                            velocidad = self._config.VELOCIDAD_MINIMA                                   #             Se pondrá al mínimo de éste
 
                     else:                                                                               #         Si sí
                         velocidad = self._config.VELOCIDADES[igual][1]                                  #             Se almacena su valor para posterior uso
