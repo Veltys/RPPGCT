@@ -7,7 +7,7 @@
 # Author            : Veltys
 # Original author   : szazo
 # Date              : 2019-11-25
-# Version           : 2.1.3
+# Version           : 2.1.4
 # Usage             : python3 dht11.py o from dht11 import
 # Notes             : ...
 
@@ -466,7 +466,7 @@ class dht11_hijos(comun.app):
 
                 humedad = bytess[0] + float(bytess[1]) / 10
 
-                return resultado_dht11(resultado_dht11.ERR_NO_ERROR, temperatura, humedad)
+                return resultado_dht11(ERR_NO_ERROR, temperatura, humedad)
 
 
 class resultado_dht11:                                                          	                        # Clase resultado devuelto por el método dht11.leer()

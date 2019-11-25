@@ -32,9 +32,10 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 
 
 
-## [0.10.0] - 2019-11-25
+## [0.10.1] - 2019-11-25
 ### Arreglado
 - Acceso al puerto GPIO en **dht11.py**.
+- Devolución de resultado errónero en **dht11.py**.
 
 
 ## [0.10.0] - 2019-11-25
