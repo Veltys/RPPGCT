@@ -5,8 +5,8 @@
 # Title         : domotica_cliente.py
 # Description   : Parte cliente del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 2019-11-22
-# Version       : 1.1.13
+# Date          : 2019-11-25
+# Version       : 1.1.14
 # Usage         : python3 domotica_cliente.py [commandos]
 # Notes         : Parte cliente del sistema en el que se gestionarán pares de puertos GPIO
 
