@@ -81,21 +81,25 @@ class domotica_cliente(comun.app):
             mensaje = self._enviar_y_recibir(comando, False)                                                        #     Se manda el comando y se recibe el mensaje
 
             if mensaje and mensaje[0:4] == 'info':                                                                  #     Si se ha recibido un mensaje y es válido
-                print('Descripción del puerto GPIO' + comando[10:] + ': "' + mensaje[6:] + '"')                     #         Se imprime la parte relevante del comando y del mensaje
+                return mensaje[6:]                                                                                  #         Se devuelve
 
             else:                                                                                                   #     Si no
                 print('Error: Número de puerto GPIO no válido', file = sys.stderr)                                  #         Se informa de ello
                 print('Error: El número de puerto GPIO no es válido')
 
+                return ''                                                                                           #         Se devuelve el fallo
+
         else:                                                                                                       # Si no
             print('Error: Sin lista de puertos GPIO, estado de conexión inadecuado', file = sys.stderr)             #         Se informa de ello
             print('Error: Imposible solicitar una lista de puertos GPIO, no ' + self.estado_conexion_lenguaje_natural(self.estado_conexion() + 1))
+
+            return ''                                                                                               #         Se devuelve el fallo
 
 
     def __estado(self, comando):
         ''' Estado de puerto GPIO:
             - Si el estado de la conexión es el adecuado, solicita al servidor el estado del puerto dado, la normaliza y la devuelve
-            - Si no o en caso de fallo, devuelve una cadena vacía
+            - Si no o en caso de fallo, devuelve una -1
         '''
 
         if self._estado_conexion >= comun.estados_conexion.LISTA_CARGADA:                                           # Si el estado de la conexión es el adecuado
@@ -109,12 +113,21 @@ class domotica_cliente(comun.app):
                         return estado                                                                               #             Se devuelve la parte preprocesada
 
                     else:                                                                                           #         Si no
+                        print('Error: Respuesta del servidor no válida', file = sys.stderr)                         #         Se informa de ello
+                        print('Error: El servidor ha devuelto una respuesta no válida')
+
                         return -1                                                                                   #             Se devuelve -1
 
                 else:                                                                                               #         Si no
+                    print('Error: Respuesta del servidor incorrecta', file = sys.stderr)                            #         Se informa de ello
+                    print('Error: El servidor ha devuelto una respuesta incorrecta')
+
                     return -1                                                                                       #             Se devuelve -1
 
             else:                                                                                                   #     Si no
+                print('Error: Sin estado del puerto GPIO, el servidor no responde', file = sys.stderr)              #         Se informa de ello
+                print('Error: Imposible solicitar una estado del puerto GPIO, el servidor no responde')
+
                 return -1                                                                                           #         Se devuelve -1
 
         else:                                                                                                       # Si no
@@ -145,9 +158,16 @@ class domotica_cliente(comun.app):
                     for i, puerto in enumerate(self._lista_GPIOS):                                                  #             Se recorre la lista para transformarla en el formato necesario
                         self._lista_GPIOS[i] = (puerto, self.__estado('estado ' + puerto), self.__describir('describir ' + puerto))
 
-                    self._estado_conexion = comun.estados_conexion.LISTA_EXTENDIDA                                  #             El estado de la conexión es actualizado de nuevo
+                        if self._lista_GPIOS[i][1] == -1 or self._lista_GPIOS[i][2] == '':
+                            self._estado_conexion = comun.estados_conexion.ERROR
 
-                    return True
+                    if self._estado_conexion != comun.estados_conexion.ERROR:                                       #         Si no se ha producido fallos
+                        self._estado_conexion = comun.estados_conexion.LISTA_EXTENDIDA                              #             El estado de la conexión es actualizado de nuevo
+
+                        return True
+
+                    else:
+                        return False
 
             else:                                                                                                   #     Si no
                 print('Error: Sin lista de puertos GPIO, el servidor no responde', file = sys.stderr)               #         Se informa de ello

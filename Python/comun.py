@@ -29,10 +29,11 @@ from pid import bloqueo                                                         
 
 
 class estados_conexion():
-    DESCONECTADO    = 0
-    CONECTADO       = 1
-    LISTA_CARGADA   = 2
-    LISTA_EXTENDIDA = 3
+    ERROR           = -1
+    DESCONECTADO    =  0
+    CONECTADO       =  1
+    LISTA_CARGADA   =  2
+    LISTA_EXTENDIDA =  3
 
 
 class app(object):
