@@ -32,6 +32,11 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 
 
 
+## [??.??.??] - 20??-??-??
+### Arreglado
+- *temperaturas.py* ➡ *temperatura.py* en **README.md**.
+
+
 ## [0.10.1] - 2019-11-25
 ### Arreglado
 - Acceso al puerto GPIO en **dht11.py**.

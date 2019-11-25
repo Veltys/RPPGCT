@@ -17,7 +17,7 @@ Colección de utilidades varias para el control GPIO en Python
 - **internet.py**: Módulo auxiliar de comprobación de conectividad a Internet.
 - **pid.py**: Módulo auxiliar para ciertas funciones de bloqueo y de PIDs.
 - **reiniciar_router.py**: Sistema que comprueba si hay acceso a Internet. Si no, manda una señal en un puerto GPIO determinado. La idea es conectar un relé a este GPIO y al mismo la alimentación del sistema de acceso a Internet.
-- **temperaturas.py**: Sistema indicador led de la temperatura del procesador en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
+- **temperatura.py**: Sistema indicador led de la temperatura del procesador en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
 
 
 ## Agradecimientos, fuentes consultadas y otros créditos
