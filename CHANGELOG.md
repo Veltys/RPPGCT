@@ -32,7 +32,7 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 
 
 
-## [0.10.0] - 2019-11-24
+## [0.10.0] - 2019-11-25
 ### Añadido
 - Archivo separado para el historial de versiones en **CHANGELOG.md**.
 - Agradecimiento por la plantilla para este archivo.
