@@ -365,7 +365,7 @@ class domotica_servidor(comun.app):
         if gpio:                                                                                                                            # Si el puerto es correcto
             res = self.encender(gpio, False)                                                                                                #     Condiciona el resultado a la devolución del método encender()
 
-            sleep(self._config.PULSACION)
+            sleep(self._config.TIEMPO_PULSACION)
 
             res = res and self.apagar(gpio, False)                                                                                          #     Recondiciona el resultado anterior a la devolución del método apagar()
 
