@@ -183,7 +183,7 @@ class temperatura_config(config_global):                                        
 
     TEMPERATURAS        = (40, 50, 60)                                                                          # TEMPERATURAS contiene las temperaturas de activación de cada etapa
 
-    VELOCIDAD_MINIMA    = 0.25                                                                                  # Velocidad mínima necesaria para el giro del ventilador
+    VELOCIDAD_MINIMA    = 0.30                                                                                  # Velocidad mínima necesaria para el giro del ventilador
 
     VELOCIDADES         = (                                                                                     # VELOCIDADES contiene pares temperatura - velocidad del ventilador
                             (20, 0.00),
