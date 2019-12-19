@@ -32,9 +32,10 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 
 
 
-## [??.??.??] - 20??-??-??
+## [0.10.2] - 2019-12-19
 ### Arreglado
 - *temperaturas.py* ➡ *temperatura.py* en **README.md**.
+- Lista de puertos GPIO libres en **indice_gpio.py**.
 
 
 ## [0.10.1] - 2019-11-25

@@ -5,8 +5,8 @@
 # Title         : indice_gpio.py
 # Description   : Sistema indizador de puertos GPIO
 # Author        : Veltys
-# Date          : 2019-11-22
-# Version       : 1.0.6
+# Date          : 2019-12-19
+# Version       : 1.0.7
 # Usage         : python3 indice_gpio.py
 # Notes         : Sistema que lee las distintas configuraciones y muestra cuáles puertos están ocupados y cuáles no
 
@@ -30,7 +30,7 @@ def main(argv):
 
     gpios_bcm_extendidos = [5, 6, 12, 19, 20, 21, 26]                                                       # Puertos GPIO "extendidos"
 
-    gpios_bcm_especiales = [2, 3, 7, 8, 9, 10, 11, 14, 15, 18]                                              # Puertos GPIO "especiales"
+    gpios_bcm_especiales = [0, 1, 2, 3, 7, 8, 9, 10, 11, 14, 15, 18]                                        # Puertos GPIO "especiales"
 
     gpios = gpios_bcm_normales + gpios_bcm_extendidos + gpios_bcm_especiales                                # Los tres anteriores
 
@@ -43,15 +43,16 @@ def main(argv):
 
     for _, clase in clases:                                                                                 # Se recorre la lista de clases
         if hasattr(clase, 'GPIOS'):                                                                         #     Si la clase contiene el miembro GPIOS
-            for gpio in clase.GPIOS:                                                                        #         Éste se recorre
-                if gpio[0] in gpios_bcm_normales_libres:                                                    #             Si el puerto está en esta lista
-                    gpios_bcm_normales_libres.remove(gpio[0])                                               #                 Se elimina de la lista de libres
-
-                elif gpio[0] in gpios_bcm_extendidos_libres:                                                #             Si el puerto está en esta lista
-                    gpios_bcm_extendidos_libres.remove(gpio[0])                                             #                 Se elimina de la lista de libres
-
-                elif gpio[0] in gpios_bcm_especiales_libres:                                                #             Si el puerto está en esta lista
-                    gpios_bcm_especiales_libres.remove(gpio[0])                                             #                 Se elimina de la lista de libres
+            for gpios in clase.GPIOS:                                                                       #         Éste se recorre
+                for gpio in gpios:
+                    if gpio[0] in gpios_bcm_normales_libres:                                                #             Si el puerto está en esta lista
+                        gpios_bcm_normales_libres.remove(gpio[0])                                           #                 Se elimina de la lista de libres
+    
+                    elif gpio[0] in gpios_bcm_extendidos_libres:                                            #             Si el puerto está en esta lista
+                        gpios_bcm_extendidos_libres.remove(gpio[0])                                         #                 Se elimina de la lista de libres
+    
+                    elif gpio[0] in gpios_bcm_especiales_libres:                                            #             Si el puerto está en esta lista
+                        gpios_bcm_especiales_libres.remove(gpio[0])                                         #                 Se elimina de la lista de libres
 
     gpios_libres = gpios_bcm_normales_libres + gpios_bcm_extendidos_libres + gpios_bcm_especiales_libres    # Cálculo de los puertos libres
 
