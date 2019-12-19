@@ -14,7 +14,7 @@
 # Description   : Script de init.d para el arranque automático del sistema "cpu.py".
 # Author        : Veltys
 # Date          : 2019-12-19
-# Version       : 2.0.1
+# Version       : 2.0.2
 # Usage         : /etc/init.d/cpu {start|stop|restart|status}
 # Notes         : 
 
@@ -36,9 +36,9 @@ case "$1" in
 			if [ -f /var/lock/${nombre}.lock ]; then
 				echo "${nombre}.py ya está en ejecución"
 			else
-				echo "Iniciando requisitos de ${nombre}.py"
+				if [ ! -z $requisitos ]; then
+					echo "Iniciando requisitos de ${nombre}.py"
 
-				if [ -z $requisitos ]; then
 					for requisito in "${requisitos[@]}"; do
 						./${requisito} start
 					done
