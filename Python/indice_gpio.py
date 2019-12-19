@@ -47,10 +47,10 @@ def main(argv):
                 for gpio in gpios:
                     if gpio[0] in gpios_bcm_normales_libres:                                                #             Si el puerto está en esta lista
                         gpios_bcm_normales_libres.remove(gpio[0])                                           #                 Se elimina de la lista de libres
-    
+
                     elif gpio[0] in gpios_bcm_extendidos_libres:                                            #             Si el puerto está en esta lista
                         gpios_bcm_extendidos_libres.remove(gpio[0])                                         #                 Se elimina de la lista de libres
-    
+
                     elif gpio[0] in gpios_bcm_especiales_libres:                                            #             Si el puerto está en esta lista
                         gpios_bcm_especiales_libres.remove(gpio[0])                                         #                 Se elimina de la lista de libres
 
