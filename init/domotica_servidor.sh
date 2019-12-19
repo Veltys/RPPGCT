@@ -14,7 +14,7 @@
 # Description   : Script de init.d para el arranque automático del sistema "domotica_servidor.py".
 # Author        : Veltys
 # Date          : 2019-12-19
-# Version       : 2.0.3
+# Version       : 2.0.4
 # Usage         : /etc/init.d/domotica_servidor {start|stop|restart|status}
 # Notes         : 
 
@@ -40,7 +40,7 @@ case "$1" in
 					echo "Iniciando requisitos de ${nombre}.py"
 
 					for requisito in "${requisitos[@]}"; do
-						./${requisito}.sh start
+						/etc/init.d/${requisito}.sh start
 					done
 				fi
 
