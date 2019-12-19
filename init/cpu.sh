@@ -14,7 +14,7 @@
 # Description   : Script de init.d para el arranque automático del sistema "cpu.py".
 # Author        : Veltys
 # Date          : 2019-12-19
-# Version       : 1.2.0
+# Version       : 2.0.0
 # Usage         : /etc/init.d/cpu {start|stop|restart|status}
 # Notes         : 
 
@@ -22,6 +22,9 @@
 nombre=cpu
 directorio='/opt/RPPGCT'
 fallo='Este comando debe ser lanzado con permisos de root. ¿Quizá anteponiéndole la orden sudo?'
+
+# requisitos[]=''
+
 
 case "$1" in
 	start)
@@ -33,7 +36,16 @@ case "$1" in
 			if [ -f /var/lock/${nombre}.lock ]; then
 				echo "${nombre}.py ya está en ejecución"
 			else
+				echo "Iniciando requisitos de ${nombre}.py"
+
+				if [ -z $requisitos ]; then
+					for requisito in "${requisitos[@]}"; do
+						./${requisito} start
+					done
+				fi
+
 				echo "Iniciando ${nombre}.py"
+
 				${directorio}/${nombre}.py &
 			fi
 		fi
@@ -47,6 +59,7 @@ case "$1" in
 		else
 			if [ -f /var/lock/${nombre}.lock ]; then
 				echo "Deteniendo ${nombre}.py"
+
 				pkill -f ${directorio}/${nombre}.py
 			else
 				echo "${nombre}.py no está en ejecución"

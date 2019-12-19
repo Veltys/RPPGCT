@@ -32,9 +32,13 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 
 
 ## [0.10.3] - 2019-12-19
+### Añadido
+- Soporte de requisitos de otros servicios en **cpu.sh**, **domotica_servidor.sh**, **reinicar_router.sh** y **temperatura.sh**.
+
 ### Arreglado
 - Comando status sin necesidad de sudo en **cpu.sh**, **domotica_servidor.sh**, **reinicar_router.sh** y **temperatura.sh**.
 - Comando de restart
+
 
 ## [0.10.2] - 2019-12-19
 ### Arreglado
