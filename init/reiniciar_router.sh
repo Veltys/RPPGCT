@@ -14,7 +14,7 @@
 # Description   : Script de init.d para el arranque automático del sistema "reiniciar_router.py".
 # Author        : Veltys
 # Date          : 2019-12-19
-# Version       : 2.0.0
+# Version       : 2.0.1
 # Usage         : /etc/init.d/reiniciar_router {start|stop|restart|status}
 # Notes         :
 
@@ -29,7 +29,7 @@ requisitos[0]='domotica_servidor'
 case "$1" in
 	start)
 		if [ "$UID" -ne '0' ]; then
-			echo fallo
+			echo $fallo
 
 			exit -1
 		else
@@ -53,7 +53,7 @@ case "$1" in
 
 	stop)
 		if [ "$UID" -ne '0' ]; then
-			echo fallo
+			echo $fallo
 
 			exit -1
 		else
@@ -69,7 +69,7 @@ case "$1" in
 
 	restart)
 		if [ "$UID" -ne '0' ]; then
-			echo fallo
+			echo $fallo
 
 			exit -1
 		else
