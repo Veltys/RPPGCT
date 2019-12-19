@@ -14,7 +14,7 @@
 # Description   : Script de init.d para el arranque automático del sistema "cpu.py".
 # Author        : Veltys
 # Date          : 2019-12-19
-# Version       : 2.0.2
+# Version       : 2.0.3
 # Usage         : /etc/init.d/cpu {start|stop|restart|status}
 # Notes         : 
 
@@ -40,7 +40,7 @@ case "$1" in
 					echo "Iniciando requisitos de ${nombre}.py"
 
 					for requisito in "${requisitos[@]}"; do
-						./${requisito} start
+						./${requisito}.sh start
 					done
 				fi
 
