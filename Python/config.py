@@ -134,16 +134,21 @@ class domotica_servidor_config(domotica_cliente_config):                        
 
 class internet_config(config_global):                                                                           # Configuración del sistema de comprobación de conectividad a Internet
     HOSTS               = (                                                                                     # HOSTS contiene los servidores a los cuales se les hará ping para comprobar si hay internet
-                            'google.es'                ,
-                            '2001:4860:4860::8888'     ,
-                            '2001:4860:4860::8844'     ,
-                            '8.8.8.8'                  ,
-                            '8.8.4.4'                  ,
-                            'opendns.com'              ,
-                            '2620:0:ccc::2'            ,
-                            '2620:0:ccd::2'            ,
-                            '208.67.222.222'           ,
-                            '208.67.220.220'           ,
+                            'one.one.one.one'            ,
+                            '2606:4700:4700::1111'       ,
+                            '2606:4700:4700::1001'       ,
+                            '1.1.1.1'                    ,
+                            '1.0.0.1'                    ,
+                            'google.es'                  ,
+                            '2001:4860:4860::8888'       ,
+                            '2001:4860:4860::8844'       ,
+                            '8.8.8.8'                    ,
+                            '8.8.4.4'                    ,
+                            'opendns.com'                ,
+                            '2620:0:ccc::2'              ,
+                            '2620:0:ccd::2'              ,
+                            '208.67.222.222'             ,
+                            '208.67.220.220'             ,
                           )
 
 
