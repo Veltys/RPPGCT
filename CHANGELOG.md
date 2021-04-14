@@ -31,6 +31,11 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - [ ] ~~Hacer que **actualizador.sh** sea "inteligente" y actualice en función de la versión.~~
 
 
+## [0.10.4] - 2021-04-14
+### Arreglado
+- Ruta al comando de medición de temperatura en **temperatura.sh**.
+
+
 ## [0.10.3] - 2019-12-19
 ### Añadido
 - Soporte de requisitos de otros servicios en **cpu.sh**, **domotica_servidor.sh**, **reinicar_router.sh** y **temperatura.sh**.
