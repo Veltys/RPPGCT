@@ -6,7 +6,7 @@
 # Description   : Sistema indicador led de la temperatura del procesador en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
 # Author        : Veltys
 # Date          : 2021-04-30
-# Version       : 3.0.3
+# Version       : 3.0.4
 # Usage         : python3 temperatura.py
 # Notes         : Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual apaga todos los leds hasta que esta misma señal sea recibida de nuevo
@@ -16,6 +16,10 @@ CMD_COMANDO     = '/usr/bin/vcgencmd'
 CMD_PARAMETROS  = 'measure_temp'
 DEBUG           = False
 DEBUG_REMOTO    = False
+ESTADO_FRESCO   = 0
+ESTADO_TEMPLADO = 1
+ESTADO_CALIENTE = 2
+ESTADO_ALARMA   = 3
 
 import errno                                                                                            # Códigos de error
 import os                                                                                               # Funcionalidades varias del sistema operativo
@@ -61,16 +65,16 @@ class temperatura(comun.app):
                     temperatura = float(temperatura[5:-3])                                              #         Se convierte a un valor numérico
 
                     if temperatura < self._config.TEMPERATURAS[0]:                                      #         Se comprueba si está por debajo del valor mínimo
-                        j = 0                                                                           #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
+                        estado = ESTADO_FRESCO                                                          #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
 
                     elif temperatura < self._config.TEMPERATURAS[1]:                                    #         Se comprueba si está por debajo del valor medio
-                        j = 1                                                                           #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
+                        estado = ESTADO_TEMPLADO                                                        #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
 
                     elif temperatura < self._config.TEMPERATURAS[2]:                                    #         Se comprueba si está por debajo del valor máximo
-                        j = 2                                                                           #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
+                        estado = ESTADO_CALIENTE                                                        #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
 
                     else:                                                                               #         Está igual o por encima del valor máximo
-                        j = 3                                                                           #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
+                        estado = ESTADO_ALARMA                                                          #             Se asigna la coordenada corespondiente para el posterior acceso a la lista de colores de los leds
 
                     igual = mayor = menor = False                                                       #         Inicialización de variables
 
@@ -105,19 +109,19 @@ class temperatura(comun.app):
                     else:                                                                               #         Si sí
                         velocidad = self._config.VELOCIDADES[igual][1]                                  #             Se almacena su valor para posterior uso
 
-                    i = 0                                                                               #         Contador de ciclos del bucle
+                    componente = 0                                                                      #         Contador de ciclos del bucle
 
                     for puertos in self._config.GPIOS:                                                  #         Se recorre la lista de leds
                         for gpio, tipo, acceso, activacion, _ in puertos:
-                            if tipo == config.LED:                                                      #             Si se está ante un led
-                                if j >= 3:                                                              #                 Si hay que activarlo
+                            if tipo == config.LED:                                                      #             Si se está ante un led (se asume el de alarma, por ser el único no modulado con PWM)
+                                if estado >= ESTADO_ALARMA:                                             #                 Si hay que activarlo
                                     GPIO.output(gpio, GPIO.HIGH if activacion else GPIO.LOW)            #                     Se activa
 
                                 else:                                                                   #                 Si no
                                     GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)            #                     Se desactiva
 
                             elif tipo == config.LED_PWM:                                                #             Si se está ante un led PWM
-                                acceso.ChangeDutyCycle(self._config.COLORES[j][i] * 100)                #                 Se cambia el ciclo de ejecución en función de la cordenada anteriormente asignada
+                                acceso.ChangeDutyCycle(self._config.COLORES[estado][componente] * 100)  #                 Se cambia el ciclo de ejecución en función de la cordenada anteriormente asignada
 
                             elif tipo == config.VENTILADOR_PWM:                                         #             Si se está ante un ventilador PWM
                                 acceso.ChangeDutyCycle(velocidad * 100)                                 #                 Se cambia el ciclo de ejecución en función de la cordenada anteriormente asignada
@@ -125,12 +129,13 @@ class temperatura(comun.app):
                             else:                                                                       #             Si se está ante cualquier otro
                                 pass                                                                    #                 No se hace nada, ya que esto sería un caso que no debería de darse
 
-                            i += 1                                                                      #         Aumento del contador
+                            componente += 1                                                             #         Aumento del contador
 
                 sleep(self._config.PAUSA)                                                               #     Pausa hasta la nueva comprobación
 
         except KeyboardInterrupt:
             self.cerrar()
+
             return
 
 
