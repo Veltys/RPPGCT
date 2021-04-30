@@ -5,8 +5,8 @@
 # Title         : indice_gpio.py
 # Description   : Sistema indizador de puertos GPIO
 # Author        : Veltys
-# Date          : 2019-12-19
-# Version       : 1.0.7
+# Date          : 2021-04-30
+# Version       : 1.0.8
 # Usage         : python3 indice_gpio.py
 # Notes         : Sistema que lee las distintas configuraciones y muestra cuáles puertos están ocupados y cuáles no
 
@@ -23,7 +23,7 @@ except ImportError:
     sys.exit(errno.ENOENT)
 
 
-def main(argv):
+def main(argv):                                                                                             # @UnusedVariable
     clases = inspect.getmembers(sys.modules['config'], inspect.isclass)                                     # Se recoge cada clase
 
     gpios_bcm_normales = [4, 13, 16, 17, 22, 23, 24, 25, 27]                                                # Puertos GPIO "normales"
@@ -74,4 +74,4 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    main(sys.argv)
+    main(sys.argv[1:])

@@ -26,7 +26,7 @@ except ImportError:
     sys.exit(errno.ENOENT)
 
 
-def main(argv):
+def main(argv):                                                                                                                     # @UnusedVariable
     sleep(config.PAUSA * 6)                                                                                                         # Pausa inicial para esperar a que se levante la red
 
     for reintentos in range(config.REINTENTOS):

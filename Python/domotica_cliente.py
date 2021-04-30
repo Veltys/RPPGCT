@@ -6,7 +6,7 @@
 # Description   : Parte cliente del sistema gestor de domótica
 # Author        : Veltys
 # Date          : 2021-04-30
-# Version       : 1.1.15
+# Version       : 1.1.16
 # Usage         : python3 domotica_cliente.py [commandos]
 # Notes         : Parte cliente del sistema en el que se gestionarán pares de puertos GPIO
 
@@ -375,7 +375,7 @@ def main(argv):
 
         pydevd.settrace(config.IP_DEP_REMOTA)
 
-    app = domotica_cliente(config, sys.argv)
+    app = domotica_cliente(config, argv)
 
     err = app.arranque()
 
