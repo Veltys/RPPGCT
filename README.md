@@ -10,13 +10,13 @@ Colección de utilidades varias para el control GPIO en Python
 - **aviso_electricidad.py**: Sistema avisador de corte de luz.
 - **correo_electronico.py**: Módulo auxiliar de envío de correos electrónicos.
 - **cpu.py**: Sistema indicador led de la carga de CPU en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
-- **dht11.py**: Sistema de lectura de sondas de temperatura DHT11.
 - **domotica_cliente.py**: Cliente del sistema gestor de domótica.
 - **domotica_servidor.py**: Servidor del sistema gestor de domótica.
 - **indice_gpio.py**: Sistema indicador de los puertos GPIO que quedan libres.
 - **internet.py**: Módulo auxiliar de comprobación de conectividad a Internet.
 - **pid.py**: Módulo auxiliar para ciertas funciones de bloqueo y de PIDs.
 - **reiniciar_router.py**: Sistema que comprueba si hay acceso a Internet. Si no, manda una señal en un puerto GPIO determinado. La idea es conectar un relé a este GPIO y al mismo la alimentación del sistema de acceso a Internet.
+- **sonda_dht11.py**: Sistema de lectura de sondas de temperatura DHT11.
 - **temperatura.py**: Sistema indicador led de la temperatura del procesador en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
 
 

@@ -6,12 +6,11 @@
 # Description   : Parte servidor del sistema gestor de domótica
 # Author        : Veltys
 # Date          : 2021-04-30
-# Version       : 2.3.3
+# Version       : 2.3.4
 # Usage         : python3 domotica_servidor.py
 # Notes         : Parte servidor del sistema en el que se gestionarán pares de puertos GPIO
 #                 Las entradas impares en la variable de configuración asociada GPIOS corresponderán a los relés que se gestionarán
 #                 Las pares, a los pulsadores que irán asociados a dichos relés, para su conmutación
-#                 Se está estudiando, para futuras versiones, la integración con servicios IoT, especuialmente con el "AWS IoT Button" --> http://amzn.eu/dsgsHvv
 
 
 DEBUG           = False
@@ -118,7 +117,7 @@ class domotica_servidor(comun.app):
                     for _, tipo, _, _, _ in puertos:
                         generar_hijo = False
 
-                        if tipo == self._config.BOTON or tipo == self._config.SONDA:                                                        #         Si el elemento es de tipo botón o superior (sonda)
+                        if tipo >= self._config.BOTON:                                                                                      #         Si el elemento es de tipo botón o superior
                             generar_hijo = True                                                                                             #             Se generará un hijo
 
                         if generar_hijo:                                                                                                    #         Si es necesario generar un hijo
