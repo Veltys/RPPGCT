@@ -189,10 +189,10 @@ class temperatura_config(config_global):                                        
 
     VELOCIDADES         = (                                                                                     # VELOCIDADES contiene pares temperatura - velocidad del ventilador
                             (20, 0.00),
-                            (30, 0.10),
-                            (40, 0.25),
-                            (50, 0.50),
-                            (60, 0.75),
+                            (50, 0.10),
+#                           (50, 0.25),
+                            (60, 0.50),
+#                           (60, 0.75),
                             (65, 1.00),
                           )
 
