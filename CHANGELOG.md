@@ -8,6 +8,7 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - [ ] Hacer un cliente en Django, que permita una gestión más visual del sistema.
 - [ ] Rehacer **dht11.py** de manera que pueda ser configurado para leer individualmente cada sensor.
 - [ ] Pasar los scripts de inicio a *systemctl*.
+- [ ] Cambiar al sistema de procesado de argumentos *argparse.ArgumentParser()* en **dht11.py**.
 - [ ] ¡Mucho más!
 
 
@@ -30,6 +31,28 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - [ ] ~~Añadir control de versiones en la instalación.~~
 - [ ] ~~Hacer que **actualizador.sh** sea "inteligente" y actualice en función de la versión.~~
 
+
+## [0.11.0] - 2021-04-30
+### Añadido
+- Agradecimientos que faltaban en **README.md**
+- Comentarios varios para suprimir errores del editor (Eclipse + Pydev) en **aviso_electricidad.py** e **indice_gpio.py**.
+- Instalación de paquetes ampliable en **config.sh** e **instalador.sh**.
+- Lectura de sondas DHT11 a través de un paquete en **dht11.py**.
+- Posibilidad de añadir hosts por parámetros a **internet.py**.
+
+### Arreglado
+- Actualizado general del código en **internet.py**.
+- Mejora en la inteligibilidad del código en **temperatura.py**.
+- Cadenas heteogéneas migradas a [*cadenas-f*](https://realpython.com/python-f-strings/#f-strings-a-new-and-improved-way-to-format-strings-in-python) para mejorar la presentación del código en **aviso_electricidad.py**, **comun.py** y **dht11.py**.
+- Optimizado del método *estado_conexion_lenguaje_natural* en **comun.py**.
+- Optimizaciones varias en **cpu.py**, **domotica_cliente.py** y **temperatura.py**.
+- Ordenado de *imports* en **aviso_electricidad.py**, **comun.py**, **correo_electronico.py**, **cpu.py**, **dht11.py**, **domotica_cliente.py**, **domotica_servidor.py**, **internet.py**, **internet.py**, **reiniciar_router.py** y **temperatura.py**.
+- Renombrado **dht11.py** a **sonda_dht11.py**
+
+### Eliminado
+- Compatibilidad con Python 3.5 debido a las cadenas-f (requieren Python 3.6).
+- Configuración no necesaria relativa a la sonda dht11 en **config.py** y **domotica_servidor.py**.
+- Sistema antiguo de lectura de sondas DHT11 en **dht11.py**.
 
 ## [0.10.4] - 2021-04-14
 ### Arreglado
