@@ -3,13 +3,16 @@
 # Title         : config.sh
 # Description   : Almacena la configuración necesaria para el resto de scripts de bash
 # Author        : Veltys
-# Date          : 2019-11-22
-# Version       : 1.4.1
+# Date          : 2021-04-30
+# Version       : 1.5.0
 # Usage         : source config.sh
 # Notes         : 
 
 
 directorio='/opt/RPPGCT'
+
+paquetes[0]='psutil'
+paquetes[1]='dht11'
 
 scripts[0]='aviso_electricidad'
 scripts[1]='correo_electronico'
