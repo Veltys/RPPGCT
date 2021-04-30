@@ -7,7 +7,7 @@
 # Original author   : linuxitux
 # Author            : Veltys
 # Date              : 2021-04-30
-# Version           : 2.0.8
+# Version           : 2.1.0
 # Usage             : python3 internet.py o from internet import hay_internet
 # Notes             : Se debe poder generar tráfico ICMP (ping), es decir, no debe ser bloqueado por un cortafuegos
 #                     Este módulo está pensado para ser llamado desde otros módulos y no directamente, aunque si es llamado de esta forma, también hará su trabajo e informará al usuario de si hay conexión a Internet
@@ -15,7 +15,7 @@
 
 import errno                                                                    # Códigos de error
 import os                                                                       # Funciones del sistema operativo
-from subprocess import call                                                     # Llamadas a programas externos
+from subprocess import run                                                      # Llamadas a programas externos
 import sys                                                                      # Funcionalidades varias del sistema
 
 
@@ -32,20 +32,27 @@ def ping(host):
     '''
 
     if sys.platform.startswith('win'):                                          # Si la plataforma en la que nos hallamos es Windows
-        ret = call(['C:\Windows\System32\PING.EXE', '-n', '3', '-w', '5000', host], stdout = open(os.devnull, 'w'), stderr = open(os.devnull, 'w'))
+        ret = run(['C:\Windows\System32\PING.EXE', '-n', '3', '-w', '5000', host], stdout = open(os.devnull, 'w'), stderr = open(os.devnull, 'w'))
     else:                                                                       # En caso contrario, se asume UNIX (o POSIX)
-        ret = call(['/bin/ping', '-c', '3', '-W', '5', host], stdout = open(os.devnull, 'w'), stderr = open(os.devnull, 'w'))
+        ret = run(['/bin/ping', '-c', '3', '-W', '5', host], stdout = open(os.devnull, 'w'), stderr = open(os.devnull, 'w'))
 
-    return ret == 0                                                             # Se evalúa si el resultado es el esperado y se devuelve éste
+    return ret.returncode == 0                                                  # Se evalúa si el resultado es el esperado y se devuelve éste
 
 
-def hay_internet():
+def hay_internet(h = None):
     ''' Comprueba si hay o no acceso a Internet
     '''
 
     res = False                                                                 # Precarga del resultado en caso de fallo
 
-    for host in config.HOSTS:                                                   # Se recorre la lista de hosts
+    if h == None:                                                               # Si no se han cargado hosts por defecto
+        hosts = []                                                              #     Se inicializa la lista de hosts vacía
+    else:                                                                       # Si sí
+        hosts = h                                                               #     Se inicializa la lista de hosts con los que han entrado
+
+    hosts.extend(config.HOSTS)                                                  # Se añaden a la lista de hosts los preconfigurados
+
+    for host in hosts:                                                          # Se recorre la lista de hosts
         if ping(host):                                                          #     Se hace ping a cada uno, si la respuesta es positiva
             res = True                                                          #         Se establece el resultado como positivo
 
@@ -55,7 +62,7 @@ def hay_internet():
 
 
 def main(argv):
-    if hay_internet():
+    if hay_internet(argv[1:]):
         print('¡Hay Internet! =D')
     else:
         print('¡No hay Internet! D=')
