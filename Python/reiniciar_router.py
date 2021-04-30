@@ -21,13 +21,13 @@ import errno                                                                    
 import os                                                                                   # Funcionalidades varias del sistema operativo
 import socket                                                                               # Tratamiento de sockets
 import sys                                                                                  # Funcionalidades varias del sistema
+from time import sleep                                                                      # Gestión de pausas
 
 import comun                                                                                # Funciones comunes a varios sistemas
+from internet import hay_internet                                                           # Módulo propio de comprobación de Internet
 
 if DEBUG_REMOTO:
     import pydevd                                                                           # Depuración remota
-
-from time import sleep                                                                      # Gestión de pausas
 
 if DEBUG_REMOTO:
     from pydevd_file_utils import setup_client_server_paths                                 # Configuración de las rutas Eclipse ➡
@@ -38,8 +38,6 @@ try:
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
-
-from internet import hay_internet                                                           # Módulo propio de comprobación de Internet
 
 
 class reiniciar_router(comun.app):
@@ -90,6 +88,7 @@ class reiniciar_router(comun.app):
 
         except KeyboardInterrupt:
             self.cerrar()
+
             return
 
 

@@ -5,8 +5,8 @@
 # Title         : aviso_electricidad.py
 # Description   : Sistema de aviso en caso de corte de electricidad
 # Author        : Veltys
-# Date          : 2019-11-22
-# Version       : 1.1.2
+# Date          : 2021-04-30
+# Version       : 1.1.3
 # Usage         : python3 aviso_electricidad.py
 # Notes         :
 
@@ -16,14 +16,14 @@ import sys                                                                      
 
 from time import sleep                                                                                                              # Para hacer pausas
 
+from correo_electronico import mandar_correo                                                                                        # Envío de correos electrónicos
+
 try:
     from config import aviso_electricidad_config as config                                                                          # Configuración
 
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
     sys.exit(errno.ENOENT)
-
-from correo_electronico import mandar_correo                                                                                        # Envío de correos electrónicos
 
 
 def main(argv):

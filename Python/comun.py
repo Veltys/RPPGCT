@@ -5,8 +5,8 @@
 # Title         : comun.py
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
-# Date          : 2019-11-25
-# Version       : 0.6.3
+# Date          : 2021-04-30
+# Version       : 0.6.4
 # Usage         : import comun | from comun import <clase>
 # Notes         : ...
 
@@ -14,17 +14,15 @@
 DEBUG           = False
 
 
+from abc import ABCMeta, abstractmethod                                                 # Clases abstractas
 import errno                                                                            # Códigos de error
 import os                                                                               # Funcionalidades varias del sistema operativo
 import signal                                                                           # Manejo de señales
 import socket                                                                           # Tratamiento de sockets
 import sys                                                                              # Funcionalidades varias del sistema
-
-import RPi.GPIO as GPIO                                                                 # Acceso a los pines GPIO
-
-from abc import ABCMeta, abstractmethod                                                 # Clases abstractas
 from time import sleep                                                                  # Para hacer pausas
 
+import RPi.GPIO as GPIO                                                                 # Acceso a los pines GPIO
 from pid import bloqueo                                                                 # Módulo propio para bloquear la ejecución de más de una instancia
 
 

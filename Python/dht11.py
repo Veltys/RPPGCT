@@ -5,9 +5,8 @@
 # Title             : dht11.py
 # Description       : Sistema gestor de sonda de temperatura DHT11
 # Author            : Veltys
-# Original author   : szazo
-# Date              : 2019-11-25
-# Version           : 2.1.4
+# Date              : 2021-04-30
+# Version           : 2.1.5
 # Usage             : python3 dht11.py o from dht11 import
 # Notes             : ...
 
@@ -29,18 +28,14 @@ STATE_DATA_PULL_DOWN        = 5
 import errno                                                                                                # Códigos de error
 import os                                                                                                   # Funcionalidades varias del sistema operativo
 import sys                                                                                                  # Funcionalidades varias del sistema
-
-if DEBUG_REMOTO:
-    import pydevd                                                                                           # Depuración remota
-
-import RPi.GPIO as GPIO                                                                                     # Acceso a los pines GPIO
-
-import comun                                                                                                # Funciones comunes a varios sistemas
-
 from threading import Thread                                                                                # Capacidades multihilo
 from time import sleep                                                                                      # Para hacer pausas
 
+import RPi.GPIO as GPIO                                                                                     # Acceso a los pines GPIO
+import comun                                                                                                # Funciones comunes a varios sistemas
+
 if DEBUG_REMOTO:
+    import pydevd                                                                                           # Depuración remota
     from pydevd_file_utils import setup_client_server_paths                                                 # Configuración de las rutas Eclipse ➡
 
 try:

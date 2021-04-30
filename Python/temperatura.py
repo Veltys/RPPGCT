@@ -5,8 +5,8 @@
 # Title         : temperatura.py
 # Description   : Sistema indicador led de la temperatura del procesador en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
 # Author        : Veltys
-# Date          : 2021-04-14
-# Version       : 3.0.2
+# Date          : 2021-04-30
+# Version       : 3.0.3
 # Usage         : python3 temperatura.py
 # Notes         : Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual apaga todos los leds hasta que esta misma señal sea recibida de nuevo
@@ -19,19 +19,15 @@ DEBUG_REMOTO    = False
 
 import errno                                                                                            # Códigos de error
 import os                                                                                               # Funcionalidades varias del sistema operativo
+from subprocess import check_output                                                                     # Llamadas a programas externos, recuperando su respuesta
 import sys                                                                                              # Funcionalidades varias del sistema
+from time import sleep                                                                                  # Para hacer pausas
+
+import RPi.GPIO as GPIO                                                                                 # Acceso a los pines GPIO
+import comun                                                                                            # Funciones comunes a varios sistemas
 
 if DEBUG_REMOTO:
     import pydevd                                                                                       # Depuración remota
-
-import RPi.GPIO as GPIO                                                                                 # Acceso a los pines GPIO
-
-import comun                                                                                            # Funciones comunes a varios sistemas
-
-from time import sleep                                                                                  # Para hacer pausas
-from subprocess import check_output                                                                     # Llamadas a programas externos, recuperando su respuesta
-
-if DEBUG_REMOTO:
     from pydevd_file_utils import setup_client_server_paths                                             # Configuración de las rutas Eclipse ➡
 
 try:
