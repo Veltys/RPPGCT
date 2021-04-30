@@ -6,7 +6,7 @@
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
 # Date          : 2021-04-30
-# Version       : 0.6.4
+# Version       : 0.6.5
 # Usage         : import comun | from comun import <clase>
 # Notes         : ...
 
@@ -235,7 +235,7 @@ class app(object):
                     for i, puertos in enumerate(self._config.GPIOS):                    # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
                         for j, puerto in enumerate(puertos):
                             if DEBUG:
-                                print('Proceso  #', os.getpid(), "\tPreparando el puerto GPIO", puerto[0], sep = '')
+                                print(f"Proceso  #{os.getpid()}\tPreparando el puerto GPIO{puerto[0]}")
 
                             if puerto[1] == self._config.RELE           \
                             or puerto[1] == self._config.LED            \
@@ -243,7 +243,7 @@ class app(object):
                             or puerto[1] == self._config.VENTILADOR     \
                             or puerto[1] == self._config.VENTILADOR_PWM :
                                 if DEBUG:
-                                    print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", puerto[0], ' como salida', sep = '')
+                                    print(f"Proceso  #{os.getpid()}\tConfigurando el puerto GPIO{puerto[0]} como salida")
 
                                 GPIO.setup(puerto[0], GPIO.OUT, initial = GPIO.LOW if puerto[2] else GPIO.HIGH)
 
@@ -257,19 +257,19 @@ class app(object):
 
                             else:
                                 if DEBUG:
-                                    print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", puerto[0], 'como entrada', sep = '')
+                                    print(f"Proceso  #{os.getpid()}\tConfigurando el puerto GPIO{puerto[0]} como entrada")
 
                                 GPIO.setup(puerto[0], GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 
                 return 0
 
             else:
-                print('Error: No se puede bloquear ' + self._bloqueo.nombre(), file = sys.stderr)
+                print(f'Error: No se puede bloquear {self._bloqueo.nombre()}', file = sys.stderr)
 
                 return errno.EACCES
 
         else:
-            print('Error: Ya se ha iniciado una instancia de ' + self._bloqueo.nombre(), file = sys.stderr)
+            print(f'Error: Ya se ha iniciado una instancia de {self._bloqueo.nombre()}', file = sys.stderr)
 
             return errno.EEXIST
 
@@ -390,7 +390,7 @@ class app(object):
                         acceso.ChangeDutyCycle(100)                                     #             Se "enciende" de modo ciclo de trabajo
 
             if DEBUG:
-                print('Esperando', self._config.PAUSA, 'segundos')
+                print(f'Esperando {self._config.PAUSA} segundos')
 
             sleep(self._config.PAUSA)                                                   #     Se espera la pausa programada
 
@@ -403,5 +403,3 @@ class app(object):
         '''
 
         pass
-
-

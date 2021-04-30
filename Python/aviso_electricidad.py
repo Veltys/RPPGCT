@@ -6,7 +6,7 @@
 # Description   : Sistema de aviso en caso de corte de electricidad
 # Author        : Veltys
 # Date          : 2021-04-30
-# Version       : 1.1.3
+# Version       : 1.1.4
 # Usage         : python3 aviso_electricidad.py
 # Notes         :
 
@@ -38,14 +38,14 @@ def main(argv):
             break                                                                                                                   #     Se sale del bucle
 
         else:                                                                                                                       # Si no
-            print('El correo no ha podido ser enviado... reintentando ', reintentos, '/', config.REINTENTOS, 'veces', sep = '')     #     Se informa de ello
+            print(f'El correo no ha podido ser enviado... reintentando {reintentos} de {config.REINTENTOS} veces')                  #     Se informa de ello
 
             enviado = False                                                                                                         #     Bandera de estado
 
             sleep(config.PAUSA)                                                                                                     #     Pausa para reintentar
 
     if not(enviado):                                                                                                                # En caso de que haya sido imposible
-        print('Imposible reenviar el correo despues de', config.REINTENTOS, 'intentos')                                             #    Se informa de ello
+        print(f'Imposible reenviar el correo despues de {config.REINTENTOS} intentos')                                              #    Se informa de ello
 
 
 if __name__ == '__main__':
