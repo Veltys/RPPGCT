@@ -6,7 +6,7 @@
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
 # Date          : 2021-04-30
-# Version       : 0.6.5
+# Version       : 0.7.0
 # Usage         : import comun | from comun import <clase>
 # Notes         : ...
 
@@ -348,20 +348,24 @@ class app(object):
         ''' Observador en lenguaje natural de un estado de conexión dado
         '''
 
-        if estado == 0:
-            return 'no hay una conexión activa'
+        respuesta = {
+            'no hay una conexión activa',
+            'hay una conexión activa',
+            'hay una lista de puertos GPIO cargada',
+            'hay una lista extendida de puertos GPIO cargada'
+            }
 
-        elif estado == 1:
-            return 'hay una conexión activa'
+        try:
+            retorno = respuesta[estado]
 
-        elif estado == 2:
-            return 'hay una lista de puertos GPIO cargada'
-
-        elif estado == 3:
-            return 'hay una lista extendida de puertos GPIO cargada'
+        except IndexError:
+            retorno = 'el estado es desconocido'
 
         else:
-            return 'el estado es desconocido'
+            pass
+
+        finally:
+            return retorno
 
 
     def test(self):
