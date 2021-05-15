@@ -3,8 +3,8 @@
 # Title         : instalador.sh
 # Description   : Instala los scripts y los configura para iniciarse automáticamente
 # Author        : Veltys
-# Date          : 2019-11-22
-# Version       : 1.3.1
+# Date          : 2021-04-30
+# Version       : 1.4.0
 # Usage         : sudo bash instalador.sh
 # Notes         : Es necesario ser superusuario para su correcto funcionamiento
 
@@ -18,17 +18,21 @@ else
 
 	echo "Recuerde editar ${directorio}/${dependencias[0]} y guardarlo como config.py con los valores adecuados"
 
-	echo 'Es necesario instalar el paquete psutil'
-	read -p "¿Desea instalarlo de forma automática? (S/n): " eleccion
-	case "$eleccion" in
-		n|N )
-			echo "Omitiendo instalación..."
+	for paquete in "${paquetes[@]}"; do
+		echo "Es necesario instalar el paquete $paquete"
+
+		read -p "¿Desea instalarlo de forma automática? (S/n): " eleccion
+
+		case "$eleccion" in
+			n|N )
+				echo "Omitiendo instalación..."
 			;;
-		* )
-			echo "Instalando..."
-			pip3 install psutil
+			* )
+				echo "Instalando..."
+				pip3 install "$paquete"
 			;;
-	esac
+		esac
+	done
 
 	for dependencia in "${dependencias[@]}"; do
 		install -m 0644 ./Python/${dependencia} ${directorio}/

@@ -5,8 +5,8 @@
 # Title         : comun.py
 # Description   : Módulo de funciones comunes a varios sistemas
 # Author        : Veltys
-# Date          : 2019-11-25
-# Version       : 0.6.3
+# Date          : 2021-04-30
+# Version       : 0.7.0
 # Usage         : import comun | from comun import <clase>
 # Notes         : ...
 
@@ -14,17 +14,15 @@
 DEBUG           = False
 
 
+from abc import ABCMeta, abstractmethod                                                 # Clases abstractas
 import errno                                                                            # Códigos de error
 import os                                                                               # Funcionalidades varias del sistema operativo
 import signal                                                                           # Manejo de señales
 import socket                                                                           # Tratamiento de sockets
 import sys                                                                              # Funcionalidades varias del sistema
-
-import RPi.GPIO as GPIO                                                                 # Acceso a los pines GPIO
-
-from abc import ABCMeta, abstractmethod                                                 # Clases abstractas
 from time import sleep                                                                  # Para hacer pausas
 
+import RPi.GPIO as GPIO                                                                 # Acceso a los pines GPIO
 from pid import bloqueo                                                                 # Módulo propio para bloquear la ejecución de más de una instancia
 
 
@@ -237,7 +235,7 @@ class app(object):
                     for i, puertos in enumerate(self._config.GPIOS):                    # Se configuran los pines GPIO como salida o entrada en función de lo leído en la configuración
                         for j, puerto in enumerate(puertos):
                             if DEBUG:
-                                print('Proceso  #', os.getpid(), "\tPreparando el puerto GPIO", puerto[0], sep = '')
+                                print(f"Proceso  #{os.getpid()}\tPreparando el puerto GPIO{puerto[0]}")
 
                             if puerto[1] == self._config.RELE           \
                             or puerto[1] == self._config.LED            \
@@ -245,7 +243,7 @@ class app(object):
                             or puerto[1] == self._config.VENTILADOR     \
                             or puerto[1] == self._config.VENTILADOR_PWM :
                                 if DEBUG:
-                                    print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", puerto[0], ' como salida', sep = '')
+                                    print(f"Proceso  #{os.getpid()}\tConfigurando el puerto GPIO{puerto[0]} como salida")
 
                                 GPIO.setup(puerto[0], GPIO.OUT, initial = GPIO.LOW if puerto[2] else GPIO.HIGH)
 
@@ -259,19 +257,19 @@ class app(object):
 
                             else:
                                 if DEBUG:
-                                    print('Proceso  #', os.getpid(), "\tConfigurando el puerto GPIO", puerto[0], 'como entrada', sep = '')
+                                    print(f"Proceso  #{os.getpid()}\tConfigurando el puerto GPIO{puerto[0]} como entrada")
 
                                 GPIO.setup(puerto[0], GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 
                 return 0
 
             else:
-                print('Error: No se puede bloquear ' + self._bloqueo.nombre(), file = sys.stderr)
+                print(f'Error: No se puede bloquear {self._bloqueo.nombre()}', file = sys.stderr)
 
                 return errno.EACCES
 
         else:
-            print('Error: Ya se ha iniciado una instancia de ' + self._bloqueo.nombre(), file = sys.stderr)
+            print(f'Error: Ya se ha iniciado una instancia de {self._bloqueo.nombre()}', file = sys.stderr)
 
             return errno.EEXIST
 
@@ -350,20 +348,24 @@ class app(object):
         ''' Observador en lenguaje natural de un estado de conexión dado
         '''
 
-        if estado == 0:
-            return 'no hay una conexión activa'
+        respuesta = {
+            'no hay una conexión activa',
+            'hay una conexión activa',
+            'hay una lista de puertos GPIO cargada',
+            'hay una lista extendida de puertos GPIO cargada'
+            }
 
-        elif estado == 1:
-            return 'hay una conexión activa'
+        try:
+            retorno = respuesta[estado]
 
-        elif estado == 2:
-            return 'hay una lista de puertos GPIO cargada'
-
-        elif estado == 3:
-            return 'hay una lista extendida de puertos GPIO cargada'
+        except IndexError:
+            retorno = 'el estado es desconocido'
 
         else:
-            return 'el estado es desconocido'
+            pass
+
+        finally:
+            return retorno
 
 
     def test(self):
@@ -392,7 +394,7 @@ class app(object):
                         acceso.ChangeDutyCycle(100)                                     #             Se "enciende" de modo ciclo de trabajo
 
             if DEBUG:
-                print('Esperando', self._config.PAUSA, 'segundos')
+                print(f'Esperando {self._config.PAUSA} segundos')
 
             sleep(self._config.PAUSA)                                                   #     Se espera la pausa programada
 
@@ -405,5 +407,3 @@ class app(object):
         '''
 
         pass
-
-

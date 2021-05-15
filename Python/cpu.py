@@ -5,8 +5,8 @@
 # Title         : cpu.py
 # Description   : Sistema indicador led de la carga de CPU en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma"
 # Author        : Veltys
-# Date          : 2019-11-22
-# Version       : 2.1.11
+# Date          : 2021-04-30
+# Version       : 2.1.13
 # Usage         : python3 cpu.py
 # Notes         : Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual apaga todos los leds hasta que esta misma señal sea recibida de nuevo
@@ -19,17 +19,13 @@ DEBUG_REMOTO    = False
 import errno                                                                                            # Códigos de error
 import os                                                                                               # Funcionalidades varias del sistema operativo
 import sys                                                                                              # Funcionalidades varias del sistema
+from time import sleep                                                                                  # Para hacer pausas
+
+import RPi.GPIO as GPIO                                                                                 # Acceso a los pines GPIO
+import comun                                                                                            # Funciones comunes a varios sistemas
 
 if DEBUG_REMOTO:
     import pydevd                                                                                       # Depuración remota
-
-import RPi.GPIO as GPIO                                                                                 # Acceso a los pines GPIO
-
-import comun                                                                                            # Funciones comunes a varios sistemas
-
-from time import sleep                                                                                  # Para hacer pausas
-
-if DEBUG_REMOTO:
     from pydevd_file_utils import setup_client_server_paths                                             # Configuración de las rutas Eclipse ➡
 
 try:
@@ -95,7 +91,7 @@ class cpu(comun.app):
 
                                         GPIO.output(gpio, GPIO.LOW if activacion else GPIO.HIGH)        #                         Se apaga el led de alarma
 
-                            i = i + 1
+                            i += 1
 
                 sleep(self._config.PAUSA)                                                               #     Pausa hasta la nueva comprobación
 
@@ -103,6 +99,7 @@ class cpu(comun.app):
             self.cerrar()                                                                               #     Se invoca al método de cierre
 
             return                                                                                      #     Se sale
+
 
     def __del__(self):
         ''' Destructor de la clase:

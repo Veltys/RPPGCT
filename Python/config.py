@@ -5,8 +5,8 @@
 # Title         : config.py
 # Description   : Módulo configurador para ser importado en el resto de módulos o sistemas que lo necesiten
 # Author        : Veltys
-# Date          : 2019-11-25
-# Version       : 1.12.3
+# Date          : 2021-04-30
+# Version       : 1.13.0
 # Usage         : import config | from config import <clase>
 # Notes         : A título ilustrativo, a se ofrece una configuración por defecto (la mía, para ser exactos)
 
@@ -25,7 +25,6 @@ class config_global(object):                                                    
     VENTILADOR          = 20
     VENTILADOR_PWM      = 21
     BOTON               = 30
-    SONDA               = 40
 
     PYDEV_REMOTE_PATHS  = [
                             (r'/home/usuario/.../proyecto-local', r'/ruta/al/proyecto/remoto'),
@@ -67,9 +66,7 @@ class cpu_config(config_global):                                                
 
 
 class dht11_config(config_global):                                                                              # Configuración del sistema de sondas DHT11
-    GPIOS               = [
-                            [[25, config_global.SONDA           , None, False, 'Sonda DHT11 de pruebas'     ]],
-                          ]
+    SONDAS              = [25]
 
     LIMITE              = 20
 
@@ -192,10 +189,10 @@ class temperatura_config(config_global):                                        
 
     VELOCIDADES         = (                                                                                     # VELOCIDADES contiene pares temperatura - velocidad del ventilador
                             (20, 0.00),
-                            (30, 0.10),
-                            (40, 0.25),
-                            (50, 0.50),
-                            (60, 0.75),
+                            (50, 0.10),
+#                           (50, 0.25),
+                            (60, 0.50),
+#                           (60, 0.75),
                             (65, 1.00),
                           )
 
@@ -204,5 +201,3 @@ class temperatura_config(config_global):                                        
                             'SIGUSR1': 'sig_test'   ,
                             'SIGUSR2': 'sig_apagado',
                           }
-
-

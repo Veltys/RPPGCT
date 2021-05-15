@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Title         : actualizador.sh
-# Description   : Actualiza los scripts sin alterar la configuración de inicio automático
+# Description   : Actualiza los scripts y los configura para iniciarse automáticamente
 # Author        : Veltys
-# Date          : 2019-11-22
-# Version       : 1.3.2
+# Date          : 2021-04-30
+# Version       : 2.0.0
 # Usage         : sudo bash actualizador.sh
 # Notes         : Es necesario ser superusuario para su correcto funcionamiento
 
@@ -14,33 +14,7 @@ if [ "$UID" -ne '0' ]; then
 else
 	source config.sh
 
-	echo "Recuerde revisar ${directorio}/${dependencias[0]} por si la configuración ha cambiado"
-	echo 'Es necesario que esté instalado el paquete psutil. No olvide instalarlo con "pip3 install psutil" si aún no lo está'
+	rm -r $directorio
 
-	for dependencia in "${dependencias[@]}"; do
-		rm ${directorio}/${dependencia} &> /dev/null
-
-		install -m 0644 ./Python/${dependencia} ${directorio}/
-	done
-
-	for dep_ejecutable in "${dep_ejecutables[@]}"; do
-		rm ${directorio}/${dep_ejecutable} &> /dev/null
-
-		install ./Python/${dep_ejecutable} ${directorio}/
-	done
-
-	for script in "${scripts[@]}"; do
-		rm ${directorio}/${script}.py
-
-		install ./Python/${script}.py ${directorio}/
-	done
-
-	for arrancable in "${arrancables[@]}"; do
-		/etc/init.d/${arrancable} stop &> /dev/null
-		rm /var/lock/${arrancable}.lock &> /dev/null
-		rm /etc/init.d/${arrancable} &> /dev/null
-
-		install ./init/${arrancable}.sh /etc/init.d/${arrancable}
-		update-rc.d ${arrancable} defaults
-	done
+	source instalador.sh
 fi

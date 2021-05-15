@@ -5,8 +5,8 @@
 # Title         : domotica_cliente.py
 # Description   : Parte cliente del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 2019-11-25
-# Version       : 1.1.14
+# Date          : 2021-04-30
+# Version       : 1.1.16
 # Usage         : python3 domotica_cliente.py [commandos]
 # Notes         : Parte cliente del sistema en el que se gestionarán pares de puertos GPIO
 
@@ -19,12 +19,10 @@ import errno                                                                    
 import socket                                                                                                       # Tratamiento de sockets
 import sys                                                                                                          # Funcionalidades varias del sistema
 
-if DEBUG_REMOTO:
-    import pydevd                                                                                                   # Depuración remota
-
 import comun                                                                                                        # Funciones comunes a varios sistemas
 
 if DEBUG_REMOTO:
+    import pydevd                                                                                                   # Depuración remota
     from pydevd_file_utils import setup_client_server_paths                                                         # Configuración de las rutas Eclipse
 
 try:
@@ -377,7 +375,7 @@ def main(argv):
 
         pydevd.settrace(config.IP_DEP_REMOTA)
 
-    app = domotica_cliente(config, sys.argv)
+    app = domotica_cliente(config, argv)
 
     err = app.arranque()
 

@@ -5,13 +5,12 @@
 # Title         : domotica_servidor.py
 # Description   : Parte servidor del sistema gestor de domótica
 # Author        : Veltys
-# Date          : 2019-11-25
-# Version       : 2.3.2
+# Date          : 2021-04-30
+# Version       : 2.3.4
 # Usage         : python3 domotica_servidor.py
 # Notes         : Parte servidor del sistema en el que se gestionarán pares de puertos GPIO
 #                 Las entradas impares en la variable de configuración asociada GPIOS corresponderán a los relés que se gestionarán
 #                 Las pares, a los pulsadores que irán asociados a dichos relés, para su conmutación
-#                 Se está estudiando, para futuras versiones, la integración con servicios IoT, especuialmente con el "AWS IoT Button" --> http://amzn.eu/dsgsHvv
 
 
 DEBUG           = False
@@ -24,21 +23,18 @@ salir           = False                                                         
 
 import errno                                                                                                                                # Códigos de error
 import os                                                                                                                                   # Funcionalidades varias del sistema operativo
-import sys                                                                                                                                  # Funcionalidades varias del sistema
 import socket                                                                                                                               # Tratamiento de sockets
-
-if DEBUG_REMOTO:
-    import pydevd                                                                                                                           # Depuración remota
-
-import RPi.GPIO as GPIO                                                                                                                     # Acceso a los pines GPIO
-
-import comun                                                                                                                                # Funciones comunes a varios sistemas
-
 from subprocess import call                                                                                                                 # Lanzamiento de nuevos procesos
+import sys                                                                                                                                  # Funcionalidades varias del sistema
 from threading import Lock, Thread                                                                                                          # Capacidades multihilo
 from time import sleep                                                                                                                      # Para hacer pausas
 
+import RPi.GPIO as GPIO                                                                                                                     # Acceso a los pines GPIO
+import comun                                                                                                                                # Funciones comunes a varios sistemas
+
+
 if DEBUG_REMOTO:
+    import pydevd                                                                                                                           # Depuración remota
     from pydevd_file_utils import setup_client_server_paths                                                                                 # Configuración de las rutas Eclipse ➡
 
 try:
@@ -121,7 +117,7 @@ class domotica_servidor(comun.app):
                     for _, tipo, _, _, _ in puertos:
                         generar_hijo = False
 
-                        if tipo == self._config.BOTON or tipo == self._config.SONDA:                                                        #         Si el elemento es de tipo botón o superior (sonda)
+                        if tipo >= self._config.BOTON:                                                                                      #         Si el elemento es de tipo botón o superior
                             generar_hijo = True                                                                                             #             Se generará un hijo
 
                         if generar_hijo:                                                                                                    #         Si es necesario generar un hijo
