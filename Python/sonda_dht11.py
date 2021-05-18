@@ -11,27 +11,28 @@
 # Notes             : ...
 
 
-DEBUG                       = False
-DEBUG_REMOTO                = False
-DEBUG_SENSOR                = False
+DEBUG           = False
+DEBUG_HIJOS     = False
+DEBUG_REMOTO    = False
+DEBUG_SENSOR    = False
 
 
-import errno                                                                                                # Códigos de error
-import os                                                                                                   # Funcionalidades varias del sistema operativo
-import sys                                                                                                  # Funcionalidades varias del sistema
-from threading import Thread                                                                                # Capacidades multihilo
-from time import sleep                                                                                      # Para hacer pausas
+import errno                                                                                                    # Códigos de error
+import os                                                                                                       # Funcionalidades varias del sistema operativo
+import sys                                                                                                      # Funcionalidades varias del sistema
+from threading import Thread                                                                                    # Capacidades multihilo
+from time import sleep                                                                                          # Para hacer pausas
 
-import RPi.GPIO as GPIO                                                                                     # Acceso a los pines GPIO
-import comun                                                                                                # Funciones comunes a varios sistemas
-import dht11                                                                                                # Acceso a sondas de temperatura y humedad DHT11
+import RPi.GPIO as GPIO                                                                                         # Acceso a los pines GPIO
+import comun                                                                                                    # Funciones comunes a varios sistemas
+import dht11                                                                                                    # Acceso a sondas de temperatura y humedad DHT11
 
 if DEBUG_REMOTO:
-    import pydevd                                                                                           # Depuración remota
-    from pydevd_file_utils import setup_client_server_paths                                                 # Configuración de las rutas Eclipse ➡
+    import pydevd                                                                                               # Depuración remota
+    from pydevd_file_utils import setup_client_server_paths                                                     # Configuración de las rutas Eclipse ➡
 
 try:
-    from config import dht11_config as config                                                               # Configuración
+    from config import dht11_config as config                                                                   # Configuración
 
 except ImportError:
     print('Error: Archivo de configuración no encontrado', file = sys.stderr)
@@ -50,7 +51,7 @@ class sonda_dht11(comun.app):
 
         self._argumentos = None
 
-        self._hijos = []                                                                                    # Preparación de la lista contenedora de hijos
+        self._hijos = []                                                                                        # Preparación de la lista contenedora de hijos
 
         super().__init__(config, nombre)
 
@@ -78,16 +79,21 @@ class sonda_dht11(comun.app):
         if len(self._argumentos) != 2 or self._argumentos[1] != '-h':
             argumentos = self.procesar_argumentos(self._argumentos)
 
-            for i, _ in enumerate(self._config.SONDAS):                                                     # Se recorre la lista de sondas para ir generando los hijos
+            for i, _ in enumerate(self._config.SONDAS):                                                         # Se recorre la lista de sondas para ir generando los hijos
                 if DEBUG:
                     print(f"Padre #{os.getpid()}\tPreparando hijo {i}")
 
-                self._hijos.append(Thread(target = main_hijos, args = ((i, argumentos, self._config),)))    #     Se prepara cada hijo y se configura
+                if not DEBUG_HIJOS:
+                    self._hijos.append(Thread(target = main_hijos, args = ((i, argumentos, self._config),)))    #     Se prepara cada hijo y se configura
 
                 if DEBUG:
                     print(f"Padre #{os.getpid()}\tArrancando hijo {i}")
 
-                self._hijos[i].start()                                                                      #     Se inicia cada hijo
+                if not DEBUG_HIJOS:
+                    self._hijos[i].start()                                                                      #     Se inicia cada hijo
+
+                else:
+                    main_hijos([i, argumentos, self._config])
 
         else:
             print('Uso:', argumentos[0], '''[opciones]
@@ -109,13 +115,13 @@ class sonda_dht11(comun.app):
         ''' Realiza las operaciones necesarias para el cierre del sistema
         '''
 
-        for hijo in self._hijos:                                                                            # Se recorren los hijos
-            hijo.join()                                                                                     #     Para esperar su finalización
+        for hijo in self._hijos:                                                                                # Se recorren los hijos
+            hijo.join()                                                                                         #     Para esperar su finalización
 
-        super().cerrar()                                                                                    # Llamada al método cerrar() de la clase padre
+        super().cerrar()                                                                                        # Llamada al método cerrar() de la clase padre
 
 
-    @staticmethod                                                                                           # Método estático
+    @staticmethod                                                                                               # Método estático
     def procesar_argumentos(argumentos):
         ''' Procesado de los argumentos
         '''
@@ -164,7 +170,7 @@ class sonda_dht11_hijos(comun.app):
             - Carga la configuración
         '''
 
-        # super().__init__()                                                                                # La llamada al constructor de la clase padre está desactivada a propósito
+        # super().__init__()                                                                                    # La llamada al constructor de la clase padre está desactivada a propósito
 
         self._argumentos = argumentos
         self._config = config
@@ -217,10 +223,10 @@ class sonda_dht11_hijos(comun.app):
             elif self._argumentos[1]:
                 print('T', end = '')
 
-            if self._argumentos[1]:                                                                         # Temperatura
+            if self._argumentos[1]:                                                                             # Temperatura
                 print(f'emperatura: {resultado.temperature}', end = '')
 
-            if self._argumentos[1] and self._argumentos[3]:                                                 # Unidades
+            if self._argumentos[1] and self._argumentos[3]:                                                     # Unidades
                 print('º C', end = '')
 
             if self._argumentos[1] and self._argumentos[2]:
@@ -232,7 +238,7 @@ class sonda_dht11_hijos(comun.app):
             elif self._argumentos[2]:
                 print('H', end = '')
 
-            if self._argumentos[2]:                                                                         # Humedad
+            if self._argumentos[2]:                                                                             # Humedad
                 print(f'umedad relativa: {resultado.humidity}', end = '')
 
             if self._argumentos[2] and self._argumentos[3]:
@@ -253,7 +259,7 @@ class sonda_dht11_hijos(comun.app):
         if DEBUG:
             print('Hijo  #', self._id_hijo, "\tDisparado el evento de cierre", sep = '')
 
-        # super().cerrar()                                                                                  # La llamada al método de cierre de la clase padre está desactivada a propósito
+        # super().cerrar()                                                                                      # La llamada al método de cierre de la clase padre está desactivada a propósito
 
 
     def leer(self):
