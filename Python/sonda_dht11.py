@@ -5,8 +5,8 @@
 # Title             : sonda_dht11.py
 # Description       : Sistema gestor de sonda de temperatura DHT11
 # Author            : Veltys
-# Date              : 2021-04-30
-# Version           : 3.0.0
+# Date              : 2021-05-18
+# Version           : 3.0.1
 # Usage             : python3 sonda_dht11.py o from sonda_dht11 import
 # Notes             : ...
 
