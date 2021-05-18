@@ -32,6 +32,10 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - [ ] ~~Hacer que **actualizador.sh** sea "inteligente" y actualice en función de la versión.~~
 
 
+## [0.11.1] - 2021-05-18
+### Arreglado
+- Arreglos menores en **sonda_dht11.py**.
+
 ## [0.11.0] - 2021-04-30
 ### Añadido
 - Agradecimientos que faltaban en **README.md**
@@ -47,7 +51,7 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - Optimizado del método *estado_conexion_lenguaje_natural* en **comun.py**.
 - Optimizaciones varias en **cpu.py**, **domotica_cliente.py** y **temperatura.py**.
 - Ordenado de *imports* en **aviso_electricidad.py**, **comun.py**, **correo_electronico.py**, **cpu.py**, **dht11.py**, **domotica_cliente.py**, **domotica_servidor.py**, **internet.py**, **internet.py**, **reiniciar_router.py** y **temperatura.py**.
-- Renombrado **dht11.py** a **sonda_dht11.py**
+- Renombrado **dht11.py** a **sonda_dht11.py**.
 
 ### Eliminado
 - Compatibilidad con Python 3.5 debido a las cadenas-f (requieren Python 3.6).
