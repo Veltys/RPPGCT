@@ -219,7 +219,7 @@ class sonda_dht11_hijos(comun.app):
 
                 ejecuciones += 1
 
-        if DEBUG_SENSOR or resultado.valido():
+        if DEBUG_SENSOR or resultado.is_valid():
             if self._argumentos[0]: # Información del sensor
                 print(f'Sensor {self._id_hijo} ➡️ ', end = '')
 
