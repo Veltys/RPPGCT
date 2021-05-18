@@ -27,6 +27,9 @@ import RPi.GPIO as GPIO                                                         
 import comun                                                                                                    # Funciones comunes a varios sistemas
 import dht11                                                                                                    # Acceso a sondas de temperatura y humedad DHT11
 
+if DEBUG:
+    import inspect                                                                                              # Metaprogramación
+
 if DEBUG_REMOTO:
     import pydevd                                                                                               # Depuración remota
     from pydevd_file_utils import setup_client_server_paths                                                     # Configuración de las rutas Eclipse ➡
@@ -181,8 +184,14 @@ class sonda_dht11_hijos(comun.app):
         self._id_hijo = id_hijo
 
         if DEBUG:
-            print(f"Hijo  #{self._id_hijo}\tMi configuración es {self._SONDAS}")
-            print(f"Hijo  #{self._id_hijo}\tDeberé trabajar en el puerto GPIO{self._SONDAS[self._id_hijo]}")
+            print(f"Hijo  #{self._id_hijo}\tMi configuración es:")
+
+            for metodo in inspect.getmembers(self._config):
+                if not metodo[0].startswith('_'):
+                    if not inspect.ismethod(metodo[1]):
+                        print(metodo)
+
+            print(f"Hijo  #{self._id_hijo}\tDeberé trabajar en el puerto GPIO{self._config.SONDAS[self._id_hijo]}")
 
 
     def bucle(self):
@@ -198,7 +207,7 @@ class sonda_dht11_hijos(comun.app):
                 if DEBUG:
                     print(f'Sensor {self._id_hijo} ➡️ Resultado no válido: ', end = '')
 
-                    if resultado.error == dht11.DHT11Result.ERR_MISSING_DATA:
+                    if resultado.error_code == dht11.DHT11Result.ERR_MISSING_DATA:
                         print('sin datos')
 
                     else: # resultado.error == ERR_CRC
