@@ -32,6 +32,11 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 - [ ] ~~Hacer que **actualizador.sh** sea "inteligente" y actualice en función de la versión.~~
 
 
+## [0.11.2] - 2021-10-15
+### Arreglado
+- Fallo de arranque del ventilador, que podría no empezar a girar en determinadas circunstancias
+- Velocidad mínima de giro del ventilador insuficiente
+
 ## [0.11.1] - 2021-05-18
 ### Arreglado
 - Arreglos menores en **sonda_dht11.py**.
