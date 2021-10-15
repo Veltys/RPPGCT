@@ -5,8 +5,8 @@
 # Title         : temperatura.py
 # Description   : Sistema indicador led de la temperatura del procesador en tiempo real. Utiliza tantos leds como GPIOs se le indiquen, siendo el último el de "alarma".
 # Author        : Veltys
-# Date          : 2021-04-30
-# Version       : 3.0.4
+# Date          : 2021-10-15
+# Version       : 3.1.0
 # Usage         : python3 temperatura.py
 # Notes         : Mandándole la señal "SIGUSR1", el sistema pasa a "modo test", lo cual enciende todos los leds, para comprobar su funcionamiento
 #                 Mandándole la señal "SIGUSR2", el sistema pasa a "modo apagado", lo cual apaga todos los leds hasta que esta misma señal sea recibida de nuevo
@@ -58,6 +58,8 @@ class temperatura(comun.app):
         ''' Realiza en bucle las tareas asignadas a este sistema
         '''
 
+        velocidad = 0                                                                                   # Es necesario establecer la velocidad actual de rotación del ventilador
+
         try:
             while True:                                                                                 # Se ejecutará siempre, ya que las condiciones de parada son externas
                 if not(self._modo_apagado):                                                             #     Si no se ha activado el "modo apagado"
@@ -92,6 +94,12 @@ class temperatura(comun.app):
 
                             break
 
+                    if velocidad == 0:                                                                  #         Antes de (re)calcular la velocidad es necesario saber si el ventilador está parado
+                        arranque = True                                                                 #             Será necesario hacer un arranque de éste
+
+                    else:                                                                               #         Si no
+                        arranque = False                                                                #             No será necesario el arranque
+
                     if igual is False:                                                                  #         Si no existe un elemento igual, puede que haya que interpolar
                         if mayor is False:                                                              #         Si valor mayor no se ha modificado e igual tampoco, se está ante un valor mayor que el máximo
                             velocidad = self._config.VELOCIDADES[len(self._config.VELOCIDADES) - 1][1]  #             Se establece la velocidad al final de los puntos
@@ -124,6 +132,10 @@ class temperatura(comun.app):
                                 acceso.ChangeDutyCycle(self._config.COLORES[estado][componente] * 100)  #                 Se cambia el ciclo de ejecución en función de la cordenada anteriormente asignada
 
                             elif tipo == config.VENTILADOR_PWM:                                         #             Si se está ante un ventilador PWM
+                                if arranque:                                                            #                 Si el ventilador ha estado parado, se realizará un arranque del mismo
+                                    acceso.ChangeDutyCycle(100)                                         #                     Poniéndolo al 100% de velocidad
+                                    sleep(1)                                                           #                     Durante un segundo
+
                                 acceso.ChangeDutyCycle(velocidad * 100)                                 #                 Se cambia el ciclo de ejecución en función de la cordenada anteriormente asignada
 
                             else:                                                                       #             Si se está ante cualquier otro
