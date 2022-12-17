@@ -1,5 +1,12 @@
 ﻿# RPPGCT
-Raspberry Pi Python GPIO Control Tools [![Codacy Badge](https://api.codacy.com/project/badge/Grade/78a8d6604cad48329f0b6800b91b36b1)](https://www.codacy.com/app/veltys/RPPGCT?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Veltys/RPPGCT&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/78a8d6604cad48329f0b6800b91b36b1)](https://www.codacy.com/app/veltys/RPPGCT?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Veltys/RPPGCT&amp;utm_campaign=Badge_Grade)
+[![GitHub release](https://img.shields.io/github/release/Veltys/RPPGCT.svg)](https://GitHub.com/Veltys/RPPGCT/releases/)
+[![GitHub commits](https://badgen.net/github/commits/Veltys/RPPGCT)](https://GitHub.com/Veltys/RPPGCT/commit/)
+[![GitHub latest commit](https://badgen.net/github/last-commit/Veltys/RPPGCT)](https://GitHub.com/Veltys/RPPGCT/commit/)
+[![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/Veltys/RPPGCT/blob/master/LICENSE)
+[![Changelog](https://img.shields.io/badge/Changelog%3F-here-green.svg)](https://github.com/Veltys/RPPGCT/blob/master/CHANGELOG.md)
+
+Raspberry Pi Python GPIO Control Tools
 
 
 ## Descripción
